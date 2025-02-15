@@ -1,0 +1,83 @@
+
+  <!-- Stats Cards -->
+  <div class="row g-4 my-4 stat-wrapper">
+    <div class="col-12 col-sm-6 col-xl-3 my-3" *ngFor="let stat of statsData">
+      <div class="stat-card">
+        <div class="stat-icon" [style.background-color]="stat.bgColor">
+          <i [class]="stat.icon"></i>
+        </div>
+        <div class="stat-content">
+          <h2 class="stat-value">
+            {{stat.value}}
+            <span class="stat-suffix" *ngIf="stat.suffix">{{stat.suffix}}</span>
+          </h2>
+          <p class="stat-label">{{stat.label}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="row g-4 mb-4 justify-content-between">
+    <!-- Expenses Chart -->
+    <div class="col-12 col-lg-7 expenses-wrapper">
+      <div class="chart-card">
+        <h2 class="chart-title">Expenses Overview</h2>
+        <div class="chart-wrapper">
+          <apx-chart
+            #expensesChart
+            [series]="expensesChartOptions.series!"
+            [chart]="expensesChartOptions.chart!"
+            [xaxis]="expensesChartOptions.xaxis!"
+            [dataLabels]="expensesChartOptions.dataLabels!"
+            [grid]="expensesChartOptions.grid!"
+            [stroke]="expensesChartOptions.stroke!"
+            [fill]="expensesChartOptions.fill!"
+            [yaxis]="expensesChartOptions.yaxis!"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inventory Chart -->
+    <div class="col-12 col-lg-4 expenses-wrapper">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="title-section">
+            <h2 class="chart-title">Top Inventory</h2>
+            <p class="total-inventory">
+              Total Inventory <span class="inventory-count">200</span>
+            </p>
+          </div>
+          <div class="period-selector">Monthly</div>
+        </div>
+        <div class="chart-wrapper">
+          <apx-chart
+            #inventoryChart
+            [series]="inventoryChartOptions.series!"
+            [chart]="inventoryChartOptions.chart!"
+            [labels]="inventoryChartOptions.labels!"
+            [colors]="inventoryChartOptions.colors!"
+            [plotOptions]="inventoryChartOptions.plotOptions!"
+            [responsive]="inventoryChartOptions.responsive!"
+            [legend]="inventoryChartOptions.legend!"
+          ></apx-chart>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <span class="legend-color machines"></span>
+            <span class="legend-label">Machines</span>
+            <span class="legend-value">20%</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color products"></span>
+            <span class="legend-label">Products</span>
+            <span class="legend-value">80%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<app-attendance-section></app-attendance-section>
+

@@ -1,0 +1,58 @@
+<div class="sidebar-container">
+  <!-- Logo -->
+  <div class="logo-section mb-4">
+    <img src="../../../assets/images/logo.png" alt="Jawharat Demyat" class="logo">
+    <h2>Jawharat Demyat</h2>
+  </div>
+
+  <!-- User Profile -->
+  <div class="user-profile mb-4">
+    <div class="profile-image">
+      <img src="../../../assets/images/Avatar.png" alt="User Profile" class="rounded-circle">
+    </div>
+    <div class="user-info">
+      <h3>Hello {{userName}}!</h3>
+      <p class="email">{{userEmail}}</p>
+    </div>
+  </div>
+
+  <!-- Main Navigation -->
+  <!-- <nav class="main-nav">
+    <ul class="nav row">
+      <li class="nav-item col-6" *ngFor="let item of navigationItems">
+        <a [routerLink]="item.link" class="nav-link flex-column" [ngClass]="item.class">
+          <i class="bi bi-{{item.icon}}"></i>
+          <span>{{item.label}}</span>
+        </a>
+      </li>
+    </ul>
+  </nav> -->
+
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+      <ul class="nav row">
+        <li class="nav-item col-6" *ngFor="let item of navigationItems">
+          <a [routerLink]="item.link"
+             class="nav-link flex-column"
+             [ngClass]="item.class"
+             routerLinkActive="active"
+             #rla="routerLinkActive"
+             [attr.background-color]="item.activeColor">
+            <i class="bi bi-{{item.icon}}"></i>
+            <span>{{item.label}}</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <ul class="nav flex-column">
+      <li class="nav-item" *ngFor="let item of bottomItems">
+        <a [routerLink]="item.link" class="nav-link p-0" [ngClass]="item.class">
+          <i class="bi bi-{{item.icon}}"></i>
+          <span>{{item.label}}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

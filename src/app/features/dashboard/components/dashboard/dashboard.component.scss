@@ -1,0 +1,299 @@
+@import "../../../../../assets/scss/variables.scss";
+
+.stat-wrapper{
+  background-color: white;
+  border-radius: $br-12px;
+}
+.stat-card {
+  background: #FFFFFF;
+  border-left: 1px solid #DADADA;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 160px;
+}
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    color: #FFFFFF;
+    font-size: 1.25rem;
+  }
+}
+
+.stat-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333333;
+  margin: 0;
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+
+  .currency {
+    font-size: 1rem;
+    color: #666666;
+    font-weight: 400;
+  }
+}
+
+.stat-label {
+  font-size: 1rem;
+  color: #666666;
+  margin: 0;
+  font-weight: 400;
+}
+
+// Responsive styles
+@media (max-width: 1200px) {
+  .stat-card {
+    padding: 1.5rem;
+    min-height: 140px;
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+
+
+  .stat-card {
+    padding: 1.25rem;
+    min-height: 90px;
+    gap: 1rem;
+    flex-direction: row;
+    border-left: 0;
+    border-bottom: 1px solid #DADADA;
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+
+      i {
+        font-size: 1rem;
+      }
+    }
+    .stat-value {
+      font-size: 1.5rem;
+    }
+  }
+  .expenses-wrapper {
+    .chart-card{
+      padding: 0.5rem;
+    }
+  }
+
+}
+
+// ==========================
+.expenses-wrapper{
+  background-color: white;
+  border-radius: $br-12px;
+  padding: 1rem;
+}
+.expenses-wrapper {
+  max-width: 900px; // Adjust this value to your needs
+
+  .chart-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+
+    .chart-wrapper {
+      width: 100%;
+      overflow: hidden; // Prevents any overflow
+    }
+  }
+}
+
+// Media queries for responsive behavior
+@media (max-width: 1200px) {
+  .expenses-wrapper {
+    max-width: 800px;
+  }
+}
+
+@media (max-width: 992px) {
+  .expenses-wrapper {
+    max-width: 100%; // Full width on smaller screens
+  }
+}
+
+// Add this to control the spacing between bars
+:host ::ng-deep {
+  .apexcharts-bar-series {
+    .apexcharts-bar-area {
+      width: 20px !important; // Adjust bar width
+    }
+  }
+}
+.expenses-chart-container {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  .chart-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+
+  .chart-wrapper {
+    width: 100%;
+    height: 400px;
+
+    @media (max-width: 768px) {
+      height: 300px;
+    }
+
+    @media (max-width: 576px) {
+      height: 250px;
+    }
+  }
+}
+// ==========================
+.inventory-chart-container {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.chart-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.total-inventory {
+  color: #666;
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+
+  .inventory-count {
+    color: #333;
+    font-weight: 600;
+    margin-left: 0.5rem;
+  }
+}
+
+.period-selector {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.chart-content {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+
+  &.machines {
+    background-color: #4B7B77;
+  }
+
+  &.products {
+    background-color: #EFA70C;
+  }
+}
+
+.legend-label {
+  color: #666;
+  font-size: 1rem;
+}
+
+.legend-value {
+  font-weight: 600;
+  color: #333;
+}
+
+@media (max-width: 576px) {
+  .inventory-chart-container {
+    padding: 1rem;
+  }
+
+  .chart-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .chart-legend {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+// ===================================
+
+// end of attendance ==========================
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  background: #f8f9fa;
+
+
+
+  .dashboard-main {
+    flex-grow: 1;
+    padding: 20px;
+
+
+
+
+    .dashboard-charts {
+      display: flex;
+      gap: 20px;
+
+      .chart {
+        flex: 1;
+      }
+    }
+
+
+  }
+}

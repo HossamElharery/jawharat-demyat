@@ -1,0 +1,49 @@
+<div class="attendance-section">
+  <div class="header">
+    <h2>Attendance Overview</h2>
+    <button pButton type="button" label="View All" class="p-button-text"></button>
+  </div>
+
+  <p-table
+    [value]="attendanceData"
+
+    styleClass="p-datatable-sm p-datatable-gridlines"
+    [scrollable]="true"
+    responsiveLayout="stack">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Employee Name</th>
+        <th>Designation</th>
+        <th>Type</th>
+        <th>Check In Time</th>
+        <th>Status</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-record>
+      <tr>
+        <td>
+          <div class="employee-info">
+            <p-avatar
+              [image]="record.avatar"
+              shape="circle"
+              size="normal"
+              [style]="{'width': '2.5rem', 'height': '2.5rem'}"
+            ></p-avatar>
+            <span class="employee-name">{{record.name}}</span>
+          </div>
+        </td>
+        <td>{{record.designation}}</td>
+        <td>{{record.type}}</td>
+        <td>{{record.checkIn}}</td>
+        <td>
+          <p-tag
+            [value]="record.status"
+            [severity]="record.status === 'Attended' ? 'success' : 'danger'"
+          ></p-tag>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
