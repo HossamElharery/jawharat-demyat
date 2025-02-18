@@ -1,0 +1,233 @@
+// .modal-container {
+//   min-width: 500px;
+//   max-width: 800px;
+//   background-color: white;
+// }
+
+// mat-form-field {
+//   width: 100%;
+// }
+// ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+//   background-color: #F9F9FB;
+// }
+
+@import"../../../../../assets/scss/variables.scss";
+::ng-deep .user-modal-dialog {
+  .mat-mdc-dialog-container {
+    padding: 0;
+  }
+
+  .mdc-dialog__surface {
+    border-radius: $br-12px !important;
+  }
+}
+.modal-container {
+  padding: 24px;
+  background: white;
+  border-radius: $br-12px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 24px;
+    margin: 0;
+    color: #333;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    color: #666;
+
+    &:hover {
+      color: #333;
+    }
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  flex: 1;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 500;
+  }
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #E2E8F0;
+  border-radius: $br-5px;
+  background: #F8FAFC;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+  }
+}
+
+.custom-select {
+  position: relative;
+
+  select {
+    appearance: none;
+    padding-right: 30px;
+  }
+
+  .bi-chevron-down {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+}
+
+.phone-input {
+  display: flex;
+  gap: 12px;
+
+  .country-code {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: $br-5px;
+
+    img {
+      width: 24px;
+      height: 16px;
+    }
+
+    span {
+      color: #666;
+    }
+  }
+
+  .form-control {
+    flex: 1;
+  }
+}
+
+.active-user-section {
+  margin-top: 24px;
+  margin-bottom: 32px;
+
+  .active-user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+
+    h3 {
+      font-size: 18px;
+      margin: 0;
+
+      span {
+        color: #22c55e;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .help-text {
+    color: #666;
+    margin: 0;
+  }
+}
+
+.toggle-switch {
+  position: relative;
+
+  .toggle-input {
+    display: none;
+
+    &:checked + .toggle-label {
+      background: $primary-color;
+
+      &:after {
+        transform: translateX(20px);
+      }
+    }
+  }
+
+  .toggle-label {
+    display: block;
+    width: 48px;
+    height: 28px;
+    background: #E2E8F0;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+  }
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+
+  .btn {
+    padding: 12px 24px;
+    border-radius: $br-5px;
+    font-weight: 500;
+
+    &.btn-cancel {
+      background: none;
+      border: none;
+      color: #666;
+
+      &:hover {
+        color: #333;
+      }
+    }
+
+    &.btn-submit {
+      background: $primary-color;
+      border: none;
+      color: white;
+
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      &:not(:disabled):hover {
+        background: darken($primary-color, 5%);
+      }
+    }
+  }
+}

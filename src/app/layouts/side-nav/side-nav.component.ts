@@ -22,7 +22,7 @@ export class SideNavComponent  {
   userName: string = 'Mohamed';
 
   navigationItems: NavItem[] = [
-    { icon: 'house', label: 'Dashboard', link: '/dashboard', class: 'text-warning', activeColor: '#ffc107' },
+    { icon: 'house', label: 'Dashboard', link: '/', class: 'text-warning', activeColor: '#ffc107' },
     { icon: 'clipboard', label: 'Tasks', link: '/tasks', class: 'text-primary', activeColor: '#0d6efd' },
     { icon: 'layers', label: 'Inventory', link: '/inventory', class: 'text-success', activeColor: '#198754' },
     { icon: 'credit-card', label: 'Payroll', link: '/payroll', class: 'text-info', activeColor: '#0dcaf0' },

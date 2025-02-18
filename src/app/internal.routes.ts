@@ -15,13 +15,13 @@ export default [
             (c) => c.default
           ),
       },
-      // {
-      //   path: 'users',
-      //   loadChildren: () =>
-      //     import('./features/users/users-routes').then(
-      //       (c) => c.default
-      //     ),
-      // },
+      {
+        path: 'users',
+        loadChildren: () =>
+          import('./features/users/users-routes').then(
+            (c) => c.default
+          ),
+      },
 
 
     ],
