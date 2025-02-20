@@ -1,0 +1,139 @@
+<!-- add-task-sidebar.component.html -->
+<p-sidebar [(visible)]="visible"
+          position="right"
+          [fullScreen]="true"
+          styleClass="add-task-sidebar"
+          [showCloseIcon]="false"
+          [baseZIndex]="10000">
+
+  <div class="sidebar-header">
+    <div class="flex justify-between items-center p-4">
+      <button pButton
+              class="p-button-text p-button-rounded close-button"
+              icon="pi pi-times"
+              (click)="closeSidebar()">
+      </button>
+      <div class="action-buttons flex gap-2">
+        <button pButton
+                class="p-button-rounded p-button-text"
+                icon="pi pi-pencil">
+        </button>
+        <button pButton
+                class="p-button-rounded p-button-text delete-btn"
+                icon="pi pi-trash">
+        </button>
+      </div>
+    </div>
+
+    <div class="task-info p-4">
+      <div class="label">Project</div>
+      <div class="project-name">{{projectName}}</div>
+
+      <div class="info-grid">
+        <div>
+          <div class="label">CREATED</div>
+          <div>{{createdDate}}</div>
+        </div>
+        <div>
+          <div class="label">Created By</div>
+          <div>{{createdBy}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-content">
+    <h2 class="text-2xl font-semibold mb-6">New Task to Build House</h2>
+
+    <div class="form-group">
+      <label>State</label>
+      <p-dropdown [options]="states"
+                  [(ngModel)]="selectedState"
+                  optionLabel="label"
+                  placeholder="Select State">
+      </p-dropdown>
+    </div>
+
+    <div class="form-group">
+      <label>Due Date</label>
+      <p-calendar [(ngModel)]="dueDate"
+                  [showIcon]="true"
+                  dateFormat="dd/mm/yy">
+      </p-calendar>
+    </div>
+
+    <div class="form-group">
+      <label>Assignee</label>
+      <p-chips [(ngModel)]="assignees"
+              placeholder="Add assignee"
+              >
+      </p-chips>
+    </div>
+
+    <div class="form-group">
+      <label>Priority</label>
+      <p-dropdown [options]="priorities"
+                  [(ngModel)]="selectedPriority"
+                  optionLabel="label"
+                  placeholder="Select Priority">
+      </p-dropdown>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea pInputTextarea
+                [(ngModel)]="description"
+                rows="5"
+                placeholder="Enter task description">
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Attachments</label>
+      <div class="file-upload-section">
+        <p-fileUpload mode="basic"
+                      chooseLabel="Upload Files"
+                      [auto]="true"
+                      chooseIcon="pi pi-upload"
+                      (onUpload)="onUpload($event)">
+        </p-fileUpload>
+      </div>
+
+      <!-- Attachments List -->
+      <div class="attachments-list">
+        <div class="attachment-item" *ngFor="let i of [1,2]">
+          <div class="file-icon">
+            <i class="pi pi-file-pdf"></i>
+          </div>
+          <div class="file-info">
+            <div class="file-name">Task Attachment Details.pdf</div>
+            <div class="file-size">12 MB</div>
+          </div>
+          <button pButton
+                  class="p-button-text download-button"
+                  icon="pi pi-download">
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="subtasks-section mt-6">
+      <div class="subtask-header">
+        <div class="flex items-center gap-2">
+          <h3 class="text-lg font-semibold">Sub Tasks</h3>
+          <span class="subtask-count">2/4</span>
+        </div>
+        <span class="text-gray-600">Comments (2)</span>
+      </div>
+
+      <div class="subtask-list">
+        <div class="subtask-item" *ngFor="let task of subTasks">
+          <i class="pi checkbox"
+             [ngClass]="task.completed ? 'pi-check-circle' : 'pi-circle-off'">
+          </i>
+          <span class="task-title">{{task.title}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</p-sidebar>

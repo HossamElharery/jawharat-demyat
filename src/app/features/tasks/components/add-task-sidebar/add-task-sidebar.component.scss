@@ -1,0 +1,246 @@
+@use '../../../../../assets/scss/variables.scss' as *;
+
+ :host ::ng-deep {
+  .add-task-sidebar {
+    .p-sidebar {
+      padding: 0;
+      max-width: 100%;
+      width: 550px !important;
+      background: white;
+
+      @media (max-width: 768px) {
+        width: 100% !important;
+      }
+
+      .p-sidebar-header {
+        display: none;
+      }
+
+      .p-sidebar-content {
+        padding: 0;
+        background: white;
+      }
+    }
+
+    .sidebar-header {
+      background: linear-gradient(90deg, #FF00D4 0%, #00D1FF 100%);
+      padding: 24px;
+      color: white;
+
+      .header-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+
+        .close-button {
+          width: 40px;
+          height: 40px;
+          border-radius: 20px;
+          color: white;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+          }
+        }
+
+        .action-buttons {
+          .p-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            color: white;
+
+            &:hover {
+              background: rgba(255, 255, 255, 0.1);
+            }
+
+            &.delete-btn:hover {
+              background: rgba(255, 0, 0, 0.1);
+            }
+          }
+        }
+      }
+
+      .project-info {
+        .label {
+          font-size: 14px;
+          opacity: 0.8;
+          margin-bottom: 4px;
+        }
+
+        .title {
+          font-size: 20px;
+          font-weight: 600;
+          margin-bottom: 24px;
+        }
+
+        .meta-info {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 32px;
+
+          .label {
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+        }
+      }
+    }
+
+    .sidebar-content {
+      padding: 24px;
+      height: calc(100vh - 200px);
+      overflow-y: auto;
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #F1F1F1;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #C1C1C1;
+        border-radius: 3px;
+
+        &:hover {
+          background: #A8A8A8;
+        }
+      }
+
+      .form-group {
+        margin-bottom: 24px;
+
+        label {
+          display: block;
+          color: #64748B;
+          font-weight: 500;
+          margin-bottom: 8px;
+        }
+      }
+
+      .file-upload-section {
+        border: 2px dashed #E0E0E0;
+        border-radius: 8px;
+        padding: 24px;
+        text-align: center;
+        background: #F8F9FA;
+
+        .p-fileupload-basic {
+          .p-button {
+            width: 100%;
+            background: white;
+            border: 1px solid #E0E0E0;
+            color: #64748B;
+            height: 40px;
+
+            &:hover {
+              background: #F0F0F0;
+            }
+
+            .p-button-icon {
+              margin-right: 8px;
+            }
+          }
+        }
+      }
+
+      .attachments-list {
+        margin-top: 16px;
+
+        .attachment-item {
+          display: flex;
+          align-items: center;
+          padding: 12px;
+          background: #F8F9FA;
+          border-radius: 8px;
+          margin-bottom: 8px;
+
+          .file-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            background: #FEF2E5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+
+            i {
+              color: #D58D49;
+              font-size: 20px;
+            }
+          }
+
+          .file-info {
+            flex: 1;
+
+            .file-name {
+              font-weight: 500;
+              color: #1D2939;
+              margin-bottom: 4px;
+            }
+
+            .file-size {
+              color: #64748B;
+              font-size: 12px;
+            }
+          }
+
+          .download-button {
+            color: $primary-color;
+
+            &:hover {
+              background: rgba($primary-color, 0.04);
+            }
+          }
+        }
+      }
+
+      .subtasks-section {
+        margin-top: 32px;
+
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+
+          .title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1D2939;
+          }
+
+          .counter {
+            color: #64748B;
+          }
+        }
+
+        .subtask-item {
+          display: flex;
+          align-items: center;
+          padding: 12px;
+          border-radius: 8px;
+          margin-bottom: 8px;
+
+          &:hover {
+            background: #F8F9FA;
+          }
+
+          .checkbox {
+            margin-right: 12px;
+            color: #4CAF50;
+            font-size: 20px;
+          }
+
+          .title {
+            color: #1D2939;
+          }
+        }
+      }
+    }
+  }
+}

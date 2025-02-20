@@ -22,6 +22,13 @@ export default [
             (c) => c.default
           ),
       },
+      {
+        path: 'tasks',
+        loadChildren: () =>
+          import('./features/tasks/tasks-routes').then(
+            (c) => c.default
+          ),
+      },
 
 
     ],

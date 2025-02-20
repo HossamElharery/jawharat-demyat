@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MainInternalComponent } from './main-internal.component';
+import { AddTaskSidebarComponent } from './add-task-sidebar.component';
 
-describe('MainInternalComponent', () => {
-  let component: MainInternalComponent;
-  let fixture: ComponentFixture<MainInternalComponent>;
+describe('AddTaskSidebarComponent', () => {
+  let component: AddTaskSidebarComponent;
+  let fixture: ComponentFixture<AddTaskSidebarComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MainInternalComponent]
+      imports: [AddTaskSidebarComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MainInternalComponent);
+    fixture = TestBed.createComponent(AddTaskSidebarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
