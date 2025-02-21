@@ -10,6 +10,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { FileUploadModule } from 'primeng/fileupload';
+import { TextareaModule } from 'primeng/textarea';
+import { ChipModule } from 'primeng/chip';
 
 interface TaskPriority {
   label: string;
@@ -33,13 +35,18 @@ interface TaskState {
     CalendarModule,
     DropdownModule,
     FileUploadModule,
-
+    TextareaModule,
+    ChipModule
   ],
   templateUrl: './add-task-sidebar.component.html',
   styleUrls: ['./add-task-sidebar.component.scss']
 })
 export class AddTaskSidebarComponent {
   @Output() close = new EventEmitter<void>();
+
+
+
+
 
   // UI Control
   visible: boolean = false;
@@ -82,6 +89,7 @@ export class AddTaskSidebarComponent {
     { name: 'Task Attachment Details.pdf', size: '12 MB' },
     { name: 'Task Attachment Details.pdf', size: '12 MB' }
   ];
+newAssignee: any;
 
   openSidebar() {
     this.visible = true;
@@ -115,5 +123,24 @@ export class AddTaskSidebarComponent {
 
   onAssigneeRemove(event: any) {
     console.log('Assignee removed:', event);
+  }
+
+
+  activeTab: 'subtasks' | 'comments' = 'subtasks';
+
+  setActiveTab(tab: 'subtasks' | 'comments') {
+    this.activeTab = tab;
+  }
+
+  editTask() {
+    // handle edit action
+  }
+
+  deleteTask() {
+    // handle delete action
+  }
+
+  downloadAll() {
+    // handle "Download All" action
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
-import { NgFor, NgClass } from '@angular/common';
+import { NgFor, NgClass, CommonModule } from '@angular/common';
 import { NgApexchartsModule } from 'ng-apexcharts';
 
 import {
@@ -74,7 +74,7 @@ interface Request {
     NgApexchartsModule,
     MatCardModule,
     MatTableModule,
-    NgFor,
+    CommonModule,
     AttendanceSectionComponent
 
   ],

@@ -11,7 +11,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^19.1.0",
-    "@angular/cdk": "^19.1.2",
+    "@angular/cdk": "^19.1.5",
     "@angular/common": "^19.1.4",
     "@angular/compiler": "^19.1.0",
     "@angular/core": "^19.1.0",
@@ -27,7 +27,7 @@
     "bootstrap": "^5.3.3",
     "http": "^0.0.1-security",
     "ng-apexcharts": "^1.15.0",
-    "primeng": "^19.0.5",
+    "primeng": "^19.0.6",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
