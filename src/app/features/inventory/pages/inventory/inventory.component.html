@@ -1,0 +1,133 @@
+
+<div class="container-fluid">
+  <div class="header-section mb-4">
+    <div class="d-flex justify-content-between align-items-center gap-3 ">
+
+      <div class="d-flex align-items-center gap-3">
+        <div class="search-container position-relative">
+          <i class="bi bi-search search-icon"></i>
+          <input
+            type="text"
+            class="form-control search-input"
+            placeholder="Search for anything"
+            [formControl]="searchControl">
+        </div>
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-secondary dropdown-toggle status-filter"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+            {{ selectedStatus || 'In Stock' }}
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" (click)="filterByStatus('In Stock')">In Stock</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('Out Stock')">Out Stock</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('All')">All</a></li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="d-flex align-items-center">
+        <div>
+          <div class="show-style">
+            <i class="bi bi-list"
+            [ngClass]="{'active': currentView === 'list'}"
+            (click)="toggleView('list')"></i>
+         <i class="bi bi-grid-3x2-gap"
+            [ngClass]="{'active': currentView === 'grid'}"
+            (click)="toggleView('grid')"></i>
+          </div>
+        </div>
+
+        <button class="btn btn-warning add-user-btn" (click)="onAddInventory()">
+          <i class="bi bi-plus-lg me-2"></i>
+          Add Inventory
+        </button>
+      </div>
+    </div>
+  </div>
+  <div [ngClass]="{'table-responsive': currentView === 'list'}">
+    <table class="table align-middle" *ngIf="currentView === 'list'">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Id</th>
+          <th>Type</th>
+          <th>Value</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of filteredUsers">
+          <td>
+            <div class="d-flex align-items-center">
+              <img [src]="user.image" class="user-avatar" alt="User avatar">
+              <span class="ms-2">{{ user.type }}</span>
+            </div>
+          </td>
+          <td>{{ user.id }}</td>
+          <td>{{ user.type }}</td>
+          <td>{{ user.value }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="{'active': user.status === 'In Stock', 'Out Stock': user.status === 'In Stock'}">
+              {{ user.status }}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn btn-link" (click)="onView(user)">
+                <i class="bi bi-eye text-warning"></i>
+              </button>
+              <button class="btn btn-link" (click)="onEdit(user)">
+                <i class="bi bi-pencil text-warning"></i>
+              </button>
+              <button class="btn btn-link" (click)="onDelete(user)">
+                <i class="bi bi-trash text-warning"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  <!-- Grid View -->
+<div class="inventory-grid" *ngIf="currentView === 'grid'">
+  <div class="row g-4">
+    <div class="col-12 col-md-6 col-lg-4" *ngFor="let user of filteredUsers">
+      <div class="inventory-card">
+        <!-- Main Image Section -->
+        <div class="card-image-container">
+          <img [src]="user.image" alt="Product image">
+          <span class="status-tag">{{ user.status }}</span>
+        </div>
+
+        <!-- Product Info Section -->
+        <div class="product-info">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="bi bi-grid-3x3-gap-fill text-warning"></i>
+            <span class="product-type">{{ user.type }}</span>
+            <span class="product-value ms-auto">{{ user.value }}</span>
+          </div>
+          <div class="product-name">Product Name
+            <span class="product-id">{{ user.id }}</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="card-actions">
+          <button class="btn btn-warning w-100 add-inventory-btn">
+            <i class="bi bi-pencil-fill me-2"></i>
+            Add Inventory
+          </button>
+          <button class="btn btn-outline-danger w-100 delete-btn">
+            <i class="bi bi-trash3-fill me-2"></i>
+            Delete Inventory
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+</div>

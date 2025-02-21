@@ -23,6 +23,14 @@ export default [
           ),
       },
 
+      {
+        path: 'inventory',
+        loadChildren: () =>
+          import('./features/inventory/inventory-routes').then(
+            (c) => c.default
+          ),
+      },
+
 
     ],
   },
