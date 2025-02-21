@@ -1,3 +1,302 @@
+@use './assets/scss/variables.scss' as*;
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.tasks-main{
+  .p-select{
+    border-radius: 10px;
+    border: solid 1px #A2A1A833;
+    background-color: white;
+    padding: 10px;
+  }
+  .p-select-list-container{
+    background-color: white;
+    padding: 10px;
+  }
+  .p-select:not(.p-disabled):hover{
+    border-color:$primary-color
+  }
+}
+.task-sidebar {
+  /* Force the sidebar to be 40% width on larger screens */
+  width: 40% !important;
+  min-height: 100vh;
+  background-color: #fff;
+  border-left: 1px solid #ddd;
+
+  /* On smaller screens, take full width */
+  @media (max-width: 768px) {
+    width: 100% !important;
+  }
+
+  .header-gradient {
+    background: linear-gradient(135deg, #f39bc2, #b187f5);
+    padding: 1rem;
+
+    .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .circle-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        border-radius: 50%;
+        color: #fff;
+        padding: 0.5rem;
+        cursor: pointer;
+        font-size: 1.2rem;
+
+        &.close-btn {
+          margin-right: auto;
+        }
+
+        &.red {
+          background: rgba(255, 0, 0, 0.2);
+        }
+      }
+
+      .circle-btn-group {
+        display: flex;
+        gap: 0.5rem;
+      }
+    }
+
+    .meta-info {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+
+      > div {
+        display: flex;
+        flex-direction: column;
+        .meta-label {
+          font-size: 0.7rem;
+          font-weight: 600;
+          color: #fff;
+          opacity: 0.8;
+          text-transform: uppercase;
+        }
+        .meta-value {
+          font-size: 0.9rem;
+          color: #fff;
+          margin-top: 0.2rem;
+        }
+      }
+    }
+  }
+
+  .task-content {
+    padding: 1.5rem;
+    background-color: white;
+
+    h1 {
+      font-size: 1.4rem;
+      margin: 1rem 0 1.5rem;
+      color: #333;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+
+      .icon-container {
+        font-size: 1.2rem;
+        color: #6b7280;
+        margin-right: 0.75rem;
+        margin-top: 0.2rem;
+      }
+
+      .info-details {
+        label {
+          display: block;
+          font-weight: 600;
+          margin-bottom: 0.25rem;
+          color: #111827;
+        }
+        .state-tag {
+          display: flex;
+          align-items: center;
+          .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+
+            &.done {
+              background-color: #10b981; /* green dot */
+            }
+          }
+        }
+        .value {
+          color: #374151;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .assignee-list {
+      display: flex;
+      gap: 0.5rem;
+
+      .assignee {
+        background-color: #f3f4f6;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        color: #111827;
+      }
+    }
+
+    .priority {
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      text-transform: capitalize;
+
+      &.low {
+        background-color: #e0f2fe;
+        color: #0369a1;
+      }
+      &.medium {
+        background-color: #fef9c3;
+        color: #92400e;
+      }
+      &.high {
+        background-color: #fee2e2;
+        color: #b91c1c;
+      }
+    }
+
+    .description-text {
+      margin-top: 0.25rem;
+      color: #4b5563;
+      line-height: 1.4;
+      font-size: 0.95rem;
+    }
+
+    .attachments-row {
+      .attachments-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .download-all-btn {
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          color: #111827;
+          font-weight: 500;
+
+          i {
+            margin-right: 0.3rem;
+          }
+        }
+      }
+
+      .attachment-item {
+        display: flex;
+        align-items: center;
+        background: #fefaf2;
+        margin-top: 0.5rem;
+        padding: 0.75rem;
+        border-radius: 6px;
+
+        .pdf-icon {
+          font-size: 1.2rem;
+          margin-right: 0.75rem;
+          color: #ff5252;
+        }
+        .file-info {
+          flex: 1;
+          .file-name {
+            font-weight: 600;
+            color: #111827;
+          }
+          .file-size {
+            font-size: 0.8rem;
+            color: #6b7280;
+          }
+        }
+        .download-btn {
+          background: #fff;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          padding: 0.3rem 0.6rem;
+          display: flex;
+          align-items: center;
+          margin-left: 0.5rem;
+          cursor: pointer;
+
+          i {
+            margin-right: 0.3rem;
+          }
+        }
+      }
+    }
+
+    .subtasks-section {
+      margin-top: 2rem;
+
+      .tabs {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+
+        .tab {
+          background: #fbbf24; /* a yellowish color */
+          color: #fff;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 5px 5px 0 0;
+          cursor: pointer;
+          font-weight: 600;
+          font-size: 0.9rem;
+
+          &.active {
+            background: #f59e0b; /* a darker shade when active */
+          }
+        }
+      }
+
+      .tab-content {
+        border: 1px solid #e5e7eb;
+        border-top: none;
+        background: #f9fafb;
+        padding: 1rem;
+        border-radius: 0 0 6px 6px;
+
+        .subtask {
+          display: flex;
+          align-items: flex-start;
+          margin-bottom: 1rem;
+
+          i {
+            font-size: 1.2rem;
+            margin-right: 0.75rem;
+            color: #10b981; /* green for completed? */
+          }
+          &.incomplete i {
+            color: #d1d5db;
+          }
+          .subtask-details {
+            .subtask-title {
+              font-weight: 600;
+              margin-bottom: 0.25rem;
+              color: #111827;
+            }
+            .subtask-desc {
+              font-size: 0.85rem;
+              color: #6b7280;
+              line-height: 1.3;
+            }
+          }
+        }
+      }
+    }
+  }
+}

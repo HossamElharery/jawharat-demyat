@@ -1,0 +1,229 @@
+<p-sidebar
+  [(visible)]="visible"
+  position="right"
+  [showCloseIcon]="false"
+  [fullScreen]="false"
+  maskStyleClass="backdrop-blur-sm"
+  styleClass="task-sidebar"
+>
+  <!-- Gradient Header -->
+  <div class="header-gradient">
+    <!-- Top row: close/edit/delete -->
+    <div class="top-row">
+      <button class="circle-btn close-btn" (click)="closeSidebar()">
+        <i class="pi pi-times"></i>
+      </button>
+      <div class="circle-btn-group">
+        <button class="circle-btn" (click)="editTask()">
+          <i class="pi pi-pencil"></i>
+        </button>
+        <button class="circle-btn red" (click)="deleteTask()">
+          <i class="pi pi-trash"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Meta info row -->
+    <div class="meta-info">
+      <div>
+        <div class="meta-label">Project</div>
+        <div class="meta-value">Project Name</div>
+      </div>
+      <div>
+        <div class="meta-label">CREATED</div>
+        <div class="meta-value">Mar 23, 10:34 PM</div>
+      </div>
+      <div>
+        <div class="meta-label">Created By</div>
+        <div class="meta-value">Mohamed Ali</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Content -->
+  <div class="task-content">
+    <h1>New Task to Build House</h1>
+
+    <!-- State -->
+    <div class="info-row">
+      <div class="icon-container">
+        <i class="pi pi-check-circle"></i>
+      </div>
+      <div class="info-details">
+        <label>State</label>
+        <div class="state-tag">
+          <span class="status-dot done"></span>
+          Done
+        </div>
+      </div>
+    </div>
+
+    <!-- Due Date -->
+    <div class="info-row">
+      <div class="icon-container">
+        <i class="pi pi-calendar"></i>
+      </div>
+      <div class="info-details">
+        <label>Due Date</label>
+        <div class="value">25/12/2024</div>
+      </div>
+    </div>
+
+    <!-- Assignee -->
+    <div class="info-row">
+      <div class="icon-container">
+        <i class="pi pi-users"></i>
+      </div>
+      <div class="info-details">
+        <label>Assignee</label>
+        <div class="assignee-list">
+          <!-- <span class="assignee">@mustafa</span>
+          <span class="assignee">@mustafa</span>
+          <span class="assignee">@mustafa</span> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Priority -->
+    <div class="info-row">
+      <div class="icon-container">
+        <i class="pi pi-flag"></i>
+      </div>
+      <div class="info-details">
+        <label>Priority</label>
+        <span class="priority low">Low</span>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="info-row">
+      <div class="icon-container">
+        <i class="pi pi-align-left"></i>
+      </div>
+      <div class="info-details">
+        <label>Description</label>
+        <p class="description-text">
+          Lorem ipsum dolor sit amet consectetur. Aliquet eu urna scelerisque
+          pharetra erat a varius pretium ut. Orci elementum id varius auctor id.
+          Sit egestas tortor ultrices commodo posuere lectus dui. Lobortis amet
+          eget tortor ornare volutpat. Lorem ipsum dolor sit amet consectetur.
+          Aliquet eu urna scelerisque pharetra erat a varius pretium ut. Orci
+          elementum id varius auctor id. Sit egestas tortor ultrices commodo
+          posuere lectus dui. Lobortis amet eget tortor ornare volutpat.
+        </p>
+      </div>
+    </div>
+
+    <!-- Attachments -->
+    <div class="info-row attachments-row">
+      <div class="icon-container">
+        <i class="pi pi-paperclip"></i>
+      </div>
+      <div class="info-details">
+        <div class="attachments-header">
+          <label>Attachments (2)</label>
+          <button class="download-all-btn" (click)="downloadAll()">
+            <i class="pi pi-download"></i>
+            Download All
+          </button>
+        </div>
+        <!-- Attachment 1 -->
+        <div class="attachment-item">
+          <div class="pdf-icon">
+            <i class="pi pi-file-pdf"></i>
+          </div>
+          <div class="file-info">
+            <div class="file-name">Task Attachment Details.pdf</div>
+            <div class="file-size">12 MB</div>
+          </div>
+          <button class="download-btn">
+            <i class="pi pi-download"></i>
+            Download
+          </button>
+        </div>
+        <!-- Attachment 2 -->
+        <div class="attachment-item">
+          <div class="pdf-icon">
+            <i class="pi pi-file-pdf"></i>
+          </div>
+          <div class="file-info">
+            <div class="file-name">Task Attachment Details.pdf</div>
+            <div class="file-size">12 MB</div>
+          </div>
+          <button class="download-btn">
+            <i class="pi pi-download"></i>
+            Download
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub Tasks & Comments -->
+    <div class="subtasks-section">
+      <div class="tabs">
+        <button
+          class="tab"
+          [class.active]="activeTab === 'subtasks'"
+          (click)="setActiveTab('subtasks')"
+        >
+          Sub Tasks (2/4)
+        </button>
+        <button
+          class="tab"
+          [class.active]="activeTab === 'comments'"
+          (click)="setActiveTab('comments')"
+        >
+          Comments (2)
+        </button>
+      </div>
+
+      <!-- Subtasks content -->
+      <div class="tab-content" *ngIf="activeTab === 'subtasks'">
+        <div class="subtask">
+          <i class="pi pi-check-circle"></i>
+          <div class="subtask-details">
+            <div class="subtask-title">Understanding Client brief</div>
+            <div class="subtask-desc">
+              Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet
+              consectetur.
+            </div>
+          </div>
+        </div>
+        <div class="subtask">
+          <i class="pi pi-check-circle"></i>
+          <div class="subtask-details">
+            <div class="subtask-title">Understanding Client brief</div>
+            <div class="subtask-desc">
+              Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet
+              consectetur.
+            </div>
+          </div>
+        </div>
+        <div class="subtask">
+          <i class="pi pi-circle-off"></i>
+          <div class="subtask-details">
+            <div class="subtask-title">Understanding Client brief</div>
+            <div class="subtask-desc">
+              Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet
+              consectetur.
+            </div>
+          </div>
+        </div>
+        <div class="subtask">
+          <i class="pi pi-circle-off"></i>
+          <div class="subtask-details">
+            <div class="subtask-title">Understanding Client brief</div>
+            <div class="subtask-desc">
+              Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet
+              consectetur.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comments content -->
+      <div class="tab-content" *ngIf="activeTab === 'comments'">
+        <p>Comments section goes here...</p>
+      </div>
+    </div>
+  </div>
+</p-sidebar>
