@@ -11,6 +11,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 import { AddTaskSidebarComponent } from '../../components/add-task-sidebar/add-task-sidebar.component';
+import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 interface Member {
   id: number;
   name: string;
@@ -47,7 +48,7 @@ interface FilterOption {
     IconComponent,
     DropdownModule,
     SelectButtonModule,
-    FormsModule,AddTaskSidebarComponent
+    FormsModule,AddTaskSidebarComponent,
  ],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss'

@@ -1,14 +1,16 @@
 <div class="sidebar-container" [ngClass]="{'collapsed': isCollapsed}">
-  <!-- Toggle Button -->
+  <!-- Toggle Button - Keep outside of scrollable area -->
   <button class="toggle-btn" (click)="toggleSidebar()">
     <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'"></i>
   </button>
 
-  <!-- Logo -->
-  <div class="logo-section mb-4">
-    <img src="../../../assets/images/logo.png" alt="Jawharat Demyat" class="logo">
-    <h2 *ngIf="!isCollapsed">Jawharat Demyat</h2>
-  </div>
+  <!-- Wrap scrollable content -->
+  <div class="sidebar-content">
+    <!-- Logo -->
+    <div class="logo-section mb-4">
+      <img src="../../../assets/images/logo.png" alt="Jawharat Demyat" class="logo">
+      <h2 *ngIf="!isCollapsed">Jawharat Demyat</h2>
+    </div>
 
   <!-- User Profile -->
   <div class="user-profile mb-4">
@@ -31,6 +33,7 @@
            [ngClass]="item.class"
            routerLinkActive="active"
            #rla="routerLinkActive"
+           (click)="onNavClick()"
            [attr.background-color]="item.activeColor">
           <i class="bi bi-{{item.icon}}"></i>
           <span *ngIf="!isCollapsed">{{item.label}}</span>

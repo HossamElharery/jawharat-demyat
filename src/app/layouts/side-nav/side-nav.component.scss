@@ -10,10 +10,17 @@
   position: relative;
   transition: all 0.3s ease;
   width: 240px;
-   height: 100vh;
-   overflow: auto;
-  &::-webkit-scrollbar {
-    display: none;
+  height: 100vh;
+
+  // Create a wrapper for the scrollable content
+  .sidebar-content {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 0.5rem; // Add some padding for the scrollbar
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   &.collapsed {

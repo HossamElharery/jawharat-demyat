@@ -7,6 +7,13 @@ export default [
   {
     path: '',
     component: MainTasksComponent,
-    children: [{ path: '', component: TasksComponent },],
+    children: [{ path: '', component: TasksComponent     ,  data: {
+      breadcrumbs: [
+        {
+          label: 'tasks',
+          url: '/tasks',
+        },
+      ],
+    }, },],
   },
 ] as Route[];

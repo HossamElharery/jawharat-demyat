@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageService } from '../../shared/services/language.service';
@@ -23,7 +23,22 @@ export class SideNavComponent {
   userEmail: string = 'rosalie.rice@gmail.com';
   userName: string = 'Mohamed';
   isCollapsed: boolean = false;
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    if (window.innerWidth <= 992) {
+      this.sidebarService.toggleSidebar();
+    }
+  }
 
+  toggleSidebar() {
+    this.sidebarService.toggleSidebar();
+  }
+
+  onNavClick() {
+    if (window.innerWidth <= 992) {
+      this.sidebarService.toggleSidebar();
+    }
+  }
   navigationItems: NavItem[] = [
     { icon: 'house', label: 'Dashboard', link: '/', class: 'text-warning', activeColor: '#ffc107' },
     { icon: 'clipboard', label: 'Tasks', link: '/tasks', class: 'text-primary', activeColor: '#0d6efd' },
@@ -50,9 +65,6 @@ export class SideNavComponent {
     );
   }
 
-  toggleSidebar() {
-    this.sidebarService.toggleSidebar();
-  }
 
   switchLang(lang: string) {
     this.languageService.setLanguage(lang);

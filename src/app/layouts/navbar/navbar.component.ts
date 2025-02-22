@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
  import { ThemeService } from '../../shared/services/theme.service';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 
 interface Activity {
   type: string;
@@ -21,7 +22,7 @@ interface Admin {
 
 @Component({
   selector: 'app-navbar',
-  imports: [InputTextModule, ButtonModule, AvatarModule, CommonModule,
+  imports: [InputTextModule, ButtonModule, AvatarModule, CommonModule,BreadcrumbComponent,
     OverlayPanelModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'

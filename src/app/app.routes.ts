@@ -10,7 +10,7 @@ export const routes: Routes = [
       import('./internal.routes').then((c) => c.default),
     // canActivate: [AuthGuard],
     data: {
-      breadcrumbs: [{ label: 'لوحة التحكم', url: '/dashboard' }],
+      breadcrumbs: [{ label: 'dashboard  ', url: '/' }],
     },
   },
 

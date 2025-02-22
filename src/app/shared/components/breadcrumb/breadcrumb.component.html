@@ -1,11 +1,12 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb mb-0">
-    <ng-container *ngFor="let breadcrumb of breadcrumbs; let i = index">
-      <ng-container *ngFor="let segment of breadcrumb.segments; let j = index">
+    <ng-container *ngFor="let breadcrumb of breadcrumbs; let i = index ">
+      <ng-container *ngFor="let segment of breadcrumb.segments; let j = index;let last = last">
+
         <li class="breadcrumb-item">
           <a [routerLink]="segment.url  ">{{ segment.label }}</a>
         </li>
-        <li *ngIf="j < breadcrumb.segments.length - 1" class="separator">/</li>
+        <li *ngIf="j < breadcrumb.segments.length - 1" class="separator">></li>
       </ng-container>
       <li *ngIf="i < breadcrumbs.length - 1" class="separator">/</li>
     </ng-container>

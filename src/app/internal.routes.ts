@@ -13,7 +13,9 @@ export default [
         loadChildren: () =>
           import('./features/dashboard/dashboard-routes').then(
             (c) => c.default
-          ),
+          ), data: {
+            breadcrumbs: [{ label: 'Dashboard', url: '/' }]
+          }
       },
       {
         path: 'users',
@@ -21,6 +23,12 @@ export default [
           import('./features/users/users-routes').then(
             (c) => c.default
           ),
+          data: {
+            breadcrumbs: [
+              { label: 'Dashboard', url: '/' },
+              { label: 'Users', url: '/users' }
+            ]
+          }
       },
       {
         path: 'tasks',
@@ -30,12 +38,10 @@ export default [
           ),
           data: {
             breadcrumbs: [
-              {
-                label: 'tasks',
-                url: '/tasks',
-              },
-            ],
-          },
+              { label: 'Dashboard', url: '/' },
+              { label: 'Tasks', url: '/tasks' }
+            ]
+          }
       },
 
       {

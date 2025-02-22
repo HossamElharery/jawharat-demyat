@@ -26,8 +26,11 @@ export class BreadcrumbComponent {
       .subscribe(() => {
         // Reinitialize breadcrumbs at each route change
         this.breadcrumbs = this.createBreadcrumbs(this.activatedRoute.root);
+        console.log( this.breadcrumbs);
+
       });
     this.breadcrumbs = this.createBreadcrumbs(this.activatedRoute.root);
+    console.log( this.breadcrumbs);
   }
 
   createBreadcrumbs(
@@ -60,6 +63,8 @@ export class BreadcrumbComponent {
         breadcrumbs.push({ segments: breadcrumbSegments });
       }
     }
+    console.log( this.breadcrumbs);
+    console.log( breadcrumbs);
 
     return breadcrumbs;
   }
