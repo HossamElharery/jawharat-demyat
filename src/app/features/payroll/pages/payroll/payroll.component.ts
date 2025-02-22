@@ -6,6 +6,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { PayrollViewComponent } from '../../components/payroll-view/payroll-view.component';
+import { AttendanceTableComponent } from "../../../../shared/components/attendance-table/attendance-table.component";
 
 interface Employee {
   employeeId:string;
@@ -39,7 +40,8 @@ interface Employee {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-   ],
+    AttendanceTableComponent
+],
   templateUrl: './payroll.component.html',
   styleUrl: './payroll.component.scss'
 })

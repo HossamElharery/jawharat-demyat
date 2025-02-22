@@ -1,0 +1,152 @@
+@use'../../../../assets/scss/variables.scss'as * ;
+.attendance-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+    .p-button-text{
+      border: 1px solid #DADADA;
+      padding: 0.2rem 0.5rem;
+      border-radius: $br-12px;
+    }
+  }
+}
+::ng-deep p-table{
+  min-width: 60rem;
+}
+:host ::ng-deep {
+  .p-datatable {
+    .p-datatable-header {
+      background: transparent;
+      border: none;
+    }
+
+    .p-datatable-thead > tr > th {
+      background: transparent;
+      border: none;
+      color: #666;
+      font-weight: 500;
+      padding: 1rem;
+
+      &:first-child {
+        padding-left: 0;
+      }
+    }
+
+    .p-datatable-tbody > tr {
+      border: none;
+
+      > td {
+        border: none;
+        padding: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:first-child {
+          padding-left: 0;
+        }
+      }
+
+      &:last-child > td {
+        border-bottom: none;
+      }
+    }
+
+    .employee-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .employee-name {
+        font-weight: 500;
+        color: #333;
+      }
+    }
+
+    .p-tag {
+      &.p-tag-success {
+        background: #E8F5E9;
+        color: #2E7D32;
+      }
+
+      &.p-tag-danger {
+        background: #FFEBEE;
+        color: #C62828;
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    :host ::ng-deep p-table{
+      min-width: 100%;
+    }
+    .p-datatable {
+      &.p-datatable-sm {
+        .p-datatable-thead {
+          display: none;
+        }
+
+        .p-datatable-tbody > tr {
+          border-bottom: 1px solid #f0f0f0;
+          margin-bottom: 1rem;
+
+          > td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: none;
+            padding: 0.5rem 0;
+
+            &:before {
+              content: attr(data-label);
+              font-weight: 500;
+              color: #666;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+// .attendance-overview {
+//   margin-top: 20px;
+
+//   .attendance-table {
+//     width: 100%;
+//     th, td {
+//       padding: 10px;
+//       text-align: left;
+//     }
+
+//     .attended {
+//       color: green;
+//       font-weight: bold;
+//     }
+
+//     .absence {
+//       color: red;
+//       font-weight: bold;
+//     }
+//   }
+// }
+@media (max-width: 576px) {
+
+  .attendance-section {
+    .header{
+      flex-direction: column;
+    }
+  }
+
+}
