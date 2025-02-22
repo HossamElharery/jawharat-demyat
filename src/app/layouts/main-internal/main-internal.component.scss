@@ -1,4 +1,89 @@
-@import"../../../assets/scss/variables.scss";
+ @use "../../../assets/scss/variables.scss" as *;
+
 .dashboard-bk{
   background-color: $bk-blue
+}
+
+
+
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: $bk-blue;
+  position: relative;
+  transition: all 0.3s ease;
+
+  &.sidebar-collapsed {
+    .sidebar-wrapper {
+      width: 80px;
+    }
+
+    .main-content-wrapper {
+      margin-left: 80px;
+    }
+  }
+}
+
+.sidebar-wrapper {
+  width: 240px;
+  position: fixed;
+  height: 100vh;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content-wrapper {
+  flex: 1;
+  margin-left: 240px;
+  transition: all 0.3s ease;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  app-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background-color: #fff;
+  }
+
+  .content-area {
+    flex: 1;
+    padding: 1.5rem;
+    background-color: $bk-blue;
+  }
+}
+
+// Responsive styles
+@media (max-width: 992px) {
+  .dashboard-container {
+    &.sidebar-collapsed {
+      .sidebar-wrapper {
+        transform: translateX(-100%);
+      }
+
+      .main-content-wrapper {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .main-content-wrapper {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .sidebar-wrapper {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content-wrapper {
+    .content-area {
+      padding: 1rem;
+    }
+  }
 }

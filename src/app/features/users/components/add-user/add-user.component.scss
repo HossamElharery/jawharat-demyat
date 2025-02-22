@@ -11,7 +11,8 @@
 //   background-color: #F9F9FB;
 // }
 
-@import"../../../../../assets/scss/variables.scss";
+ @use "../../../../../assets/scss/variables.scss" as *;
+
 ::ng-deep .user-modal-dialog {
   .mat-mdc-dialog-container {
     padding: 0;

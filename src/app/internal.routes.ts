@@ -28,6 +28,14 @@ export default [
           import('./features/tasks/tasks-routes').then(
             (c) => c.default
           ),
+          data: {
+            breadcrumbs: [
+              {
+                label: 'tasks',
+                url: '/tasks',
+              },
+            ],
+          },
       },
 
       {
