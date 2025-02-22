@@ -1,0 +1,102 @@
+<div class="container-fluid">
+  <div class="row g-4 py-4">
+    <div class="col-12 col-sm-6 col-xl-3" *ngFor="let stat of stats">
+      <mat-card class="stat-card mat-elevation-z2" [style.--card-color]="stat.color">
+        <mat-card-content>
+          <div class="stat-content">
+            <div class="stat-icon">
+              <mat-icon>{{stat.matIcon}}</mat-icon>
+            </div>
+            <div class="stat-text">
+              <h2 class="stat-value">{{stat.value}}</h2>
+              <p class="stat-title">{{stat.title}}</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="header-section mb-4">
+    <div class="d-flex justify-content-between align-items-center gap-3">
+
+      <div class="d-flex align-items-center gap-3">
+        <div class="search-container position-relative">
+          <i class="bi bi-search search-icon"></i>
+          <input
+            type="text"
+            class="form-control search-input"
+            placeholder="Search for anything"
+            [formControl]="searchControl">
+        </div>
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-secondary dropdown-toggle status-filter"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+            {{ selectedStatus || 'Paid' }}
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" (click)="filterByStatus('Paid')">Paid</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('Pending')">Pending</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('All')">All</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Employee Id</th>
+          <th>Employee</th>
+          <th>Salary</th>
+          <th>Overtime</th>
+          <th>Expenses</th>
+          <th>Net Salary</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of filteredUsers">
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="ms-2">{{ user.employeeId }}</span>
+            </div>
+          </td>
+          <td>
+            <img [src]="user.avatarUrl" class="user-avatar" alt="User avatar">
+            {{ user.employee }}</td>
+          <td>{{ user.salary }}</td>
+          <td>{{ user.overtime }}</td>
+          <td>{{ user.expenses }}</td>
+          <td>{{ user.netSalary }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="{'active': user.status === 'Paid', 'inactive': user.status === 'Pending'}">
+              {{ user.status }}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+
+              <span class="action-pay_btn">Pay</span>
+              <button class="btn btn-link" (click)="onView(user)">
+                <i class="bi bi-eye text-warning"></i>
+              </button>
+              <!-- <button class="btn btn-link" (click)="onEdit(user)">
+                <i class="bi bi-pencil text-warning"></i>
+              </button>
+              <button class="btn btn-link" (click)="onDelete(user)">
+                <i class="bi bi-trash text-warning"></i>
+              </button> -->
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

@@ -37,6 +37,13 @@ export default [
             (c) => c.default
           ),
       },
+      {
+        path: 'payroll',
+        loadChildren: () =>
+          import('./features/payroll/payroll-routes').then(
+            (c) => c.default
+          ),
+      },
 
 
     ],
