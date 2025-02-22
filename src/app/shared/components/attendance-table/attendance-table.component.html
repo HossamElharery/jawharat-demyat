@@ -1,47 +1,63 @@
 <div class="attendance-section">
-  <div class="header">
-    <h2>Attendance Overview</h2>
-    <button pButton type="button" label="View All" class="p-button-text"></button>
-  </div>
-
   <p-table
-    [value]="attendanceData"
-
+    [value]="data"
     styleClass="p-datatable-sm p-datatable-gridlines"
     [scrollable]="true"
-    responsiveLayout="stack">
-
+    responsiveLayout="stack"
+  >
     <ng-template pTemplate="header">
       <tr>
-        <th>Employee Name</th>
-        <th>Designation</th>
-        <th>Type</th>
-        <th>Check In Time</th>
-        <th>Status</th>
+        <th *ngFor="let col of columns">{{ col.header }}</th>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-record>
       <tr>
-        <td>
-          <div class="employee-info">
+        <td *ngFor="let col of columns">
+          <!-- Employee field with avatar -->
+          <div *ngIf="col.field === 'Employee'" class="employee-info">
             <p-avatar
               [image]="record.avatar"
               shape="circle"
               size="normal"
               [style]="{'width': '2.5rem', 'height': '2.5rem'}"
             ></p-avatar>
-            <span class="employee-name">{{record.name}}</span>
+            <span class="employee-name">{{ record[col.field] }}</span>
           </div>
-        </td>
-        <td>{{record.designation}}</td>
-        <td>{{record.type}}</td>
-        <td>{{record.checkIn}}</td>
-        <td>
+
+          <!-- Tag template -->
           <p-tag
-            [value]="record.status"
-            [severity]="record.status === 'Attended' ? 'success' : 'danger'"
+            *ngIf="col.type === 'tag' && col.tagConfig"
+            [value]="record[col.field]"
+            [severity]="getSeverity(record[col.field], col.tagConfig.severityMap)"
           ></p-tag>
+
+          <!-- Actions template -->
+          <div *ngIf="col.field === 'actions' && col.actionConfig" class="action-buttons">
+            <ng-container *ngFor="let button of col.actionConfig.buttons">
+              <ng-container [ngSwitch]="button.type">
+                <span
+                  *ngSwitchCase="'pay'"
+                  class="action-pay-btn"
+                  (click)="onPayClick(record)"
+                >
+                  {{ button.label || 'Pay' }}
+                </span>
+                <button
+                  *ngSwitchCase="'view'"
+                  class="btn btn-link"
+                  (click)="onViewClick(record)"
+                >
+                  <i class="bi" [class]="button.icon || 'bi-eye'"></i>
+                </button>
+              </ng-container>
+            </ng-container>
+          </div>
+
+          <!-- Default text template -->
+          <span *ngIf="col.type !== 'tag' && col.field !== 'actions' && col.field !== 'Employee'">
+            {{ record[col.field] }}
+          </span>
         </td>
       </tr>
     </ng-template>

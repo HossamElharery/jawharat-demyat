@@ -47,7 +47,7 @@
     </div>
   </div>
   <div class="table-responsive">
-    <table class="table align-middle">
+    <!-- <table class="table align-middle">
       <thead>
         <tr>
           <th>Employee Id</th>
@@ -83,20 +83,26 @@
             <div class="action-buttons">
 
               <span class="action-pay_btn">Pay</span>
-              <button class="btn btn-link" (click)="onView(user)">
+              <!-- <button class="btn btn-link" (click)="onView(user)">
                 <i class="bi bi-eye text-warning"></i>
-              </button>
+              </button> -->
               <!-- <button class="btn btn-link" (click)="onEdit(user)">
                 <i class="bi bi-pencil text-warning"></i>
               </button>
               <button class="btn btn-link" (click)="onDelete(user)">
                 <i class="bi bi-trash text-warning"></i>
-              </button> -->
+              </button> --
             </div>
           </td>
         </tr>
       </tbody>
-    </table>
+    </table> -->
+    <app-attendance-table
+      [data]="attendanceData"
+      [columns]="tableColumns"
+      [viewComponent]="PayrollViewComponent"
+      (payClick)="onPay($event)"
+    ></app-attendance-table>
   </div>
 </div>
 

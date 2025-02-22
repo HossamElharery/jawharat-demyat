@@ -150,3 +150,54 @@
   }
 
 }
+.employee-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.employee-name {
+  font-weight: 500;
+}
+// ===============
+.employee-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .employee-name {
+    font-weight: 500;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .action-pay-btn {
+    background: #FFC107;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+
+    &:hover {
+      background: #e0a800;
+    }
+  }
+
+  .btn-link {
+    padding: 0.25rem;
+    color: #6c757d;
+
+    &:hover {
+      color: #FFC107;
+    }
+
+    i {
+      font-size: 1rem;
+    }
+  }
+}
