@@ -30,7 +30,6 @@ interface inventory {
     FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
-
   ],
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.scss'

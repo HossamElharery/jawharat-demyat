@@ -1,0 +1,66 @@
+@use '../../../../../assets/scss/variables.scss' as *;
+:host {
+  display: block;
+  background-color: $bk-blue;
+}
+.action-buttons{
+  .action-pay_btn{
+    background-color: $primary-color;
+    color: white;
+    padding: 10px;
+    border-radius: $br-5px;
+  }
+}
+.stat-card {
+  background: white;
+  border-radius: $br-12px;
+  transition: transform 0.2s ease-in-out;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  .stat-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: $br-5px;
+    background: var(--card-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+      color: white;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .stat-text {
+    flex: 1;
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin: 0;
+      color: #2c3e50;
+      font-family: Roboto, sans-serif;
+    }
+
+    .stat-title {
+      font-size: 0.875rem;
+      color: #6c757d;
+      margin: 0;
+      margin-top: 0.25rem;
+      font-family: Roboto, sans-serif;
+    }
+  }
+}

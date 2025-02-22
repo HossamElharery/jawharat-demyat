@@ -340,3 +340,115 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background-color: #0000003D !important;
 }
 
+// ===================== users & payroll & inventory & members
+.header-section {
+  .search-container {
+    flex: 1;
+    max-width: 400px;
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $primary-color;
+      z-index: 2;
+    }
+
+    .search-input {
+      padding-left: 35px;
+      height: 40px;
+      border-radius: $br-5px;
+      border: 1px solid #C0C0C0;
+      background-color: transparent;
+
+      &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 0.2rem rgba($primary-color, 0.25);
+      }
+    }
+  }
+
+  .status-filter {
+    height: 40px;
+    border-radius: $br-5px;
+    border: 1px solid #C0C0C0;
+    background-color: transparent;
+    min-width: 110px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+      &::after{
+        content: "\F282";
+        font-family: bootstrap-icons!important;
+        border: 0;
+        color: $primary-color;
+      }
+
+    &:hover, &:focus {
+      border-color: $primary-color;
+      background-color: white;
+      color: #6c757d;
+    }
+
+  }
+
+  .add-user-btn {
+    height: 40px;
+    border-radius: $br-5px;
+    background-color: $primary-color;
+    border: none;
+    padding: 0 1.25rem;
+    color: white;
+
+    &:hover {
+      background-color: $primary-color ;
+    }
+
+    i {
+      font-size: 1.1rem;
+    }
+  }
+  .show-style{
+    .bi{
+      padding: 3px 4px;
+      margin: 0 8px;
+      border-radius: 5px;
+      font-size: 20px;
+
+
+    &.active{
+
+      background-color: #efa70c;
+      color: white;
+    }
+  }
+  }
+}
+// ====================== table users & payroll
+.table {
+  background-color: white;
+  border-radius: $br-12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 0;
+
+  th {
+    color: #A2A1A8;
+    font-weight: 500;
+    border-bottom: 1px solid #A2A1A81A;
+    padding: 1rem;
+    background-color: white;
+  }
+
+  td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #A2A1A81A;
+  }
+
+  tbody tr {
+    &:hover {
+      background-color: rgba($primary-color, 0.02);
+    }
+  }
+}

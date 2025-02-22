@@ -227,7 +227,7 @@
       }
 
       &:not(:disabled):hover {
-        background: darken($primary-color, 5%);
+        background:  $primary-color ;
       }
     }
   }
