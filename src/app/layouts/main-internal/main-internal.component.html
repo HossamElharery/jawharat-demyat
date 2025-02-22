@@ -1,13 +1,12 @@
-<div class="container-fluid dashboard-bk">
-  <div class="row">
-    <nav class="col-lg-3 col-xl-2 d-lg-block sidebar collapse">
-      <app-side-nav></app-side-nav>
-      </nav>
+<div class="dashboard-container" [ngClass]="{'sidebar-collapsed': sidebarService.isCollapsed$ | async}">
+  <div class="sidebar-wrapper">
+    <app-side-nav></app-side-nav>
+  </div>
 
-    <main class="col-lg-9 ms-sm-auto col-xl-10   pt-lg-0">
-<app-navbar></app-navbar>
-
+  <div class="main-content-wrapper">
+    <app-navbar></app-navbar>
+    <div class="content-area">
       <router-outlet></router-outlet>
-    </main>
+    </div>
   </div>
 </div>

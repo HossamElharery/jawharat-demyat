@@ -110,7 +110,7 @@
         <div class="status-group">
           <span class="status-dot" [class]="status.toLowerCase().replace(' ', '-')"></span>
           <span class="status-title">{{status}}</span>
-          <span class="task-count">4</span>
+          <span class="task-count">{{getTaskCount(status)}}</span>
         </div>
         <button pButton class="p-button-text" icon="pi pi-plus"></button>
       </div>

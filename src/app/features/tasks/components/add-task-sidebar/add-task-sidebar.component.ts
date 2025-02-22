@@ -1,10 +1,10 @@
 // add-task-sidebar.component.ts
-import { Component, EventEmitter, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 // PrimeNG Component Imports
-import { SidebarModule } from 'primeng/sidebar';
+import { Sidebar, SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
@@ -41,13 +41,21 @@ interface TaskState {
   templateUrl: './add-task-sidebar.component.html',
   styleUrls: ['./add-task-sidebar.component.scss']
 })
-export class AddTaskSidebarComponent {
+export class AddTaskSidebarComponent implements AfterViewInit {
   @Output() close = new EventEmitter<void>();
-
-
-
-
-
+  @ViewChild('sidebar') sidebar!: Sidebar;
+  ngAfterViewInit() {
+     if (this.sidebar) {
+      const mask = document.querySelector('.p-sidebar-mask');
+      if (mask) {
+        mask.addEventListener('click', (event) => {
+          if (event.target === mask) {
+            this.closeSidebar();
+          }
+        });
+      }
+    }
+  }
   // UI Control
   visible: boolean = false;
 
@@ -89,7 +97,9 @@ export class AddTaskSidebarComponent {
     { name: 'Task Attachment Details.pdf', size: '12 MB' },
     { name: 'Task Attachment Details.pdf', size: '12 MB' }
   ];
-newAssignee: any;
+
+  newAssignee: any;
+  activeTab: 'subtasks' | 'comments' = 'subtasks';
 
   openSidebar() {
     this.visible = true;
@@ -98,6 +108,11 @@ newAssignee: any;
   closeSidebar() {
     this.visible = false;
     this.close.emit();
+  }
+
+  handleClose() {
+    // This will be called by p-sidebar's onHide event
+    this.closeSidebar();
   }
 
   onUpload(event: any) {
@@ -125,22 +140,22 @@ newAssignee: any;
     console.log('Assignee removed:', event);
   }
 
-
-  activeTab: 'subtasks' | 'comments' = 'subtasks';
-
   setActiveTab(tab: 'subtasks' | 'comments') {
     this.activeTab = tab;
   }
 
   editTask() {
     // handle edit action
+    console.log('Edit task');
   }
 
   deleteTask() {
     // handle delete action
+    console.log('Delete task');
   }
 
   downloadAll() {
     // handle "Download All" action
+    console.log('Download all attachments');
   }
 }

@@ -1,8 +1,13 @@
-<div class="sidebar-container">
+<div class="sidebar-container" [ngClass]="{'collapsed': isCollapsed}">
+  <!-- Toggle Button -->
+  <button class="toggle-btn" (click)="toggleSidebar()">
+    <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'"></i>
+  </button>
+
   <!-- Logo -->
   <div class="logo-section mb-4">
     <img src="../../../assets/images/logo.png" alt="Jawharat Demyat" class="logo">
-    <h2>Jawharat Demyat</h2>
+    <h2 *ngIf="!isCollapsed">Jawharat Demyat</h2>
   </div>
 
   <!-- User Profile -->
@@ -10,48 +15,37 @@
     <div class="profile-image">
       <img src="../../../assets/images/Avatar.png" alt="User Profile" class="rounded-circle">
     </div>
-    <div class="user-info">
+    <div class="user-info" *ngIf="!isCollapsed">
       <h3>Hello {{userName}}!</h3>
       <p class="email">{{userEmail}}</p>
     </div>
   </div>
 
   <!-- Main Navigation -->
-  <!-- <nav class="main-nav">
+  <nav class="main-nav">
     <ul class="nav row">
-      <li class="nav-item col-6" *ngFor="let item of navigationItems">
-        <a [routerLink]="item.link" class="nav-link flex-column" [ngClass]="item.class">
+      <li class="nav-item" [ngClass]="isCollapsed ? 'col-12' : 'col-6'" *ngFor="let item of navigationItems">
+        <a [routerLink]="item.link"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="nav-link flex-column"
+           [ngClass]="item.class"
+           routerLinkActive="active"
+           #rla="routerLinkActive"
+           [attr.background-color]="item.activeColor">
           <i class="bi bi-{{item.icon}}"></i>
-          <span>{{item.label}}</span>
+          <span *ngIf="!isCollapsed">{{item.label}}</span>
         </a>
       </li>
     </ul>
-  </nav> -->
+  </nav>
 
-    <!-- Main Navigation -->
-    <nav class="main-nav">
-      <ul class="nav row">
-        <li class="nav-item col-6" *ngFor="let item of navigationItems">
-          <a [routerLink]="item.link"
-          [routerLinkActiveOptions]="{ exact: true }"
-             class="nav-link flex-column"
-             [ngClass]="item.class"
-             routerLinkActive="active"
-             #rla="routerLinkActive"
-             [attr.background-color]="item.activeColor">
-            <i class="bi bi-{{item.icon}}"></i>
-            <span>{{item.label}}</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
   <!-- Bottom Navigation -->
   <nav class="bottom-nav">
     <ul class="nav flex-column">
       <li class="nav-item" *ngFor="let item of bottomItems">
         <a [routerLink]="item.link" class="nav-link p-0" [ngClass]="item.class">
           <i class="bi bi-{{item.icon}}"></i>
-          <span>{{item.label}}</span>
+          <span *ngIf="!isCollapsed">{{item.label}}</span>
         </a>
       </li>
     </ul>

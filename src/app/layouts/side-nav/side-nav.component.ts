@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { LanguageService } from '../../shared/services/language.service';
 import { CommonModule } from '@angular/common';
+import { SidebarService } from '../../shared/services/sidebar.service';
+
 interface NavItem {
   icon: string;
   label: string;
@@ -13,13 +15,14 @@ interface NavItem {
 
 @Component({
   selector: 'app-side-nav',
-  imports: [RouterModule,TranslateModule , CommonModule],
+  imports: [RouterModule, TranslateModule, CommonModule],
   templateUrl: './side-nav.component.html',
   styleUrl: './side-nav.component.scss'
 })
-export class SideNavComponent  {
+export class SideNavComponent {
   userEmail: string = 'rosalie.rice@gmail.com';
   userName: string = 'Mohamed';
+  isCollapsed: boolean = false;
 
   navigationItems: NavItem[] = [
     { icon: 'house', label: 'Dashboard', link: '/', class: 'text-warning', activeColor: '#ffc107' },
@@ -37,11 +40,19 @@ export class SideNavComponent  {
     { icon: 'question-circle', label: 'Knowledge Base', link: '/knowledge-base', class: 'text-secondary' },
     { icon: 'box-arrow-left', label: 'Logout', link: '/logout', class: 'text-danger' }
   ];
-  currentLang: string = 'en';
 
-  constructor(private languageService: LanguageService) {}
+  constructor(
+    private languageService: LanguageService,
+    private sidebarService: SidebarService
+  ) {
+    this.sidebarService.isCollapsed$.subscribe(
+      state => this.isCollapsed = state
+    );
+  }
 
-
+  toggleSidebar() {
+    this.sidebarService.toggleSidebar();
+  }
 
   switchLang(lang: string) {
     this.languageService.setLanguage(lang);
