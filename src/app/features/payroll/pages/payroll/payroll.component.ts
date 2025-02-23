@@ -6,6 +6,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { PayrollViewComponent } from '../../components/payroll-view/payroll-view.component';
+import { AttendanceTableComponent, Column } from "../../../../shared/components/attendance-table/attendance-table.component";
 
 interface Employee {
   employeeId:string;
@@ -39,11 +40,88 @@ interface Employee {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-   ],
+    AttendanceTableComponent
+],
   templateUrl: './payroll.component.html',
   styleUrl: './payroll.component.scss'
 })
 export class PayrollComponent {
+  // test
+  PayrollViewComponent = PayrollViewComponent; // Your modal component
+
+  tableColumns: Column[] = [
+    {
+      field: 'EmplyeeId',
+      header: 'Employee Id',
+      type: 'text',
+    },
+    {
+      field: 'Employee',
+      header: 'Employee',
+      type: 'text'
+    },
+    {
+      field: 'salary',
+      header: 'salary',
+      type: 'text'
+    },
+    {
+      field: 'expenses',
+      header: 'expenses',
+      type: 'text'
+    },
+    {
+      field: 'NetSalary',
+      header: 'NetSalary',
+      type: 'text'
+    },
+    {
+      field: 'Overtime',
+      header: 'Overtime',
+      type: 'text'
+    },
+    {
+      field: 'status',
+      header: 'Status',
+      type: 'tag',
+      tagConfig: {
+        field: 'status',
+        severityMap: {
+          'Paid': 'success',
+          'Pending': 'danger'
+        }
+      }
+    },
+    {
+      field: 'actions',
+      header: 'Actions',
+      type: 'actions',
+      actionConfig: {
+        buttons: [
+          { type: 'pay', label: 'Pay' },
+          { type: 'view', icon: 'bi-eye' }
+        ]
+      }
+    }
+  ];
+
+  attendanceData = [
+    {
+      EmplyeeId: '#12345',
+      Employee: 'Mohamed Ali',
+      salary: '1500 AED',
+      NetSalary: '1500 AED',
+      Overtime: '1200 AED',
+      status: 'Pending',
+      expenses: '1500 AED',
+      avatar: '../../../../../assets/images/leasie.png'
+    }
+  ];
+
+  onPay(record: any): void {
+    console.log('Pay clicked', record);
+  }
+  // test
   stats = [
     {
       title: 'Total Payroll',
@@ -118,23 +196,23 @@ export class PayrollComponent {
       return matchesSearch && matchesStatus;
     });
   }
-  onView(user: Employee): void {
-      const dialogRef = this.dialog.open(PayrollViewComponent, {
-        maxWidth: '1200px',
-        width:'1000px',
-        panelClass: 'user-modal-dialog',
-        data: { ...user, isEditing: true }
-      });
+  // onView(user: Employee): void {
+  //     const dialogRef = this.dialog.open(PayrollViewComponent, {
+  //       maxWidth: '1200px',
+  //       width:'1000px',
+  //       panelClass: 'user-modal-dialog',
+  //       data: { ...user, isEditing: true }
+  //     });
 
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.users = this.users.map(u =>
-            u.employeeId === user.employeeId ? { ...u, ...result, avatarUrl: u.avatarUrl } : u
-          );
-          this.filterUsers(this.searchControl.value || '');
-        }
-      });
-    }
+  //     dialogRef.afterClosed().subscribe(result => {
+  //       if (result) {
+  //         this.users = this.users.map(u =>
+  //           u.employeeId === user.employeeId ? { ...u, ...result, avatarUrl: u.avatarUrl } : u
+  //         );
+  //         this.filterUsers(this.searchControl.value || '');
+  //       }
+  //     });
+  //   }
 
     // onView(user: Employee): void {
     //   console.log('View user:', user);
