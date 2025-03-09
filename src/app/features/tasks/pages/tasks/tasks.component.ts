@@ -17,7 +17,22 @@ interface Member {
   name: string;
   image: string;
 }
-
+interface TaskModel {
+  id?: number;
+  title: string;
+  projectId: string;
+  priority: string;
+  dueDate: Date;
+  assignees: string[];
+  description: string;
+  attachments: File[];
+  subTasks: SubTask[];
+}
+interface SubTask {
+  title: string;
+  description: string;
+  completed: boolean;
+}
 interface Task {
   id: number;
   title: string;
@@ -178,5 +193,9 @@ private async updateTaskState(task: Task, newState: string) {
 
   toggleView() {
     this.viewMode = this.viewMode === 'kanban' ? 'table' : 'kanban';
+  }
+  onTaskSaved(task: TaskModel) {
+    // Handle the saved task
+    console.log('Task saved:', task);
   }
 }

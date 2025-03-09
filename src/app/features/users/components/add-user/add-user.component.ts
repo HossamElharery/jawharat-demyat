@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
 export interface UserDialogData {
-  id?: number;
+  id?: string;
   name?: string;
   email?: string;
   phoneNumber?: string;
@@ -27,6 +27,7 @@ export interface UserDialogData {
 export class AddUserComponent implements OnInit {
   userForm!: FormGroup;
   isEditMode: boolean = false;
+  availableRoles = ['ADMIN', 'MANAGER'];
 
   constructor(
     private fb: FormBuilder,
@@ -42,10 +43,13 @@ export class AddUserComponent implements OnInit {
   private initializeForm() {
     if (this.isEditMode && this.data) {
       // Edit mode - populate form with existing data
+      // Remove country code for display in the form
+      const phoneWithoutCode = this.data.phoneNumber?.replace(/^971\+/, '');
+
       this.userForm = this.fb.group({
         name: [this.data.name, Validators.required],
         email: [this.data.email, [Validators.required, Validators.email]],
-        phoneNumber: [this.data.phoneNumber?.replace('971+', ''), Validators.required],
+        phoneNumber: [phoneWithoutCode, Validators.required],
         role: [this.data.role, Validators.required],
         password: [''], // Optional in edit mode
         isActive: [this.data.status === 'Active']
@@ -56,7 +60,7 @@ export class AddUserComponent implements OnInit {
         name: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
         phoneNumber: ['', Validators.required],
-        role: ['Admin', Validators.required],
+        role: ['ADMIN', Validators.required],
         password: ['', Validators.required],
         isActive: [true]
       });
@@ -70,7 +74,7 @@ export class AddUserComponent implements OnInit {
         ...formValue,
         phoneNumber: '971+' + formValue.phoneNumber,
         status: formValue.isActive ? 'Active' : 'In Active',
-        id: this.data?.id || Date.now()
+        id: this.data?.id || undefined
       };
       this.dialogRef.close(userData);
     }

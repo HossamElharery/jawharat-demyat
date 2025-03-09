@@ -1,0 +1,527 @@
+ @use "../../../../../assets/scss/variables.scss" as *;
+
+ .settings-container {
+   padding: 20px;
+   font-family: 'Roboto', sans-serif;
+ }
+
+ .nav-tabs {
+   border-bottom: none;
+   background-color: $white;
+   padding: 7px 30px;
+
+   .nav-item {
+     margin-right: 20px;
+   }
+
+   .nav-link {
+     border: none;
+     padding: 0.75rem 0;
+     color: #6c757d;
+     background-color: transparent;
+     border-radius: 0;
+
+     &.active {
+       color: $primary-color;
+       border-bottom: 2px solid $primary-color;
+       background-color: transparent;
+     }
+
+     &:hover:not(.active) {
+       border-bottom: none;
+     }
+
+     i {
+       font-size: 1rem;
+     }
+   }
+ }
+
+ // Tab content
+ .tab-content {
+  //  background-color: $white;
+   border-radius: $br-12px;
+  //  padding: 30px;
+   margin-top: 20px;
+   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+ }
+
+ // Main Info section
+ .main-info-container {
+  background-color: $white;
+   h3 {
+     font-size: 20px;
+     font-weight: 500;
+     color: #212529;
+   }
+
+   .text-muted {
+     font-size: 14px;
+     color: #6c757d;
+   }
+ }
+
+ // Profile picture section
+ .profile-pic-container {
+   display: flex;
+   align-items: center;
+   margin: 25px 0;
+
+   .profile-pic {
+     width: 70px;
+     height: 70px;
+     border-radius: 50%;
+     overflow: hidden;
+
+     img {
+       width: 100%;
+       height: 100%;
+       object-fit: cover;
+     }
+   }
+
+   .profile-actions {
+     margin-left: 15px;
+
+     .btn-icon {
+       width: 35px;
+       height: 35px;
+       border-radius: 50%;
+       border: none;
+       display: inline-flex;
+       align-items: center;
+       justify-content: center;
+       cursor: pointer;
+
+       &.edit-btn {
+         background-color: $primary-color;
+         color: white;
+       }
+
+       &.delete-btn {
+         background-color: white;
+         color: #dc3545;
+         border: 1px solid #ced4da;
+       }
+
+       i {
+         font-size: 14px;
+       }
+     }
+   }
+ }
+
+ // Form controls
+ .form-label {
+   font-weight: 500;
+   color: #212529;
+   font-size: 14px;
+   margin-bottom: 8px;
+ }
+
+ .form-control {
+   background-color: white;
+   border: 1px solid #ced4da;
+   border-radius: $br-5px;
+   padding: 0.75rem;
+   height: auto;
+
+   &:focus {
+     border-color: $primary-color;
+     box-shadow: 0 0 0 0.2rem rgba(239, 167, 12, 0.25);
+   }
+ }
+
+ // Phone input (ngx-intl-tel-input)
+ :host ::ng-deep {
+   .custom-phone-input {
+     .iti {
+       width: 100%;
+
+       .iti__flag-container {
+         .iti__selected-flag {
+           background-color: white;
+           border: 1px solid #ced4da;
+           border-right: none;
+           border-radius: $br-5px 0 0 $br-5px;
+           padding: 0 16px 0 8px;
+           height: 44px;
+         }
+       }
+
+       .form-control {
+         height: 44px;
+         border-radius: 0 $br-5px $br-5px 0;
+       }
+     }
+   }
+
+   // Dropdown styling
+   .p-dropdown {
+     width: 100%;
+     background-color: white;
+     border: 1px solid #ced4da;
+     border-radius: $br-5px;
+
+     .p-dropdown-label {
+       padding: 0.75rem;
+     }
+
+     &:not(.p-disabled).p-focus {
+       border-color: $primary-color;
+       box-shadow: 0 0 0 0.2rem rgba(239, 167, 12, 0.25);
+     }
+   }
+ }
+
+ // Password section
+ .password-section {
+   background-color: $white;
+   padding: 30px;
+   border-radius: $br-12px;
+   margin-top: 20px;
+   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+
+   h3 {
+     font-size: 20px;
+     font-weight: 500;
+     color: #212529;
+   }
+
+   .text-muted {
+     font-size: 14px;
+     color: #6c757d;
+   }
+ }
+
+ // Password input with toggle
+ .input-group {
+   .form-control {
+     border-right: none;
+   }
+
+   .btn-outline-secondary {
+     background-color: white;
+     border-color: #ced4da;
+     border-left: none;
+     color: #6c757d;
+
+     &:hover, &:active, &:focus {
+       background-color: #f8f9fa;
+       border-color: #ced4da;
+       color: #6c757d;
+       box-shadow: none;
+     }
+   }
+ }
+
+ // Action buttons
+ .action-buttons {
+   .cancel-btn {
+     min-width: 120px;
+     padding: 0.75rem 1.5rem;
+     border-color: #ced4da;
+     color: #495057;
+
+     &:hover {
+       background-color: #f8f9fa;
+     }
+   }
+
+   .save-btn {
+     min-width: 120px;
+     padding: 0.75rem 1.5rem;
+     background-color: $primary-color;
+     border-color: $primary-color;
+     color: $white;
+
+     &:hover {
+       background-color:  $primary-color ;
+       color: black;
+
+       border-color:  $primary-color ;
+     }
+   }
+ }
+
+ // RTL support
+ :host-context(.rtl) {
+   .nav-tabs .nav-item {
+     margin-right: 0;
+     margin-left: 20px;
+   }
+
+   .profile-actions {
+     margin-left: 0;
+     margin-right: 15px;
+   }
+
+   .action-buttons .cancel-btn {
+     margin-right: 0;
+     margin-left: 0.5rem;
+   }
+
+   .input-group {
+     .form-control {
+       border-right: 1px solid #ced4da;
+       border-left: none;
+     }
+
+     .btn-outline-secondary {
+       border-left: 1px solid #ced4da;
+       border-right: none;
+     }
+   }
+
+ }
+
+//  :host ::ng-deep {
+//   .p-select-overlay{
+//     background-color: white !important;
+//     color: black !important;
+//   }
+//   .p-dropdown {
+//     background-color: #ffffff !important;
+
+//     .p-dropdown-label {
+//       color: #212529 !important;
+//     }
+
+//     .p-dropdown-trigger {
+//       color: #6c757d !important;
+//     }
+
+//     .p-dropdown-panel {
+//       background-color: #ffffff !important;
+
+//       .p-dropdown-items {
+//         .p-dropdown-item {
+//           color: #212529 !important;
+
+//           &:hover {
+//             background-color: #f8f9fa !important;
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
+
+.notifications-container {
+  background-color: $white;
+  border-radius: $br-12px;
+
+  h3 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #212529;
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #212529;
+  }
+
+  .text-muted {
+    font-size: 14px;
+    color: #6c757d;
+  }
+
+  .notification-section {
+    padding: 15px 0;
+    border-bottom: 1px solid #efefef;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .notification-item {
+    padding: 8px 0;
+
+    p {
+      font-size: 14px;
+      color: #6c757d;
+      max-width: 80%;
+    }
+  }
+}
+
+// Override PrimeNG input switch styles
+:host ::ng-deep {
+  .p-inputswitch {
+    width: 3rem;
+    height: 1.5rem;
+
+    .p-inputswitch-slider {
+      background-color: #e9ecef;
+
+      &:before {
+        background-color: #ffffff;
+        width: 1.25rem;
+        height: 1.25rem;
+        left: 0.125rem;
+        bottom: 0.125rem;
+        border-radius: 50%;
+        transition: 0.2s;
+      }
+    }
+
+    &.p-inputswitch-checked {
+      .p-inputswitch-slider {
+        background-color: $primary-color;
+      }
+    }
+  }
+}
+
+// RTL support
+:host-context(.rtl) {
+  .notification-item {
+    p {
+      text-align: right;
+    }
+  }
+
+  :host ::ng-deep {
+    .p-inputswitch {
+      .p-inputswitch-slider {
+        &:before {
+          right: 0.125rem;
+          left: auto;
+        }
+      }
+
+      &.p-inputswitch-checked {
+        .p-inputswitch-slider:before {
+          transform: translateX(-1.5rem);
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+.roles-container {
+  background-color: $white;
+  border-radius: $br-12px;
+
+  h3 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #212529;
+  }
+
+  .text-muted {
+    font-size: 14px;
+    color: #6c757d;
+  }
+}
+
+// Add Role Button
+.add-role-btn {
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  border-radius: $br-5px;
+
+  i {
+    font-size: 1rem;
+  }
+}
+
+// Roles List
+.roles-list {
+  margin-top: 1.5rem;
+}
+
+.role-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #efefef;
+  border-radius: $br-5px;
+  background-color: #ffffff;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.role-icon {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(239, 167, 12, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+
+  i {
+    color: $primary-color;
+    font-size: 1.2rem;
+  }
+}
+
+.role-info {
+  flex: 1;
+
+  .role-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #212529;
+    margin-bottom: 0.25rem;
+  }
+
+  .role-permissions {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 0;
+  }
+}
+
+.role-actions {
+  display: flex;
+  gap: 0.5rem;
+
+  .btn-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &.edit-btn {
+      background-color: rgba(239, 167, 12, 0.15);
+      color: $primary-color;
+    }
+
+    &.delete-btn {
+      background-color: #ffffff;
+      color: #dc3545;
+      border: 1px solid #ced4da;
+    }
+
+    i {
+      font-size: 14px;
+    }
+  }
+}
+
+// RTL support
+:host-context(.rtl) {
+  .role-icon {
+    margin-right: 0;
+    margin-left: 1rem;
+  }
+}

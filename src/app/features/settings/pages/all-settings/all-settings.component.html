@@ -1,0 +1,269 @@
+<div class="settings-container">
+  <div class="tab-container">
+    <ul class="nav nav-tabs" id="settingsTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="main-info-tab" data-bs-toggle="tab" data-bs-target="#main-info-tab-pane" type="button" role="tab" aria-controls="main-info-tab-pane" aria-selected="true">
+          <i class="pi pi-info-circle text-warning me-2"></i>{{ 'Main Information' | translate }}
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="notifications-tab" data-bs-toggle="tab" data-bs-target="#notifications-tab-pane" type="button" role="tab" aria-controls="notifications-tab-pane" aria-selected="false">
+          <i class="pi pi-bell me-2"></i>{{ 'Notifications' | translate }}
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="roles-tab" data-bs-toggle="tab" data-bs-target="#roles-tab-pane" type="button" role="tab" aria-controls="roles-tab-pane" aria-selected="false">
+          <i class="pi pi-users me-2"></i>{{ 'Roles' | translate }}
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="settingsTabsContent">
+      <div class="tab-pane fade show active" id="main-info-tab-pane" role="tabpanel" aria-labelledby="main-info-tab" tabindex="0">
+        <div class="main-info-container">
+          <div class="" style="padding: 30px;">
+            <div class="d-flex align-items-center">
+              <i class="pi pi-user text-warning me-2"></i>
+              <h3 class="mb-0">{{ 'Main Info' | translate }}</h3>
+            </div>
+
+            <p class="text-muted my-3">{{ 'Customize your profile settings to ensure all information is accurate and tailored to your preferences.' | translate }}</p>
+
+            <div class="profile-pic-container mb-4">
+              <div class="profile-pic">
+                <img src="../../../../../assets/images/Avatar.png" alt="Profile Picture" class="img-fluid">
+              </div>
+              <div class="profile-actions">
+                <button class="btn-icon edit-btn">
+                  <i class="pi pi-pencil"></i>
+                </button>
+                <button class="btn-icon delete-btn ms-2">
+                  <i class="pi pi-trash"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="row mb-4">
+              <div class="col-md-6 mb-3 mb-md-0">
+                <label for="fullName" class="form-label">{{ 'Full Name' | translate }}</label>
+                <input type="text" id="fullName" class="form-control">
+              </div>
+              <div class="col-md-6">
+                <label for="email" class="form-label">{{ 'E-Mail' | translate }}</label>
+                <input type="email" id="email" class="form-control">
+              </div>
+            </div>
+
+            <div class="row mb-4">
+              <div class="col-md-3 mb-3 mb-md-0">
+                <label for="companyName" class="form-label">{{ 'Company Name' | translate }}</label>
+                <input type="text" id="companyName" class="form-control">
+              </div>
+              <div class="col-md-3">
+                <label for="companySize" class="form-label">{{ 'Company Size' | translate }}</label>
+                <p-dropdown id="companySize" [options]="companySizes" optionLabel="name" [placeholder]="'Select'" styleClass="w-100"></p-dropdown>
+              </div>
+
+
+              <div class="col-6">
+                <label for="phoneNumber" class="form-label d-block">{{ 'Phone Number' | translate }}</label>
+                <ngx-intl-tel-input
+                  [cssClass]="'custom-phone-input'"
+                  [preferredCountries]="preferredCountries"
+                  [enableAutoCountrySelect]="true"
+                  [enablePlaceholder]="true"
+                  [searchCountryFlag]="true"
+                  [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                  [selectFirstCountry]="false"
+                  [selectedCountryISO]="CountryISO.UnitedArabEmirates"
+                  [phoneValidation]="true"
+                  [separateDialCode]="true"
+                  name="phoneNumber"
+                  [(ngModel)]="phoneNumber"
+                ></ngx-intl-tel-input>
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+
+        </div>
+
+
+        <div class="password-section mt-4">
+          <div class="d-flex align-items-center">
+            <i class="pi pi-lock text-warning me-2"></i>
+            <h3 class="mb-0">{{ 'Password' | translate }}</h3>
+          </div>
+
+          <p class="text-muted my-3">{{ 'Customize your profile settings to ensure all information is accurate and tailored to your preferences.' | translate }}</p>
+
+          <div class="row mb-3">
+            <div class="col-6">
+              <label for="currentPassword" class="form-label">{{ 'Current Password' | translate }}</label>
+              <div class="input-group">
+                <input [type]="showCurrentPassword ? 'text' : 'password'" id="currentPassword" class="form-control">
+                <button type="button" class="btn btn-outline-secondary" (click)="toggleCurrentPassword()">
+                  <i class="pi" [ngClass]="showCurrentPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6">
+              <label for="newPassword" class="form-label">{{ 'New Password' | translate }}</label>
+              <div class="input-group">
+                <input [type]="showNewPassword ? 'text' : 'password'" id="newPassword" class="form-control">
+                <button type="button" class="btn btn-outline-secondary" (click)="toggleNewPassword()">
+                  <i class="pi" [ngClass]="showNewPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6">
+              <label for="confirmPassword" class="form-label">{{ 'Confirm New Password' | translate }}</label>
+              <div class="input-group">
+                <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" class="form-control">
+                <button type="button" class="btn btn-outline-secondary" (click)="toggleConfirmPassword()">
+                  <i class="pi" [ngClass]="showConfirmPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="notifications-tab-pane" role="tabpanel" aria-labelledby="notifications-tab" tabindex="0">
+        <!-- Notifications content -->
+
+        <!-- Notifications Tab Content -->
+<div class="notifications-container p-4">
+  <!-- Header -->
+  <div class="d-flex align-items-center">
+    <i class="pi pi-bell text-warning me-2"></i>
+    <h3 class="mb-0">{{ 'Notifications' | translate }}</h3>
+  </div>
+
+  <p class="text-muted my-3">{{ 'Customize your profile settings to ensure all information is accurate and tailored to your preferences.' | translate }}</p>
+
+  <!-- Task Reminders Section -->
+  <div class="notification-section mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <i class="pi pi-calendar text-warning me-2"></i>
+        <h4 class="mb-0">{{ 'Task Reminders' | translate }}</h4>
+      </div>
+    </div>
+
+    <div class="notification-item d-flex justify-content-between align-items-center my-3">
+      <p class="mb-0">{{ 'Notifications for assigned tasks, task updates, and task deadlines.' | translate }}</p>
+      <p-inputSwitch [(ngModel)]="taskNotifications"></p-inputSwitch>
+    </div>
+
+    <div class="notification-item d-flex justify-content-between align-items-center my-3">
+      <p class="mb-0">{{ 'Daily or weekly summaries of pending or overdue tasks.' | translate }}</p>
+      <p-inputSwitch [(ngModel)]="taskSummaries"></p-inputSwitch>
+    </div>
+  </div>
+
+  <!-- Expenses Section -->
+  <div class="notification-section mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <i class="pi pi-wallet text-warning me-2"></i>
+        <h4 class="mb-0">{{ 'Expenses' | translate }}</h4>
+      </div>
+    </div>
+
+    <div class="notification-item d-flex justify-content-between align-items-center my-3">
+      <p class="mb-0">{{ 'Notifications for new case assignments, status changes, or updates on ongoing cases.' | translate }}</p>
+      <p-inputSwitch [(ngModel)]="expenseNotifications1"></p-inputSwitch>
+    </div>
+
+    <div class="notification-item d-flex justify-content-between align-items-center my-3">
+      <p class="mb-0">{{ 'Notifications for new case assignments, status changes, or updates on ongoing cases.' | translate }}</p>
+      <p-inputSwitch [(ngModel)]="expenseNotifications2"></p-inputSwitch>
+    </div>
+  </div>
+
+  <!-- Team Collaboration Section -->
+  <div class="notification-section">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <i class="pi pi-users text-warning me-2"></i>
+        <h4 class="mb-0">{{ 'Team Collaboration Notifications' | translate }}</h4>
+      </div>
+    </div>
+
+    <div class="notification-item d-flex justify-content-between align-items-center my-3">
+      <p class="mb-0">{{ 'Updates when a team member comments on or updates a shared case or task.' | translate }}</p>
+      <p-inputSwitch [(ngModel)]="teamUpdates"></p-inputSwitch>
+    </div>
+
+    <div class="notification-item d-flex justify-content-between align-items-center my-3">
+      <p class="mb-0">{{ 'Notifications for new file shares or collaborative edits.' | translate }}</p>
+      <p-inputSwitch [(ngModel)]="fileShares"></p-inputSwitch>
+    </div>
+  </div>
+</div>
+
+      </div>
+
+  <!-- Roles Tab Content with Click Handlers -->
+<div class="tab-pane fade" id="roles-tab-pane" role="tabpanel" aria-labelledby="roles-tab" tabindex="0">
+  <!-- Roles content -->
+  <div class="roles-container p-4">
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <div>
+        <div class="d-flex align-items-center">
+          <i class="pi pi-users text-warning me-2"></i>
+          <h3 class="mb-0">{{ 'Roles' | translate }}</h3>
+        </div>
+        <p class="text-muted my-3">{{ 'Customize your profile settings to ensure all information is accurate and tailored to your preferences.' | translate }}</p>
+      </div>
+      <button class="btn btn-warning add-role-btn" (click)="addNewRole()">
+        <i class="pi pi-plus me-2"></i>
+        {{ 'Add New Role' | translate }}
+      </button>
+    </div>
+
+    <!-- Roles List -->
+    <div class="roles-list">
+      <!-- Role Item -->
+      <div class="role-item" *ngFor="let role of roles">
+        <div class="role-icon">
+          <i class="pi pi-lock"></i>
+        </div>
+        <div class="role-info">
+          <h4 class="role-name">{{ 'Role Name' | translate }}</h4>
+          <p class="role-permissions">Dashboard,Tasks, Incentory</p>
+        </div>
+        <div class="role-actions">
+          <button class="btn-icon edit-btn" (click)="editRole(role.id)">
+            <i class="pi pi-pencil"></i>
+          </button>
+          <button class="btn-icon delete-btn" (click)="deleteRole(role.id)">
+            <i class="pi pi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+
+
+
+  <div class="d-flex justify-content-end mt-4 action-buttons">
+    <button type="button" class="btn btn-outline-secondary me-2 cancel-btn">{{ 'Cancel' | translate }}</button>
+    <button type="button" class="btn btn-warning save-btn">{{ 'Save' | translate }}</button>
+  </div>
+</div>

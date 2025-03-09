@@ -1,0 +1,149 @@
+// Import variables
+@use "../../../../../assets/scss/variables.scss" as *;
+
+.add-role-container {
+  background-color: $white;
+  border-radius: $br-12px;
+
+  h3 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #212529;
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #212529;
+  }
+
+  .text-muted {
+    font-size: 14px;
+    color: #6c757d;
+  }
+}
+
+// Module section styling
+.module-section {
+  border: 1px solid #efefef;
+  border-radius: $br-5px;
+  overflow: hidden;
+  background-color: #ffffff;
+
+  .module-header {
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #efefef;
+  }
+}
+
+// Permissions table
+.permissions-table {
+  padding: 1rem;
+
+  .permissions-header {
+    font-weight: 500;
+    color: #495057;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #efefef;
+  }
+
+  .permission-row {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #efefef;
+    align-items: center;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .permission-name {
+    font-size: 1rem;
+    color: #000000;
+    padding-right: 1rem;
+  }
+
+  .permission-action {
+    width: 80px;
+    text-align: center;
+
+    .form-check {
+      display: flex;
+      justify-content: center;
+    }
+
+    .form-check-input {
+      margin-top: 0;
+      cursor: pointer;
+
+      &:checked {
+        background-color: $primary-color;
+        border-color: $primary-color;
+      }
+    }
+  }
+}
+
+// Override PrimeNG input switch styles
+:host ::ng-deep {
+  .p-inputswitch {
+    width: 3rem;
+    height: 1.5rem;
+
+    .p-inputswitch-slider {
+      background-color: #e9ecef;
+
+      &:before {
+        background-color: #ffffff;
+        width: 1.25rem;
+        height: 1.25rem;
+        left: 0.125rem;
+        bottom: 0.125rem;
+        border-radius: 50%;
+        transition: 0.2s;
+      }
+    }
+
+    &.p-inputswitch-checked {
+      .p-inputswitch-slider {
+        background-color: $primary-color;
+      }
+    }
+  }
+}
+
+// Action buttons
+.action-buttons {
+  .cancel-btn {
+    min-width: 120px;
+    padding: 0.75rem 1.5rem;
+    border-color: #ced4da;
+    color: #495057;
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+  }
+
+  .save-btn {
+    min-width: 120px;
+    padding: 0.75rem 1.5rem;
+    background-color: $primary-color;
+    border-color: $primary-color;
+    color: $white;
+
+    &:hover {
+      background-color: $primary-color;
+      color: black;
+      border-color: $primary-color;
+    }
+  }
+}
+
+// RTL support
+:host-context(.rtl) {
+  .permission-name {
+    padding-right: 0;
+    padding-left: 1rem;
+  }
+}

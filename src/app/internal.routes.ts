@@ -31,6 +31,32 @@ export default [
           }
       },
       {
+        path: 'chat',
+        loadChildren: () =>
+          import('./features/chat/chat-routes').then(
+            (c) => c.default
+          ),
+          data: {
+            breadcrumbs: [
+              { label: 'Dashboard', url: '/' },
+              { label: 'chat', url: '/chat' }
+            ]
+          }
+      },
+      {
+        path: 'settings',
+        loadChildren: () =>
+          import('./features/settings/settings-routes').then(
+            (c) => c.default
+          ),
+          data: {
+            breadcrumbs: [
+              { label: 'Dashboard', url: '/' },
+              { label: 'settings', url: '/settings' }
+            ]
+          }
+      },
+      {
         path: 'tasks',
         loadChildren: () =>
           import('./features/tasks/tasks-routes').then(

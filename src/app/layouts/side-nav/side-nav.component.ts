@@ -46,6 +46,8 @@ export class SideNavComponent {
     { icon: 'credit-card', label: 'Payroll', link: '/payroll', class: 'text-info', activeColor: '#0dcaf0' },
     { icon: 'people', label: 'Users', link: '/users', class: 'text-primary', activeColor: '#0d6efd' },
     { icon: 'bar-chart', label: 'Reports', link: '/reports', class: 'text-success', activeColor: '#198754' },
+    { icon: 'chat-dots-fill', label: 'Chat', link: '/chat', class: 'text-info', activeColor: '#0dcaf0' },
+
     { icon: 'grid', label: 'Projects', link: '/projects', class: 'text-success', activeColor: '#198754' },
     { icon: 'gear', label: 'Settings', link: '/settings', class: 'text-purple', activeColor: '#6f42c1' }
   ];

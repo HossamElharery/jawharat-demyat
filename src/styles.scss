@@ -19,326 +19,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     border-color:$primary-color
   }
 }
-.task-sidebar {
-  /* Force the sidebar to be 40% width on larger screens */
-  width: 40% !important;
-  min-height: 100vh;
-  background-color: #fff;
-  border-left: 1px solid #ddd;
 
-  /* On smaller screens, take full width */
-  @media (max-width: 768px) {
-    width: 100% !important;
-  }
-
-  .header-gradient {
-    background: linear-gradient(135deg, #f39bc2, #b187f5);
-    padding: 1rem;
-
-    .top-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .circle-btn {
-        background: rgba(255, 255, 255, 0.1);
-        border: none;
-        border-radius: 50%;
-        color: #fff;
-        padding: 0.5rem;
-        cursor: pointer;
-        font-size: 1.2rem;
-
-        &.close-btn {
-          margin-right: auto;
-        }
-
-        &.red {
-          background: rgba(255, 0, 0, 0.2);
-        }
-      }
-
-      .circle-btn-group {
-        display: flex;
-        gap: 0.5rem;
-      }
-    }
-
-    .meta-info {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 1rem;
-
-      > div {
-        display: flex;
-        flex-direction: column;
-        .meta-label {
-          font-size: 0.875;
-          font-weight: 400;
-          color: #000000;
-          opacity: 0.8;
-          text-transform: uppercase;
-        }
-        .meta-value {
-          font-size: 0.875;
-          color: #000000;
-          margin-top: 0.2rem;
-          font-weight: 500;
-
-        }
-      }
-    }
-  }
-
-  .task-content {
-    padding: 24px;
-    background: #fff;
-
-    .task-title {
-      font-size: 24px;
-      font-weight: 600;
-      color: #1a1a1a;
-      margin: 0 0 24px;
-    }
-
-    .info-row {
-      display: flex;
-      align-items: flex-start;
-      margin-bottom: 20px;
-      gap: 12px;
-
-      .info-icon {
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #6B7280;
-        font-size: 20px;
-      }
-
-      .info-content {
-        flex: 1;
-
-        .info-label {
-          font-size: 14px;
-          font-weight: 600;
-          color: #918F8A;
-          // margin-bottom: 8px;
-          display: block;
-        }
-
-        .info-value {
-          font-size: 14px;
-          color: #4B5563;
-        }
-      }
-
-
-
-
-    }
-
-    .state-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      color: #4B5563;
-
-      .status-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-
-        &.done {
-          background-color: #10B981;
-        }
-      }
-    }
-
-    .assignee-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-
-      .assignee-tag {
-        background: #F3F4F6;
-        padding: 4px 12px;
-        border-radius: 4px;
-        font-size: 14px;
-        color: #4B5563;
-      }
-    }
-
-    .priority-tag {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 4px;
-      font-size: 14px;
-
-      &.low {
-        background: #E0F2FE;
-        color: #0369A1;
-      }
-    }
-
-    .description-text {
-      font-size: 14px;
-      line-height: 1.6;
-      color: #4B5563;
-    }
-
-    .attachments-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-
-      .download-all-btn {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        background: none;
-        border: none;
-        color: #4B5563;
-        cursor: pointer;
-        font-size: 14px;
-
-        &:hover {
-          color: #1F2937;
-        }
-      }
-    }
-
-    .attachments-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-
-      .attachment-item {
-        display: flex;
-        align-items: center;
-        padding: 12px;
-        background: #FEFAF2;
-        border-radius: 8px;
-        gap: 12px;
-
-        .pdf-icon {
-          color: #DC2626;
-          font-size: 24px;
-        }
-
-        .file-info {
-          flex: 1;
-
-          .file-name {
-            font-size: 14px;
-            font-weight: 500;
-            color: #1F2937;
-            display: block;
-          }
-
-          .file-size {
-            font-size: 12px;
-            color: #6B7280;
-          }
-        }
-
-        .download-btn {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 6px 12px;
-          background: #FFFFFF;
-          border: 1px solid #E5E7EB;
-          border-radius: 4px;
-          color: #4B5563;
-          cursor: pointer;
-          font-size: 14px;
-
-          &:hover {
-            background: #F9FAFB;
-          }
-        }
-      }
-    }
-
-    .tabs-section {
-      margin-top: 32px;
-
-      .tabs {
-        display: flex;
-        gap: 16px;
-        margin-bottom: 16px;
-
-        .tab-btn {
-          padding: 8px 16px;
-          background: #FBBF24;
-          border: none;
-          border-radius: 6px;
-          color: #FFFFFF;
-          font-weight: 600;
-          font-size: 14px;
-          cursor: pointer;
-
-          &.active {
-            background: #F59E0B;
-          }
-        }
-      }
-
-      .subtasks-list {
-        background: #F9FAFB;
-        border: 1px solid #E5E7EB;
-        border-radius: 8px;
-        padding: 16px;
-
-        .subtask-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          margin-bottom: 16px;
-
-          &:last-child {
-            margin-bottom: 0;
-          }
-
-          i {
-            font-size: 20px;
-            color: #D1D5DB;
-
-            &.pi-check-circle {
-              color: #10B981;
-            }
-          }
-
-          .subtask-content {
-            flex: 1;
-
-            .subtask-title {
-              font-size: 14px;
-              font-weight: 600;
-              color: #1F2937;
-              margin-bottom: 4px;
-            }
-
-            .subtask-description {
-              font-size: 12px;
-              color: #6B7280;
-              line-height: 1.5;
-            }
-          }
-        }
-      }
-    }
-  }
-
-
-}
-.p-overlay-mask{
-  background-color: #0000003D !important;
-}
 
 // ===================== users & payroll & inventory & members
 .header-section {
@@ -451,4 +132,79 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
       background-color: rgba($primary-color, 0.02);
     }
   }
+}
+:host ::ng-deep {
+  .p-dropdown {
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+
+    .p-dropdown-label {
+      padding: 0.75rem;
+      color: #495057;
+    }
+
+    .p-dropdown-trigger {
+      width: 3rem;
+      padding: 0 0.75rem;
+
+      .p-dropdown-trigger-icon {
+        color: #6c757d;
+      }
+    }
+
+    &:not(.p-disabled).p-focus {
+      border-color: #EFA70C;
+      box-shadow: 0 0 0 0.2rem rgba(239, 167, 12, 0.25);
+    }
+
+    .p-dropdown-panel {
+      .p-dropdown-items {
+        padding: 0.5rem 0;
+
+        .p-dropdown-item {
+          padding: 0.75rem 1rem;
+          color: #495057;
+
+          &.p-highlight {
+            background-color: rgba(239, 167, 12, 0.1);
+            color: #EFA70C;
+          }
+
+          &:hover {
+            background-color: #f8f9fa;
+          }
+        }
+      }
+    }
+  }
+}
+.p-select-label{
+  color: black !important;
+}
+
+.iti__tel-input{
+  padding-left: 98px;
+  height: 2.6rem;
+  background: #f7f8fa;
+  border: 1px solid #ced4da;
+  color: black;
+}
+#country-search-box{
+  background: #000000a8;
+  border: unset;
+}
+.iti__country-list{
+  max-height: 250px;
+}
+.search-container input::placeholder {
+  color: white; /* Replace with the color you want */
+  opacity: 1; /* Firefox sometimes needs this */
+}
+
+.form-check-input:focus {
+  border-color: #EFA70C !important;
+  outline: 0;
+  box-shadow: 0 0 0 .25rem rgba(0, 0, 0, 0) !important;
 }

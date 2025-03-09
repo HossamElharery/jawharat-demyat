@@ -203,4 +203,5 @@
     </p-table>
   </div>
 </div>
-<app-add-task-sidebar #addTaskSidebar (close)="onSidebarClose()"></app-add-task-sidebar>
+<!-- <app-add-task-sidebar #addTaskSidebar (close)="onSidebarClose()"></app-add-task-sidebar> -->
+<app-add-task-sidebar #addTaskSidebar (close)="onSidebarClose()" (saved)="onTaskSaved($event)"></app-add-task-sidebar>
