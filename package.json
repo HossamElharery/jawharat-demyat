@@ -28,6 +28,7 @@
     "http": "^0.0.1-security",
     "ng-apexcharts": "^1.15.0",
     "ngx-intl-tel-input": "^17.0.0",
+    "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primeng": "^19.0.9",
     "rxjs": "~7.8.0",

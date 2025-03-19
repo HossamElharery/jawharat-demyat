@@ -2,7 +2,7 @@ import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 
 import { routes } from './app.routes';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 // NGX-Translate
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -14,6 +14,8 @@ import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 // Correct import for Angular 19
 import Lara from '@primeng/themes/lara';
+import { AuthInterceptor } from './core/interceptor/auth';
+import { HttpResponseInterceptor } from './core/interceptor/http-response';
 
 // Factory for translations
 export function HttpLoaderFactory(http: HttpClient) {
@@ -41,6 +43,11 @@ export const appConfig: ApplicationConfig = {
     LanguageService,
     provideAnimationsAsync(),
     MessageService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpResponseInterceptor,
+      multi: true
+    },
     providePrimeNG({
       theme: {
         preset: Lara, // Ensure this is the light variant

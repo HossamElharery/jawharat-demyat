@@ -1,0 +1,262 @@
+@import '../../../../../assets/scss/variables.scss';
+
+.modal-container {
+  position: relative;
+  padding: 1.5rem;
+  overflow: auto;
+  max-height: 90vh;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .close-btn {
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: $br-5px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+.section-header {
+  margin-bottom: 1rem;
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+
+  .form-group {
+    flex: 1 1 calc(50% - 0.5rem);
+    min-width: 250px;
+  }
+}
+
+.form-group {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .form-control, .form-select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: $br-5px;
+    transition: border-color 0.15s ease-in-out;
+
+    &:focus {
+      border-color: $primary-color;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(239, 167, 12, 0.25);
+    }
+  }
+
+  // Override for ngx-intl-tel-input
+  ::ng-deep .custom-phone-input {
+    .iti {
+      width: 100%;
+    }
+  }
+
+  // Override for p-calendar
+  ::ng-deep .p-calendar {
+    width: 100%;
+
+    .p-inputtext {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #ced4da;
+      border-radius: $br-5px;
+    }
+
+    .p-datepicker-trigger {
+      background-color: $primary-color;
+      border-color: $primary-color;
+    }
+  }
+}
+
+.work-days-container {
+  margin-bottom: 1.5rem;
+
+  .work-day-item {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: $br-5px;
+    margin-bottom: 1rem;
+
+    .action-col {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      flex: 0 0 auto;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.active-member-section {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: $br-5px;
+  margin-bottom: 1.5rem;
+
+  .active-member-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0;
+
+      span {
+        font-weight: normal;
+        color: #666;
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .help-text {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+
+    .toggle-input {
+      display: none;
+
+      &:checked + .toggle-label {
+        background-color: $primary-color;
+        border-color: $primary-color;
+
+        &:after {
+          left: calc(100% - 18px);
+        }
+      }
+    }
+
+    .toggle-label {
+      display: block;
+      width: 48px;
+      height: 24px;
+      border-radius: 24px;
+      background-color: #ccc;
+      border: 1px solid #bbb;
+      cursor: pointer;
+      position: relative;
+      transition: 0.3s;
+
+      &:after {
+        content: '';
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background-color: white;
+        top: 2px;
+        left: 2px;
+        transition: 0.3s;
+      }
+    }
+  }
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+
+  .btn {
+    padding: 0.5rem 1.5rem;
+    border-radius: $br-5px;
+    font-weight: 500;
+
+    &.btn-cancel {
+      background-color: #f8f9fa;
+      border: 1px solid #ced4da;
+      color: #495057;
+
+      &:hover {
+        background-color: #e9ecef;
+      }
+    }
+
+    &.btn-submit {
+      background-color: $primary-color;
+      border: 1px solid $primary-color;
+      color: white;
+
+      &:hover:not(:disabled) {
+        background-color: darken($primary-color, 5%);
+      }
+
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+// RTL support
+:host-context(.rtl) {
+  .form-row {
+    .form-group {
+      margin-right: 0;
+    }
+  }
+
+  .modal-header .close-btn {
+    margin-left: 0;
+    margin-right: auto;
+  }
+
+  .active-member-header {
+    flex-direction: row-reverse;
+  }
+
+  .modal-footer {
+    flex-direction: row-reverse;
+  }
+}

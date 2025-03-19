@@ -1,0 +1,255 @@
+@import '../../../../assets/scss/variables.scss';
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #fff;
+  padding: 20px;
+}
+
+.login-panel {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  height: 600px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.left-panel {
+  width: 50%;
+  background-color: #F9CD3D; // Yellow background as in reference
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px;
+
+  .image-container {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    right: 40px;
+    height: calc(100% - 200px);
+    overflow: hidden;
+    border-radius: 10px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
+  .content {
+    position: relative;
+    color: white;
+    z-index: 1;
+    margin-top: auto;
+
+    h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      max-width: 90%;
+    }
+
+    p {
+      font-size: 16px;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+  }
+
+  .dots {
+    display: flex;
+    margin-bottom: 20px;
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.5);
+      margin-right: 8px;
+
+      &.active {
+        background-color: white;
+        width: 25px;
+        border-radius: 10px;
+      }
+    }
+  }
+
+  .arrows {
+    display: flex;
+    justify-content: space-between;
+    max-width: 80px;
+
+    .arrow {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.3);
+      border: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: white;
+      font-size: 18px;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+}
+
+.form-panel {
+  width: 50%;
+  background-color: white;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+
+  .form-content {
+    width: 100%;
+    padding: 0 40px;
+
+    h1 {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 40px;
+    }
+  }
+}
+
+.login-form {
+  .form-group {
+    margin-bottom: 25px;
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+
+      &:focus {
+        border-color: #F9CD3D;
+        outline: none;
+      }
+
+      &.is-invalid {
+        border-color: #dc3545;
+      }
+    }
+
+    .error-message {
+      color: #dc3545;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+  }
+
+  .password-field {
+    position: relative;
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  .login-button {
+    width: 100%;
+    padding: 14px;
+    background-color: #F9CD3D;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: darken(#F9CD3D, 5%);
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .login-panel {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .left-panel, .form-panel {
+    width: 100%;
+  }
+
+  .left-panel {
+    padding: 20px;
+    height: 450px;
+
+    .image-container {
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      height: 250px;
+    }
+  }
+
+  .form-content {
+    padding: 20px !important;
+  }
+}
+
+// RTL Support (for Arabic)
+:host-context(.rtl) {
+  .form-panel .form-content {
+    direction: rtl;
+    text-align: right;
+  }
+
+  .password-field .toggle-password {
+    right: auto;
+    left: 12px;
+  }
+
+  .dots .dot {
+    margin-right: 0;
+    margin-left: 8px;
+  }
+}

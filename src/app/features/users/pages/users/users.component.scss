@@ -1,86 +1,170 @@
  @use "../../../../../assets/scss/variables.scss" as *;
 
+ .container-fluid {
+   background-color: $bk-blue;
+   padding: 1.5rem;
 
-.container-fluid {
-  background-color: $bk-blue;
-  padding: 1.5rem;
-  .search-container {
-    .dropdown{
-      margin: 0 2rem;
-      .dropdown-toggle{
-        &::after{
-          content: "\F282";
-          font-family: bootstrap-icons!important;
-          border: 0;
-        }
-      }
-    }
+   @media (max-width: 576px) {
+     padding: 1rem;
+   }
+ }
 
-    .search-icon {
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #6c757d;
-    }
+ .header-section {
+   // Make header section responsive
+   .search-container {
+     width: 100%;
+     max-width: 280px;
+     position: relative;
 
-    .search-input {
-      padding-left: 2.5rem;
-      border-radius: $br-12px;
-      border: 1px solid #e0e0e0;
-      background-color: #f8f9fa;
+     @media (max-width: 576px) {
+       max-width: 100%;
+     }
 
-      &::placeholder {
-        color: #adb5bd;
-      }
+     .search-icon {
+       position: absolute;
+       left: 1rem;
+       top: 50%;
+       transform: translateY(-50%);
+       color: #6c757d;
+     }
 
-      &:focus {
-        box-shadow: none;
-        border-color: $primary-color;
-      }
-    }
-  }
-}
+     .search-input {
+       padding-left: 2.5rem;
+       border-radius: $br-12px;
+       border: 1px solid #e0e0e0;
+       background-color: #f8f9fa;
 
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: $br-5px;
-}
+       &::placeholder {
+         color: #adb5bd;
+       }
 
-.status-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: $br-5px;
-  font-size: 0.875rem;
-  display: inline-block;
+       &:focus {
+         box-shadow: none;
+         border-color: $primary-color;
+       }
+     }
+   }
 
-  &.active {
-    background-color: rgba(#22c55e, 0.1);
-    color: #22c55e;
-  }
+   .dropdown {
+     .dropdown-toggle {
+       &::after {
+         content: "\F282";
+         font-family: bootstrap-icons !important;
+         border: 0;
+       }
+     }
 
-  &.inactive {
-    background-color: rgba(#ef4444, 0.1);
-    color: #ef4444;
-  }
-}
+     @media (max-width: 576px) {
+       width: 100%;
 
-.action-buttons {
-  display: flex;
-  gap: 0.5rem;
+       .dropdown-toggle {
+         width: 100%;
+       }
+     }
+   }
 
-  .btn-link {
-    padding: 0.25rem;
-    color: #A2A1A81A;
-    transition: color 0.2s ease;
+   .add-user-btn {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     background-color: $primary-color;
+     border-color: $primary-color;
 
-    &:hover {
-      color: $primary-color;
-    }
+     @media (max-width: 768px) {
+       width: 100%;
+     }
+   }
+ }
 
-    i {
-      font-size: 1.25rem;
-    }
-  }
-}
+ .user-avatar {
+   width: 40px;
+   height: 40px;
+   min-width: 40px; // Prevent avatar from shrinking
+   object-fit: cover;
+   border-radius: $br-5px;
+ }
+
+ .status-badge {
+   padding: 0.25rem 0.75rem;
+   border-radius: $br-5px;
+   font-size: 0.875rem;
+   display: inline-block;
+   white-space: nowrap; // Prevent wrapping
+
+   &.active {
+     background-color: rgba(#22c55e, 0.1);
+     color: #22c55e;
+   }
+
+   &.inactive {
+     background-color: rgba(#ef4444, 0.1);
+     color: #ef4444;
+   }
+ }
+
+ .table-responsive {
+   overflow-x: auto;
+   -webkit-overflow-scrolling: touch;
+
+   .table {
+     min-width: 650px; // Ensures table doesn't collapse too much
+
+     th, td {
+       vertical-align: middle;
+       white-space: nowrap; // Prevents text wrapping
+
+       @media (max-width: 768px) {
+         &:not(:first-child):not(:last-child) {
+           padding-left: 0.5rem;
+           padding-right: 0.5rem;
+         }
+       }
+     }
+   }
+ }
+
+ .action-buttons {
+   display: flex;
+   gap: 0.5rem;
+
+   .btn-link {
+     padding: 0.25rem;
+     color: #A2A1A81A;
+     transition: color 0.2s ease;
+
+     &:hover {
+       color: $primary-color;
+     }
+
+     i {
+       font-size: 1.25rem;
+     }
+   }
+ }
+
+ // RTL Support
+ :host-context(.rtl) {
+   .search-container .search-icon {
+     left: auto;
+     right: 1rem;
+   }
+
+   .search-container .search-input {
+     padding-left: 0.75rem;
+     padding-right: 2.5rem;
+   }
+
+   .user-avatar + .ms-2 {
+     margin-left: 0 !important;
+     margin-right: 0.5rem !important;
+   }
+
+   .add-user-btn i {
+     margin-right: 0 !important;
+     margin-left: 0.5rem;
+   }
+
+   .action-buttons {
+     flex-direction: row-reverse;
+   }
+ }

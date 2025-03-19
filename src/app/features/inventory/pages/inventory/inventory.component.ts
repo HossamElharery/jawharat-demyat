@@ -1,137 +1,310 @@
-import { Component } from '@angular/core';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-// =====================================
-import { OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { AddInventoryComponent } from '../../components/add-inventory/add-inventory.component';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-interface inventory {
-  id: string;
-  type: string;
-  value: string;
-  actions: string;
-  status: 'In Stock' | 'Out Stock';
-  image: string;
-
-
-  name: string;  // Added
-  stock: number; // Added
-  description?: string; // Added
-
-  images?: string[]; // Added
-}
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
+import { AddInventoryComponent } from '../../components/add-inventory/add-inventory.component';
+import { InventoryService, InventoryProduct } from '../../services/inventory.service';
+import { MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ButtonModule } from 'primeng/button';
+import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-inventory',
+  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
+    ConfirmDialogModule,
+    ButtonModule,
+    PaginationComponent
   ],
   templateUrl: './inventory.component.html',
-  styleUrl: './inventory.component.scss'
+  styleUrl: './inventory.component.scss',
+  providers: [ConfirmationService]
 })
 export class InventoryComponent implements OnInit {
-    searchControl = new FormControl('');
-    selectedStatus: string = 'In Stock';
-    users: inventory[] = [
-      {
-        image: '../../../../../assets/images/inventory_grid.jpg',
-        type: 'product',
-        id: '#12345',
-        value: '2000 AED',
-        actions: 'Admin',
-        status: 'In Stock',
-        name:'product one',
-        stock:12,
-        description:"description"
+  searchControl = new FormControl('');
+  selectedStatus: string = 'instock';
+  inventoryProducts: InventoryProduct[] = [];
+  filteredProducts: InventoryProduct[] = [];
+  currentView: 'list' | 'grid' = 'list';
+  isLoading = false;
+  currentPage = 1;
+  perPage = 10;
+  totalProducts = 0;
+  totalPages = 0;
+
+  // Permission flags
+  canViewInventory = true;
+  canCreateInventory = true;
+  canEditInventory = true;
+  canDeleteInventory = true;
+
+  constructor(
+    private dialog: MatDialog,
+    private inventoryService: InventoryService,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
+  ) {}
+
+  ngOnInit(): void {
+    // Load inventory products
+    this.loadInventoryProducts();
+
+    // Set up search field
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(value => {
+      this.currentPage = 1; // Reset to first page on new search
+      this.loadInventoryProducts();
+    });
+  }
+
+  toggleView(view: 'list' | 'grid'): void {
+    this.currentView = view;
+  }
+
+  filterByStatus(status: string): void {
+    // Convert UI status to API status
+    if (status === 'In Stock') {
+      this.selectedStatus = 'instock';
+    } else if (status === 'Out Stock') {
+      this.selectedStatus = 'outofstock';
+    } else {
+      this.selectedStatus = '';
+    }
+
+    this.currentPage = 1; // Reset to first page on filter change
+    this.loadInventoryProducts();
+  }
+
+  /**
+   * Load inventory products from API
+   */
+  loadInventoryProducts(): void {
+    this.isLoading = true;
+    const searchQuery = this.searchControl.value || '';
+    let typeFilter = undefined; // Add type filter if needed
+
+    this.inventoryService.getInventoryProducts(
+      this.currentPage,
+      this.perPage,
+      searchQuery,
+      typeFilter
+    ).pipe(
+      finalize(() => this.isLoading = false)
+    ).subscribe({
+      next: (response) => {
+        this.inventoryProducts = response.result.inventories;
+        this.filteredProducts = [...this.inventoryProducts];
+        this.totalProducts = response.result.totalInventories;
+        this.totalPages = response.result.totalPages;
+        this.currentPage = response.result.currentPage;
+      },
+      error: (error) => {
+        console.error('Error loading inventory products:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load inventory products. Please try again.'
+        });
       }
-    ];
-    filteredUsers: inventory[] = [];
-    currentView: 'list' | 'grid' = 'list';
+    });
+  }
 
-    toggleView(view: 'list' | 'grid'): void {
-      this.currentView = view;
+  /**
+   * Handle page change
+   */
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadInventoryProducts();
+  }
+
+  /**
+   * Handle per page change
+   */
+  onPerPageChange(perPage: number): void {
+    this.perPage = perPage;
+    this.currentPage = 1; // Reset to first page when changing items per page
+    this.loadInventoryProducts();
+  }
+
+  /**
+   * Get image URL for a product
+   */
+  getProductImageUrl(product: InventoryProduct): string {
+    if (product.productImages && product.productImages.length > 0) {
+      return this.inventoryService.getImageUrl(product.productImages[0].path);
     }
-    constructor(private dialog: MatDialog) {}
+    return '../../../../../assets/images/inventory-placeholder.jpg';
+  }
 
-    ngOnInit(): void {
-      this.filteredUsers = this.users;
-      this.filterByStatus(this.selectedStatus);
+  /**
+   * Format status for display
+   */
+  formatStatus(status: string): string {
+    return status === 'instock' ? 'In Stock' : 'Out of Stock';
+  }
 
-      this.searchControl.valueChanges.pipe(
-        debounceTime(300),
-        distinctUntilChanged()
-      ).subscribe(value => {
-        this.filterUsers(value || '');
+  /**
+   * Format the value to display as currency
+   */
+  formatValue(value: number): string {
+    return `${value} AED`;
+  }
+
+  /**
+   * Open dialog to add a new inventory product
+   */
+  onAddInventory(): void {
+    if (!this.canCreateInventory) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Permission Denied',
+        detail: 'You do not have permission to create inventory products'
       });
+      return;
     }
 
-    filterByStatus(status: string): void {
-      this.selectedStatus = status;
-      this.filterUsers(this.searchControl.value || '');
-    }
+    const dialogRef = this.dialog.open(AddInventoryComponent, {
+      width: '800px',
+      height: 'auto',
+      disableClose: false,
+      data: { isEditing: false }
+    });
 
-    filterUsers(searchQuery: string): void {
-      this.filteredUsers = this.users.filter(user => {
-        const matchesSearch = !searchQuery ||
-          Object.values(user).some(value =>
-            value.toString().toLowerCase().includes(searchQuery.toLowerCase())
-          );
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadInventoryProducts();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Inventory product created successfully'
+        });
+      }
+    });
+  }
 
-        const matchesStatus = this.selectedStatus === 'All' ||
-          user.status === this.selectedStatus;
-
-        return matchesSearch && matchesStatus;
+  /**
+   * Open dialog to edit an inventory product
+   */
+  onEdit(product: InventoryProduct): void {
+    if (!this.canEditInventory) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Permission Denied',
+        detail: 'You do not have permission to edit inventory products'
       });
+      return;
     }
 
-    onAddInventory(): void {
-      console.log('Opening dialog');
-      this.dialog.open(AddInventoryComponent, {
-        width: '800px',
-        height: 'auto',
-        disableClose: false,
-        data: { isEditing: false }
-      }).afterClosed().subscribe(result => {
-        console.log('Dialog closed with result:', result);
-        if (result) {
-          const newUser: inventory = {
-            ...result,
-            image: result.images?.[0] || '../../../../../assets/images/default-avatar.png',
-            actions: 'Admin',
-          };
-          this.users = [...this.users, newUser];
-          this.filterUsers(this.searchControl.value || '');
+    this.isLoading = true;
+
+    // Fetch the complete product details from the API
+    this.inventoryService.getInventoryProductById(product.id)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe({
+        next: (response) => {
+          const dialogRef = this.dialog.open(AddInventoryComponent, {
+            width: '800px',
+            panelClass: 'inventory-modal-dialog',
+            data: {
+              isEditing: true,
+              product: response.result
+            }
+          });
+
+          dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+              this.loadInventoryProducts();
+            }
+          });
+        },
+        error: (error) => {
+          console.error('Error fetching inventory product details:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to load inventory product details. Please try again.'
+          });
         }
       });
-    }
+  }
 
-    onEdit(user: inventory): void {
-      const dialogRef = this.dialog.open(AddInventoryComponent, {
-        width: '800px',
-        panelClass: 'user-modal-dialog',
-        data: { ...user, isEditing: true }
-      });
+  /**
+   * View inventory product details
+   */
+  onView(product: InventoryProduct): void {
+    this.isLoading = true;
 
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.users = this.users.map(u =>
-            u.id === user.id ? { ...u, ...result, image: result.images?.[0] || u.image } : u
-          );
-          this.filterUsers(this.searchControl.value || '');
+    // Fetch the complete product details from the API
+    this.inventoryService.getInventoryProductById(product.id)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe({
+        next: (response) => {
+          const dialogRef = this.dialog.open(AddInventoryComponent, {
+            width: '800px',
+            panelClass: 'inventory-modal-dialog',
+            data: {
+              isEditing: false, // Not editing, just viewing
+              product: response.result
+            }
+          });
+        },
+        error: (error) => {
+          console.error('Error fetching inventory product details:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to load inventory product details. Please try again.'
+          });
         }
       });
+  }
+
+  /**
+   * Delete an inventory product
+   */
+  onDelete(product: InventoryProduct): void {
+    if (!this.canDeleteInventory) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Permission Denied',
+        detail: 'You do not have permission to delete inventory products'
+      });
+      return;
     }
 
-    onView(user: inventory): void {
-      console.log('View user:', user);
-    }
-
-    onDelete(user: inventory): void {
-      console.log('Delete user:', user);
-    }
+    this.confirmationService.confirm({
+      message: `Are you sure you want to delete the inventory product "${product.name}"?`,
+      header: 'Confirm Delete',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.inventoryService.deleteInventoryProduct(product.id).subscribe({
+          next: (response) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: response.message || 'Inventory product deleted successfully'
+            });
+            this.loadInventoryProducts();
+          },
+          error: (error) => {
+            console.error('Error deleting inventory product:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: error.error?.message || 'Failed to delete inventory product'
+            });
+          }
+        });
+      }
+    });
+  }
 }

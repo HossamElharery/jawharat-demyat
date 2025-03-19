@@ -1,0 +1,117 @@
+<div class="projects-container">
+  <div class="projects-header">
+    <div class="search-container">
+      <i class="pi pi-search search-icon"></i>
+      <input type="text" pInputText placeholder="Search For anything" class="search-input" [formControl]="searchControl">
+    </div>
+    <button pButton type="button" label="Add Project" icon="pi pi-plus" class="add-project-btn"
+      (click)="addProject()" *ngIf="canCreateProjects"></button>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="loading-container">
+    <i class="pi pi-spin pi-spinner loading-icon"></i>
+    <p>Loading projects...</p>
+  </div>
+
+  <!-- Permission denied message -->
+  <div *ngIf="!canViewProjects" class="permission-denied">
+    <i class="pi pi-exclamation-triangle warning-icon"></i>
+    <p>You do not have permission to view projects.</p>
+  </div>
+
+  <!-- Projects table -->
+  <div class="projects-table" *ngIf="!isLoading && canViewProjects && projects.length > 0">
+    <div class="table-header">
+      <div class="header-cell project-title">Project Title</div>
+      <div class="header-cell creator">Creator</div>
+      <div class="header-cell creation-date">Creation Date</div>
+      <div class="header-cell members">Members</div>
+      <div class="header-cell actions">Actions</div>
+    </div>
+
+    <div class="table-body">
+      <div class="table-row" *ngFor="let project of projects">
+        <div class="body-cell project-title">{{project.title}}</div>
+        <div class="body-cell creator">
+          <div class="creator-info">
+            <img [src]="project.creator.avatar" alt="Creator Avatar" class="creator-avatar">
+            <span class="creator-name">{{project.creator.name}}</span>
+          </div>
+        </div>
+        <div class="body-cell creation-date">{{project.creationDate}}</div>
+        <div class="body-cell members">
+          <div class="members-container" *ngIf="project.members.length > 0">
+            <div class="members-avatars">
+              <div class="member-item" *ngFor="let member of project.members.slice(0, 3); let i = index">
+                <img [src]="member.avatar" [alt]="member.name" class="member-avatar" [style.zIndex]="100-i">
+                <div class="member-tooltip">
+                  <div class="member-name">{{member.name}}</div>
+                  <div class="member-email" *ngIf="member.email">{{member.email}}</div>
+                </div>
+              </div>
+              <div class="additional-members" *ngIf="project.members.length > 3">
+                +{{project.members.length - 3}}
+              </div>
+            </div>
+          </div>
+          <div class="no-members" *ngIf="project.members.length === 0">
+            No members
+          </div>
+        </div>
+        <div class="body-cell actions">
+          <button pButton class="p-button-text edit-btn" (click)="editProject(project)" *ngIf="canEditProjects">
+            <i class="pi pi-pencil"></i>
+          </button>
+          <button pButton class="p-button-text delete-btn" (click)="deleteProject(project)" *ngIf="canDeleteProjects">
+            <i class="pi pi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state if no projects -->
+  <div class="empty-state" *ngIf="!isLoading && canViewProjects && projects.length === 0">
+    <div class="empty-icon">
+      <i class="pi pi-folder-open"></i>
+    </div>
+    <h3>No Projects Found</h3>
+    <p>Create a new project to get started</p>
+    <button pButton type="button" label="Add Your First Project" icon="pi pi-plus"
+      class="add-project-btn" (click)="addProject()" *ngIf="canCreateProjects"></button>
+  </div>
+
+  <!-- Pagination controls -->
+  <app-pagination
+    *ngIf="!isLoading && canViewProjects && totalProjects > 0"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    [totalItemsCount]="totalProjects"
+    [perPage]="perPage"
+    [theme]="'warning'"
+    (pageChange)="onPageChange($event)"
+    (perPageChange)="onPerPageChange($event)">
+  </app-pagination>
+
+  <!-- Project Dialog -->
+  <p-dialog [(visible)]="showProjectDialog" [header]="dialogTitle" [modal]="true" [draggable]="false" [resizable]="false"
+    [style]="{width: '450px'}" [closeOnEscape]="true" [closable]="!submitting">
+    <div class="dialog-content">
+      <div class="p-field">
+        <label for="projectName">Project Name</label>
+        <input type="text" pInputText id="projectName" [(ngModel)]="projectName"
+          placeholder="Enter project name" [disabled]="submitting" class="w-100">
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton label="Cancel" icon="pi pi-times" class="p-button-text"
+        (click)="showProjectDialog = false" [disabled]="submitting"></button>
+      <button pButton label="Save" icon="pi pi-check"
+        (click)="onDialogSubmit()" [loading]="submitting"></button>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Confirmation Dialog -->
+  <p-confirmDialog></p-confirmDialog>
+</div>

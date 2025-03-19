@@ -1,1 +1,115 @@
-<p>members works!</p>
+<div class="container-fluid">
+  <div class="header-section mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+      <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3">
+        <div class="search-container position-relative w-100 w-sm-auto">
+          <i class="bi bi-search search-icon"></i>
+          <input
+            type="text"
+            class="form-control search-input"
+            placeholder="Search for anything"
+            [formControl]="searchControl">
+        </div>
+        <div class="dropdown mt-2 mt-sm-0">
+          <button
+            class="btn btn-outline-secondary dropdown-toggle status-filter w-100 w-sm-auto"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+            {{ selectedStatus || 'Active' }}
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" (click)="filterByStatus('Active')">Active</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('In Active')">In Active</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('All')">All</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Only show Add Member button if user has permission -->
+      <button *ngIf="canCreateMembers" class="btn btn-warning add-member-btn mt-3 mt-md-0  w-md-auto" (click)="onAddMember()">
+        <i class="bi bi-plus-lg me-2"></i>
+        Add New Member
+      </button>
+    </div>
+  </div>
+
+  <!-- Permission denied message -->
+  <div *ngIf="!canViewMembers" class="alert alert-warning">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    You do not have permission to view members.
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="text-center my-4">
+    <div class="spinner-border text-warning" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Error message for no members found -->
+  <div *ngIf="!isLoading && canViewMembers && filteredMembers.length === 0" class="alert alert-info">
+    No members found matching your criteria.
+  </div>
+
+  <!-- Member table -->
+  <div *ngIf="!isLoading && canViewMembers && filteredMembers.length > 0" class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>E-mail</th>
+          <th class="d-none d-md-table-cell">Phone Number</th>
+          <th class="d-none d-md-table-cell">Job Title</th>
+          <th class="d-none d-lg-table-cell">Employment Type</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let member of filteredMembers">
+          <td>
+            <div class="d-flex align-items-center">
+              <img [src]="member.avatarUrl" class="member-avatar" alt="Member avatar">
+              <span class="ms-2">{{ member.name }}</span>
+            </div>
+          </td>
+          <td>{{ member.email }}</td>
+          <td class="d-none d-md-table-cell">{{ member.phoneNumber }}</td>
+          <td class="d-none d-md-table-cell">{{ member.jobTitle }}</td>
+          <td class="d-none d-lg-table-cell">{{ getPayTypeLabel(member.payType) }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="{'active': member.status === 'Active', 'inactive': member.status === 'In Active'}">
+              {{ member.status }}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn btn-link" (click)="onView(member)" title="View details">
+                <i class="bi bi-eye text-warning"></i>
+              </button>
+              <button *ngIf="canEditMembers" class="btn btn-link" (click)="onEdit(member)" title="Edit member">
+                <i class="bi bi-pencil text-warning"></i>
+              </button>
+              <button *ngIf="canDeleteMembers" class="btn btn-link" (click)="onDelete(member)" title="Delete member">
+                <i class="bi bi-trash text-warning"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination controls -->
+  <app-pagination
+    *ngIf="!isLoading && canViewMembers && totalMembers > 0"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    [totalItemsCount]="totalMembers"
+    [perPage]="perPage"
+    [theme]="'warning'"
+    (pageChange)="onPageChange($event)"
+    (perPageChange)="onPerPageChange($event)">
+  </app-pagination>
+</div>

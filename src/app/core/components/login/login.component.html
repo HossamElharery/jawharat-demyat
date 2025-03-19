@@ -1,0 +1,78 @@
+<div class="login-container">
+  <div class="login-panel">
+    <div class="left-panel">
+      <div class="image-container">
+        <img src="../../../../assets/images/login.jpeg" alt="Construction workers">
+      </div>
+      <div class="content">
+        <div class="dots">
+          <span class="dot active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+
+        <div class="arrows">
+          <button class="arrow prev">
+            <i class="arrow-icon">&larr;</i>
+          </button>
+          <button class="arrow next">
+            <i class="arrow-icon">&rarr;</i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-panel">
+      <div class="form-content">
+        <h1>{{ 'login.title' | translate }}</h1>
+        <p class="subtitle">{{ 'login.subtitle' | translate }}</p>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+          <div class="form-group">
+            <label for="email">{{ 'login.email' | translate }}</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="form-control"
+              [ngClass]="{'is-invalid': email?.invalid && (email?.dirty || email?.touched)}"
+            >
+            <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="error-message">
+              <span *ngIf="email?.errors?.['required']">{{ 'validation.email_required' | translate }}</span>
+              <span *ngIf="email?.errors?.['email']">{{ 'validation.email_invalid' | translate }}</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">{{ 'login.password' | translate }}</label>
+            <div class="password-field">
+              <input
+                [type]="isPasswordVisible ? 'text' : 'password'"
+                id="password"
+                formControlName="password"
+                class="form-control"
+                [ngClass]="{'is-invalid': password?.invalid && (password?.dirty || password?.touched)}"
+              >
+              <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+                <i class="eye-icon">👁️</i>
+              </button>
+            </div>
+            <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="error-message">
+              <span *ngIf="password?.errors?.['required']">{{ 'validation.password_required' | translate }}</span>
+              <span *ngIf="password?.errors?.['minlength']">{{ 'validation.password_length' | translate }}</span>
+            </div>
+          </div>
+
+          <div *ngIf="loginError" class="alert alert-danger">
+            {{ loginError }}
+          </div>
+
+          <button type="submit" class="login-button" [disabled]="isLoading">
+            <span *ngIf="!isLoading">{{ 'login.submit' | translate }}</span>
+            <span *ngIf="isLoading">{{ 'login.processing' | translate }}...</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

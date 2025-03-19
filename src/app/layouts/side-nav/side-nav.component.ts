@@ -4,6 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LanguageService } from '../../shared/services/language.service';
 import { CommonModule } from '@angular/common';
 import { SidebarService } from '../../shared/services/sidebar.service';
+import { AuthService } from '../../core/services/auth.service';
+import { PermissionsService } from '../../core/services/permissions.service';
 
 interface NavItem {
   icon: string;
@@ -11,6 +13,18 @@ interface NavItem {
   link: string;
   class: string;
   activeColor: string;
+  requiredPermission?: string; // Permission required to see this item
+  requiredRole?: string; // Role required to see this item
+}
+
+interface BottomNavItem {
+  icon: string;
+  label: string;
+  link?: string;  // Make link optional
+  action?: () => void;  // Add an optional action function
+  class: string;
+  requiredPermission?: string; // Permission required to see this item
+  requiredRole?: string; // Role required to see this item
 }
 
 @Component({
@@ -20,9 +34,11 @@ interface NavItem {
   styleUrl: './side-nav.component.scss'
 })
 export class SideNavComponent {
-  userEmail: string = 'rosalie.rice@gmail.com';
-  userName: string = 'Mohamed';
+  userEmail: string = '';
+  userName: string = '';
+  userRole: string = '';
   isCollapsed: boolean = false;
+
   @HostListener('window:resize', ['$event'])
   onResize() {
     if (window.innerWidth <= 992) {
@@ -39,34 +55,102 @@ export class SideNavComponent {
       this.sidebarService.toggleSidebar();
     }
   }
+
   navigationItems: NavItem[] = [
     { icon: 'house', label: 'Dashboard', link: '/', class: 'text-warning', activeColor: '#ffc107' },
-    { icon: 'clipboard', label: 'Tasks', link: '/tasks', class: 'text-primary', activeColor: '#0d6efd' },
-    { icon: 'layers', label: 'Inventory', link: '/inventory', class: 'text-success', activeColor: '#198754' },
-    { icon: 'credit-card', label: 'Payroll', link: '/payroll', class: 'text-info', activeColor: '#0dcaf0' },
-    { icon: 'people', label: 'Users', link: '/users', class: 'text-primary', activeColor: '#0d6efd' },
-    { icon: 'bar-chart', label: 'Reports', link: '/reports', class: 'text-success', activeColor: '#198754' },
+    { icon: 'clipboard', label: 'Tasks', link: '/tasks', class: 'text-primary', activeColor: '#0d6efd', requiredPermission: 'view_tasks' },
+    { icon: 'person-bounding-box', label: 'Members', link: '/members', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_members' },
+    { icon: 'people', label: 'Users', link: '/users', class: 'text-primary', activeColor: '#0d6efd', requiredPermission: 'view_users' },
+    { icon: 'layers', label: 'Inventory', link: '/inventory', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_inventory' },
+    { icon: 'currency-dollar', label: 'Expenses', link: '/expenses', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_expenses' },
+    { icon: 'credit-card', label: 'Payroll', link: '/payroll', class: 'text-info', activeColor: '#0dcaf0', requiredPermission: 'view_payroll' },
+    { icon: 'bar-chart', label: 'Reports', link: '/reports', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_reports' },
     { icon: 'chat-dots-fill', label: 'Chat', link: '/chat', class: 'text-info', activeColor: '#0dcaf0' },
-
-    { icon: 'grid', label: 'Projects', link: '/projects', class: 'text-success', activeColor: '#198754' },
-    { icon: 'gear', label: 'Settings', link: '/settings', class: 'text-purple', activeColor: '#6f42c1' }
+    { icon: 'grid', label: 'Projects', link: '/projects', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_projects' },
+    { icon: 'gear', label: 'Settings', link: '/settings', class: 'text-purple', activeColor: '#6f42c1', requiredRole: 'ADMIN' }
   ];
 
-  bottomItems = [
+  bottomItems: BottomNavItem[] = [
     { icon: 'chat-left-text', label: 'Send Feedback', link: '/feedback', class: 'text-secondary' },
     { icon: 'question-circle', label: 'Knowledge Base', link: '/knowledge-base', class: 'text-secondary' },
-    { icon: 'box-arrow-left', label: 'Logout', link: '/logout', class: 'text-danger' }
+    {
+      icon: 'box-arrow-left',
+      label: 'Logout',
+      action: () => this.logout(),
+      class: 'text-danger'
+    }
   ];
 
   constructor(
     private languageService: LanguageService,
-    private sidebarService: SidebarService
+    private sidebarService: SidebarService,
+    private authService: AuthService,
+    private permissionsService: PermissionsService
   ) {
     this.sidebarService.isCollapsed$.subscribe(
       state => this.isCollapsed = state
     );
+
+    // Get user data from auth service
+    this.loadUserData();
   }
 
+  /**
+   * Load user data from auth service
+   */
+  private loadUserData(): void {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.userName = user.name;
+      this.userEmail = user.email;
+      this.userRole = user.role;
+    }
+  }
+
+  /**
+   * Check if the current user has permission to view an item
+   */
+  hasPermission(item: NavItem | BottomNavItem): boolean {
+    // Admin role bypasses all permission checks
+    if (this.userRole === 'ADMIN') {
+      return true;
+    }
+
+    // Check role-based permission
+    if (item.requiredRole && this.userRole !== item.requiredRole) {
+      return false;
+    }
+
+    // Check specific permission
+    if (item.requiredPermission && !this.permissionsService.hasPermission(item.requiredPermission)) {
+      return false;
+    }
+
+    // No restrictions or has all required permissions
+    return true;
+  }
+
+  /**
+   * Get visible navigation items based on permissions
+   */
+  get visibleNavigationItems(): NavItem[] {
+    return this.navigationItems.filter(item => this.hasPermission(item));
+  }
+
+  /**
+   * Get visible bottom items based on permissions
+   */
+  get visibleBottomItems(): BottomNavItem[] {
+    return this.bottomItems.filter(item => this.hasPermission(item));
+  }
+
+  /**
+   * Logout handler
+   */
+  logout(): void {
+    this.authService.logout();
+    // The AuthService will handle navigation to the login page
+  }
 
   switchLang(lang: string) {
     this.languageService.setLanguage(lang);

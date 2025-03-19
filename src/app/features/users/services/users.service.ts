@@ -30,6 +30,8 @@ export interface UserResponseDto {
   isActive: boolean;
   role: string;
   phone: string;
+  imageUrl?: string | null;
+  permissions?: string[];
   assignedRoles?: {
     id: string;
     name: string;
@@ -42,15 +44,26 @@ export interface ApiResponse<T> {
   result: T;
 }
 
-export interface PaginatedResponse<T> {
+export interface PaginatedResponse {
   message: string;
   result: {
-    data: T[];
-    total: number;
-    page: number;
+    users: UserResponseDto[];
+    totalUsers: number;
+    activeUsers: number;
+    inactiveUsers: number;
+  };
+  pagination: {
+    currentPage: number;
     perPage: number;
     totalPages: number;
+    totalCount: number;
   };
+}
+
+export interface RoleResponse {
+  id: string;
+  name: string;
+  permissions?: { id: string; name: string }[];
 }
 
 @Injectable({
@@ -58,6 +71,7 @@ export interface PaginatedResponse<T> {
 })
 export class UsersService {
   private apiUrl = `${environment.apiUrl}/users`;
+  private rolesUrl = `${environment.apiUrl}/roles`;
 
   constructor(private http: HttpClient) {}
 
@@ -67,7 +81,7 @@ export class UsersService {
     perPage: number = 10,
     search?: string,
     isActive?: boolean
-  ): Observable<PaginatedResponse<UserResponseDto>> {
+  ): Observable<PaginatedResponse> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('perPage', perPage.toString());
@@ -80,7 +94,7 @@ export class UsersService {
       params = params.set('isActive', isActive.toString());
     }
 
-    return this.http.get<PaginatedResponse<UserResponseDto>>(
+    return this.http.get<PaginatedResponse>(
       this.apiUrl,
       { params }
     );
@@ -93,16 +107,31 @@ export class UsersService {
 
   // Create a new user
   createUser(user: UserCreateDto): Observable<ApiResponse<UserResponseDto>> {
+    // Format phone number if needed
+    if (user.phone && !user.phone.startsWith('+')) {
+      user.phone = '+' + user.phone;
+    }
+
     return this.http.post<ApiResponse<UserResponseDto>>(this.apiUrl, user);
   }
 
   // Update a user
   updateUser(id: string, updates: UserUpdateDto): Observable<ApiResponse<UserResponseDto>> {
+    // Format phone number if needed
+    if (updates.phone && !updates.phone.startsWith('+')) {
+      updates.phone = '+' + updates.phone;
+    }
+
     return this.http.put<ApiResponse<UserResponseDto>>(`${this.apiUrl}/${id}`, updates);
   }
 
   // Delete a user
   deleteUser(id: string): Observable<ApiResponse<UserResponseDto>> {
     return this.http.delete<ApiResponse<UserResponseDto>>(`${this.apiUrl}/${id}`);
+  }
+
+  // Get all available roles
+  getRoles(): Observable<ApiResponse<RoleResponse[]>> {
+    return this.http.get<ApiResponse<RoleResponse[]>>(this.rolesUrl);
   }
 }

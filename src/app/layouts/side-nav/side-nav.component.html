@@ -23,10 +23,10 @@
     </div>
   </div>
 
-  <!-- Main Navigation -->
+  <!-- Main Navigation - Using filtered visibleNavigationItems -->
   <nav class="main-nav">
     <ul class="nav row">
-      <li class="nav-item" [ngClass]="isCollapsed ? 'col-12' : 'col-6'" *ngFor="let item of navigationItems">
+      <li class="nav-item" [ngClass]="isCollapsed ? 'col-12' : 'col-6'" *ngFor="let item of visibleNavigationItems">
         <a [routerLink]="item.link"
            [routerLinkActiveOptions]="{ exact: true }"
            class="nav-link flex-column"
@@ -42,15 +42,29 @@
     </ul>
   </nav>
 
-  <!-- Bottom Navigation -->
+  <!-- Bottom Navigation - Using filtered visibleBottomItems -->
   <nav class="bottom-nav">
     <ul class="nav flex-column">
-      <li class="nav-item" *ngFor="let item of bottomItems">
-        <a [routerLink]="item.link" class="nav-link p-0" [ngClass]="item.class">
+      <li class="nav-item" *ngFor="let item of visibleBottomItems">
+        <!-- Use routerLink for navigation items, click for action items -->
+        <a *ngIf="item.link"
+           [routerLink]="item.link"
+           class="nav-link p-0"
+           [ngClass]="item.class">
+          <i class="bi bi-{{item.icon}}"></i>
+          <span *ngIf="!isCollapsed">{{item.label}}</span>
+        </a>
+
+        <a *ngIf="!item.link && item.action"
+           (click)="item.action()"
+           class="nav-link p-0"
+           [ngClass]="item.class"
+           style="cursor: pointer;">
           <i class="bi bi-{{item.icon}}"></i>
           <span *ngIf="!isCollapsed">{{item.label}}</span>
         </a>
       </li>
     </ul>
   </nav>
+</div>
 </div>

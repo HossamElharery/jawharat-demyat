@@ -1,0 +1,376 @@
+// Variables
+$primary-color: #FDB900;
+$background-color: #F6F8FA;
+$text-color: #333333;
+$secondary-text: #787486;
+$border-color: #E0E0E0;
+$hover-color: #f8f9fa;
+
+// Status colors
+$accepted-color: #4CAF50;
+$accepted-bg: #E8F5E9;
+$pending-color: #FFA000;
+$pending-bg: #FFF8E1;
+$rejected-color: #F44336;
+$rejected-bg: #FFEBEE;
+
+// Mixins for responsive design
+@mixin mobile {
+  @media (max-width: 767px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: 768px) and (max-width: 1023px) {
+    @content;
+  }
+}
+
+.expenses-container {
+  background-color: $background-color;
+  min-height: 100vh;
+  padding: 24px;
+  position: relative;
+
+  @include mobile {
+    padding: 16px;
+  }
+}
+
+// Summary Cards
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+
+  @include mobile {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .summary-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+
+      app-icon {
+        font-size: 24px;
+      }
+    }
+
+    .card-content {
+      .card-count {
+        font-size: 24px;
+        font-weight: 600;
+        color: $text-color;
+        margin-bottom: 4px;
+      }
+
+      .card-label {
+        font-size: 14px;
+        color: $secondary-text;
+      }
+    }
+  }
+}
+
+// Filter Controls
+.filter-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  @include mobile {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .search-container {
+    position: relative;
+    width: 300px;
+
+    @include mobile {
+      width: 100%;
+    }
+
+    @include tablet {
+      width: 250px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 12px 12px 40px;
+      border-radius: 8px;
+      border: 1px solid $border-color;
+
+      &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+      }
+    }
+  }
+
+  .filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    @include mobile {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    ::ng-deep {
+      .status-dropdown {
+        min-width: 140px;
+
+        .p-dropdown {
+          border-radius: 8px;
+          border: 1px solid $border-color;
+          background-color: white;
+
+          .p-dropdown-label {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+
+          &:hover {
+            border-color: $primary-color;
+          }
+
+          &.p-focus {
+            border-color: $primary-color;
+            box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+          }
+        }
+
+        .p-dropdown-panel {
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+          .p-dropdown-items {
+            padding: 8px;
+
+            .p-dropdown-item {
+              padding: 12px 16px;
+              border-radius: 4px;
+
+              &:hover {
+                background-color: $hover-color;
+              }
+
+              &.p-highlight {
+                background-color: rgba($primary-color, 0.1);
+                color: $primary-color;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .status-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-weight: 500;
+
+      i {
+        font-size: 12px;
+        color: $secondary-text;
+      }
+    }
+
+    .add-expense-btn {
+      background-color: $primary-color;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      &:hover {
+        background-color: darken($primary-color, 5%);
+      }
+
+      @include mobile {
+        flex: 1;
+      }
+    }
+  }
+}
+
+// Expenses Table
+.expenses-table {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+
+  @include mobile {
+    border-radius: 8px;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .table-header {
+    display: flex;
+    padding: 16px 24px;
+    border-bottom: 1px solid $border-color;
+    background-color: white;
+
+    .header-cell {
+      color: $secondary-text;
+      font-weight: 500;
+      font-size: 14px;
+    }
+  }
+
+  .table-row {
+    display: flex;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid $border-color;
+    transition: background-color 0.2s ease;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: $hover-color;
+    }
+  }
+
+  .employee {
+    flex: 2;
+    min-width: 180px;
+
+    .employee-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .employee-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    }
+  }
+
+  .title {
+    flex: 2;
+    min-width: 150px;
+  }
+
+  .due-date {
+    flex: 1.5;
+    min-width: 120px;
+  }
+
+  .value {
+    flex: 1.5;
+    min-width: 120px;
+  }
+
+  .status {
+    flex: 1;
+    min-width: 100px;
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+
+      &.accepted {
+        background-color: $accepted-bg;
+        color: $accepted-color;
+      }
+
+      &.pending {
+        background-color: $pending-bg;
+        color: $pending-color;
+      }
+
+      &.rejected {
+        background-color: $rejected-bg;
+        color: $rejected-color;
+      }
+    }
+  }
+
+  .actions {
+    flex: 1;
+    min-width: 80px;
+    display: flex;
+    justify-content: flex-end;
+
+    .view-btn {
+      color: $primary-color;
+
+      &:hover {
+        background-color: rgba($primary-color, 0.1);
+      }
+    }
+  }
+}
+
+// Empty state styling
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 64px 24px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-top: 24px;
+
+  .empty-icon {
+    font-size: 48px;
+    color: $secondary-text;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    margin: 0 0 8px 0;
+    color: $text-color;
+    font-weight: 600;
+  }
+
+  p {
+    color: $secondary-text;
+    margin: 0 0 24px 0;
+  }
+}

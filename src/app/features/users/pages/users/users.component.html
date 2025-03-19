@@ -1,9 +1,8 @@
 <div class="container-fluid">
   <div class="header-section mb-4">
-    <div class="d-flex justify-content-between align-items-center gap-3">
-
-      <div class="d-flex align-items-center gap-3">
-        <div class="search-container position-relative">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+      <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3">
+        <div class="search-container position-relative w-100 w-sm-auto">
           <i class="bi bi-search search-icon"></i>
           <input
             type="text"
@@ -11,9 +10,9 @@
             placeholder="Search for anything"
             [formControl]="searchControl">
         </div>
-        <div class="dropdown">
+        <div class="dropdown mt-2 mt-sm-0">
           <button
-            class="btn btn-outline-secondary dropdown-toggle status-filter"
+            class="btn btn-outline-secondary dropdown-toggle status-filter w-100 w-sm-auto"
             type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false">
@@ -25,13 +24,20 @@
             <li><a class="dropdown-item" (click)="filterByStatus('All')">All</a></li>
           </ul>
         </div>
-
       </div>
-      <button class="btn btn-warning add-user-btn" (click)="onAddUser()">
+
+      <!-- Only show Add User button if user has permission -->
+      <button *ngIf="canCreateUsers" class="btn btn-warning add-user-btn mt-3 mt-md-0  w-md-auto" (click)="onAddUser()">
         <i class="bi bi-plus-lg me-2"></i>
         Add New User
       </button>
     </div>
+  </div>
+
+  <!-- Permission denied message -->
+  <div *ngIf="!canViewUsers" class="alert alert-warning">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    You do not have permission to view users.
   </div>
 
   <!-- Loading indicator -->
@@ -41,20 +47,20 @@
     </div>
   </div>
 
-  <!-- Error message placeholder -->
-  <div *ngIf="!isLoading && filteredUsers.length === 0" class="alert alert-info">
+  <!-- Error message for no users found -->
+  <div *ngIf="!isLoading && canViewUsers && filteredUsers.length === 0" class="alert alert-info">
     No users found matching your criteria.
   </div>
 
   <!-- User table -->
-  <div *ngIf="!isLoading && filteredUsers.length > 0" class="table-responsive">
+  <div *ngIf="!isLoading && canViewUsers && filteredUsers.length > 0" class="table-responsive">
     <table class="table align-middle">
       <thead>
         <tr>
           <th>User Name</th>
           <th>E-mail</th>
-          <th>Phone Number</th>
-          <th>Role</th>
+          <th class="d-none d-md-table-cell">Phone Number</th>
+          <th class="d-none d-lg-table-cell">Role</th>
           <th>Status</th>
           <th>Actions</th>
         </tr>
@@ -68,8 +74,8 @@
             </div>
           </td>
           <td>{{ user.email }}</td>
-          <td>{{ user.phoneNumber }}</td>
-          <td>{{ user.role }}</td>
+          <td class="d-none d-md-table-cell">{{ user.phoneNumber }}</td>
+          <td class="d-none d-lg-table-cell">{{ user.role }}</td>
           <td>
             <span class="status-badge" [ngClass]="{'active': user.status === 'Active', 'inactive': user.status === 'In Active'}">
               {{ user.status }}
@@ -77,13 +83,13 @@
           </td>
           <td>
             <div class="action-buttons">
-              <button class="btn btn-link" (click)="onView(user)">
+              <!-- <button class="btn btn-link" (click)="onView(user)" title="View details">
                 <i class="bi bi-eye text-warning"></i>
-              </button>
-              <button class="btn btn-link" (click)="onEdit(user)">
+              </button> -->
+              <button *ngIf="canEditUsers" class="btn btn-link" (click)="onEdit(user)" title="Edit user">
                 <i class="bi bi-pencil text-warning"></i>
               </button>
-              <button class="btn btn-link" (click)="onDelete(user)">
+              <button *ngIf="canDeleteUsers" class="btn btn-link" (click)="onDelete(user)" title="Delete user">
                 <i class="bi bi-trash text-warning"></i>
               </button>
             </div>
@@ -94,24 +100,14 @@
   </div>
 
   <!-- Pagination controls -->
-  <div *ngIf="!isLoading && totalUsers > 0" class="d-flex justify-content-between align-items-center mt-4">
-    <div>
-      Showing {{ filteredUsers.length }} of {{ totalUsers }} users
-    </div>
-    <div>
-      <nav aria-label="Page navigation">
-        <ul class="pagination">
-          <li class="page-item" [class.disabled]="currentPage === 1">
-            <a class="page-link" href="javascript:void(0)" (click)="prevPage()">Previous</a>
-          </li>
-          <li class="page-item">
-            <span class="page-link">{{ currentPage }}</span>
-          </li>
-          <li class="page-item" [class.disabled]="filteredUsers.length < perPage">
-            <a class="page-link" href="javascript:void(0)" (click)="nextPage()">Next</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </div>
+  <app-pagination
+    *ngIf="!isLoading && canViewUsers && totalUsers > 0"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    [totalItemsCount]="totalUsers"
+    [perPage]="perPage"
+    [theme]="'warning'"
+    (pageChange)="onPageChange($event)"
+    (perPageChange)="onPerPageChange($event)">
+  </app-pagination>
 </div>

@@ -1,0 +1,94 @@
+<div class="expenses-container">
+  <!-- Summary Cards -->
+  <div class="summary-cards">
+    <div class="summary-card" *ngFor="let summary of summaries">
+      <div class="card-icon" [ngStyle]="{'background-color': summary.iconColor + '15'}">
+        <app-icon [name]="summary.icon" [color]="summary.iconColor"></app-icon>
+      </div>
+      <div class="card-content">
+        <div class="card-count">{{summary.count}}</div>
+        <div class="card-label">{{summary.label}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Controls -->
+  <div class="filter-controls">
+    <div class="search-container">
+      <i class="pi pi-search search-icon"></i>
+      <input type="text" pInputText placeholder="Search For anything" class="search-input" (input)="searchExpenses($event)">
+    </div>
+
+    <div class="filter-actions">
+      <p-dropdown
+        [options]="statusOptions"
+        [(ngModel)]="selectedStatus"
+        optionLabel="label"
+        optionValue="value"
+        (onChange)="onStatusChange()"
+        styleClass="status-dropdown">
+        <ng-template pTemplate="selectedItem">
+          <div class="status-option">
+            <span>{{selectedStatus === 'all' ? 'All' : (selectedStatus | titlecase)}}</span>
+            <i class="pi pi-chevron-down"></i>
+          </div>
+        </ng-template>
+        <ng-template let-option pTemplate="item">
+          <div class="status-option">
+            <span>{{option.label}}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
+
+      <button pButton type="button" label="Add Expenses" icon="pi pi-plus" class="add-expense-btn" (click)="addExpense()"></button>
+    </div>
+  </div>
+
+  <!-- Expenses Table -->
+  <div class="expenses-table">
+    <div class="table-header">
+      <div class="header-cell employee">Employee</div>
+      <div class="header-cell title">Title</div>
+      <div class="header-cell due-date">Due Date</div>
+      <div class="header-cell value">Expenses Value</div>
+      <div class="header-cell status">Status</div>
+      <div class="header-cell actions">Actions</div>
+    </div>
+
+    <div class="table-body">
+      <div class="table-row" *ngFor="let expense of filteredExpenses">
+        <div class="body-cell employee">
+          <div class="employee-info">
+            <img [src]="expense.employee.avatar" alt="Employee Avatar" class="employee-avatar">
+            <span class="employee-name">{{expense.employee.name}}</span>
+          </div>
+        </div>
+        <div class="body-cell title">{{expense.title}}</div>
+        <div class="body-cell due-date">{{expense.dueDate}}</div>
+        <div class="body-cell value">{{expense.value}}</div>
+        <div class="body-cell status">
+          <span class="status-badge" [ngClass]="getStatusClass(expense.status)">
+            {{expense.status | titlecase}}
+          </span>
+        </div>
+        <div class="body-cell actions">
+          <button pButton class="p-button-text view-btn" (click)="viewExpense(expense)">
+            <i class="pi pi-eye"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state if no expenses -->
+  <div class="empty-state" *ngIf="filteredExpenses.length === 0">
+    <div class="empty-icon">
+      <i class="pi pi-file"></i>
+    </div>
+    <h3>No Expenses Found</h3>
+    <p>Create a new expense request or try a different filter</p>
+    <button pButton type="button" label="Add Your First Expense" icon="pi pi-plus" class="add-expense-btn" (click)="addExpense()"></button>
+  </div>
+
+
+</div>

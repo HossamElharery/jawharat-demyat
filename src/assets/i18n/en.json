@@ -1,83 +1,29 @@
 {
-  "SIDENAV": {
-    "DASHBOARD": "Dashboard",
-    "ALL_REQUESTS": "All Requests",
-    "ALL_USERS": "All Users",
-    "TOTAL_LAWYERS": "Total Lawyers",
-    "TOTAL_ACCOUNTANTS": "Total Accountants",
-    "TOTAL_HR": "Total HR",
-    "TOTAL_TRANSLATORS": "Total Translators",
-    "MY_ACCOUNT": "My Account",
-    "SETTINGS": "Settings",
-    "REPORTS": "Reports",
-    "PACKAGES": "Packages",
-    "ROLES_PERMISSIONS": "Roles & Permissions"
-  }
-  ,
-  "LOGIN": {
-    "TITLE": "Sign In",
-    "SUBTITLE": "Enter your email and password to sign in!",
-    "GOOGLE_SIGNIN": "Sign in with Google",
-    "OR": "or",
-    "EMAIL": "Email",
-    "PASSWORD": "Password",
-    "REMEMBER_ME": "Keep me logged in",
-    "FORGOT_PASSWORD": "Forget password?",
-    "SIGNIN_BTN": "Sign In",
-    "NOT_REGISTERED": "Not registered yet?",
-    "CREATE_ACCOUNT": "Create an Account",
-    "BACK_DASHBOARD": "Back to dashboard",
-    "WELCOME": {
-      "LINE1": "Let's take you on a quick tour!",
-      "LINE2": "Join us on an exciting introductory journey by watching our featured videos",
-      "LINE3": "You'll discover how our platform provides integrated solutions for your financial and legal needs",
-      "LINE4": "easily."
-    },
-    "ERRORS": {
-      "EMAIL_REQUIRED": "Email is required",
-      "EMAIL_INVALID": "Please enter a valid email",
-      "PASSWORD_REQUIRED": "Password is required",
-      "PASSWORD_LENGTH": "Password must be at least 8 characters"
-    }
+  "login": {
+    "title": "Login",
+    "subtitle": "Enter your credentials to access the management system",
+    "email": "E-mail",
+    "password": "Password",
+    "submit": "Login",
+    "processing": "Logging in",
+    "error": "Login failed. Please check your credentials."
   },
-  "USER_DETAILS": {
-    "PROFILE": {
-      "TITLE": "User Profile",
-      "EDIT": "Edit Profile",
-      "PERSONAL": {
-        "TITLE": "Personal",
-        "FIRST_NAME": "First Name",
-        "SURNAME": "Surname",
-        "NATIONAL_CODE": "National Code",
-        "DOB": "Date of birth",
-        "EDUCATION": "Education level"
-      },
-      "CONTACT": {
-        "TITLE": "Contact",
-        "EMAIL": "Email",
-        "PHONE": "Phone Number",
-        "COUNTRY": "Country",
-        "CITY": "City"
-      }
-    },
-    "REQUESTS": {
-      "ALL": "All Requests",
-      "ACTIVE": "Active Requests",
-      "PENDING": "Pending Requests",
-      "MEETINGS": "All Meetings"
-    },
-    "PLAN": "Current Plan",
-    "SECURITY": "Password & Security",
-    "WALLET": "Wallet & Points",
-    "SAVE": "Save",
-    "CONSULTATION": {
-      "NEW": "New Consolation",
-      "TYPE": "Lawyer Consultation",
-      "RESPONSES": "Responses",
-      "DECLINED": "Declined",
-      "DETAILS": "Details"
-    },
-    "LAST_UPDATE": "last update",
-    "DELETE": "Delete"
+  "validation": {
+    "email_required": "Email is required",
+    "email_invalid": "Please enter a valid email",
+    "password_required": "Password is required",
+    "password_length": "Password must be at least 6 characters"
+  },
+  "auth": {
+    "session_expired": "Your session has expired. Please login again.",
+    "unauthorized": "You are not authorized to access this resource."
+  },
+  "pagination": {
+    "showing": "Showing",
+    "to": "to",
+    "of": "of",
+    "items": "items",
+    "show": "Show",
+    "items_per_page": "per page"
   }
 }

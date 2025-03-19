@@ -1,0 +1,66 @@
+@use '../../../../../assets/scss/variables.scss' as *;
+
+// .report-container {
+//   padding: 20px;
+// }
+
+.report-card {
+  background-color: $white;
+  border-radius: $br-12px;
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.report-icon {
+  margin-bottom: 15px;
+
+  img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+}
+
+.report-title {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.report-description {
+  color: #6c757d;
+  font-size: 14px;
+  flex-grow: 1;
+  margin-bottom: 15px;
+}
+
+.report-action {
+  margin-top: auto;
+}
+
+.view-report-btn {
+  display: block;
+  background-color: $primary-color;
+  color: $white;
+  text-align: center;
+  padding: 12px 10px;
+  border-radius: $br-5px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: darken($primary-color, 5%);
+  }
+}
+
+// Ensure the background color matches the image
+:host {
+  display: block;
+  background-color: $bk-blue;
+  min-height: 100vh;
+  padding: 20px 0;
+}

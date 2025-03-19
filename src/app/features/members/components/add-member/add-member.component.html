@@ -1,0 +1,330 @@
+<div class="modal-container">
+  <div class="modal-header">
+    <h2>{{ isViewMode ? 'Member Details' : (isEditMode ? 'Edit Member' : 'Add New Member') }}</h2>
+    <button class="close-btn" (click)="onClose()">
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="text-center my-4">
+    <div class="spinner-border text-warning" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- API Error message -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Validation errors -->
+  <div *ngIf="apiErrors && apiErrors.length > 0" class="alert alert-danger">
+    <ul class="mb-0 ps-3">
+      <li *ngFor="let error of apiErrors">{{ error }}</li>
+    </ul>
+  </div>
+
+  <form [formGroup]="memberForm" (ngSubmit)="onSubmit()">
+    <!-- Basic Information Section -->
+    <div class="section-header">
+      <h3>Basic Information</h3>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input
+          type="text"
+          id="name"
+          class="form-control"
+          formControlName="name"
+          placeholder="Enter full name">
+        <small *ngIf="memberForm.get('name')?.errors?.['required'] && memberForm.get('name')?.touched" class="text-danger">
+          Full name is required
+        </small>
+        <small *ngIf="memberForm.get('name')?.errors?.['minlength'] && memberForm.get('name')?.touched" class="text-danger">
+          Full name must be at least 2 characters
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="jobTitle">Job Title</label>
+        <input
+          type="text"
+          id="jobTitle"
+          class="form-control"
+          formControlName="jobTitle"
+          placeholder="Enter job title">
+        <small *ngIf="memberForm.get('jobTitle')?.errors?.['required'] && memberForm.get('jobTitle')?.touched" class="text-danger">
+          Job title is required
+        </small>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group phone-group">
+        <label for="phone">Phone Number</label>
+        <!-- International Phone Input with Egypt as default -->
+        <ngx-intl-tel-input
+          [cssClass]="'custom-phone-input'"
+          [preferredCountries]="preferredCountries"
+          [enableAutoCountrySelect]="true"
+          [enablePlaceholder]="true"
+          [searchCountryFlag]="true"
+          [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+          [selectFirstCountry]="false"
+          [selectedCountryISO]="CountryISO.Egypt"
+          [phoneValidation]="true"
+          [separateDialCode]="true"
+          id="phone"
+          formControlName="phoneNumber">
+        </ngx-intl-tel-input>
+        <small *ngIf="memberForm.get('phoneNumber')?.invalid && memberForm.get('phoneNumber')?.touched" class="text-danger">
+          Valid phone number is required
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-Mail</label>
+        <input
+          type="email"
+          id="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="Enter email">
+        <small *ngIf="memberForm.get('email')?.errors?.['required'] && memberForm.get('email')?.touched" class="text-danger">
+          Email is required
+        </small>
+        <small *ngIf="memberForm.get('email')?.errors?.['email'] && memberForm.get('email')?.touched" class="text-danger">
+          Please enter a valid email
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="!isViewMode">
+      <label for="password">Password{{ isEditMode ? ' (Leave blank to keep current)' : '' }}</label>
+      <input
+        type="password"
+        id="password"
+        class="form-control"
+        formControlName="password"
+        placeholder="Enter password">
+      <small *ngIf="!isEditMode && memberForm.get('password')?.invalid && memberForm.get('password')?.touched" class="text-danger">
+        Password is required
+      </small>
+    </div>
+
+    <!-- Location Information Section -->
+    <div class="section-header mt-4">
+      <h3>Location Information</h3>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input
+          type="text"
+          id="country"
+          class="form-control"
+          formControlName="country"
+          placeholder="Enter country">
+        <small *ngIf="memberForm.get('country')?.errors?.['required'] && memberForm.get('country')?.touched" class="text-danger">
+          Country is required
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location/City</label>
+        <input
+          type="text"
+          id="location"
+          class="form-control"
+          formControlName="location"
+          placeholder="Enter city or location">
+        <small *ngIf="memberForm.get('location')?.errors?.['required'] && memberForm.get('location')?.touched" class="text-danger">
+          Location is required
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="timeZone">Time Zone</label>
+      <select id="timeZone" class="form-select" formControlName="timeZone">
+        <option value="" disabled>Select time zone</option>
+        <option *ngFor="let timeZone of timeZoneOptions" [value]="timeZone">{{ timeZone }}</option>
+      </select>
+      <small *ngIf="memberForm.get('timeZone')?.errors?.['required'] && memberForm.get('timeZone')?.touched" class="text-danger">
+        Time zone is required
+      </small>
+    </div>
+
+    <!-- Employment Information Section -->
+    <div class="section-header mt-4">
+      <h3>Employment Information</h3>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="payType">Employment Type</label>
+        <select id="payType" class="form-select" formControlName="payType">
+          <option *ngFor="let type of payTypeOptions" [value]="type">
+            {{ type === 'FULL_TIME' ? 'Full Time' : (type === 'PART_TIME' ? 'Part Time' : 'Hourly') }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group" *ngIf="memberForm.get('payType')?.value !== 'HOURLY'">
+        <label for="salary">Monthly Salary</label>
+        <input
+          type="number"
+          id="salary"
+          class="form-control"
+          formControlName="salary"
+          placeholder="Enter monthly salary">
+        <small *ngIf="memberForm.get('salary')?.errors?.['required'] && memberForm.get('salary')?.touched" class="text-danger">
+          Salary is required
+        </small>
+      </div>
+
+      <div class="form-group" *ngIf="memberForm.get('payType')?.value === 'HOURLY'">
+        <label for="hourlyRate">Hourly Rate</label>
+        <input
+          type="number"
+          id="hourlyRate"
+          class="form-control"
+          formControlName="hourlyRate"
+          placeholder="Enter hourly rate">
+        <small *ngIf="memberForm.get('hourlyRate')?.errors?.['required'] && memberForm.get('hourlyRate')?.touched" class="text-danger">
+          Hourly rate is required
+        </small>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group" *ngIf="memberForm.get('payType')?.value !== 'HOURLY'">
+        <label for="salaryDate">Salary Date</label>
+        <p-calendar
+          id="salaryDate"
+          formControlName="salaryDate"
+          [showIcon]="true"
+          [showButtonBar]="true"
+          placeholder="Select salary date"
+          dateFormat="dd/mm/yy">
+        </p-calendar>
+        <small *ngIf="memberForm.get('salaryDate')?.errors?.['required'] && memberForm.get('salaryDate')?.touched" class="text-danger">
+          Salary date is required
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="contractStartDate">Contract Start Date</label>
+        <p-calendar
+          id="contractStartDate"
+          formControlName="contractStartDate"
+          [showIcon]="true"
+          [showButtonBar]="true"
+          placeholder="Select start date"
+          dateFormat="dd/mm/yy">
+        </p-calendar>
+        <small *ngIf="memberForm.get('contractStartDate')?.errors?.['required'] && memberForm.get('contractStartDate')?.touched" class="text-danger">
+          Contract start date is required
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="contractEndDate">Contract End Date (Optional)</label>
+        <p-calendar
+          id="contractEndDate"
+          formControlName="contractEndDate"
+          [showIcon]="true"
+          [showButtonBar]="true"
+          placeholder="Select end date (optional)"
+          dateFormat="dd/mm/yy">
+        </p-calendar>
+      </div>
+    </div>
+
+    <!-- Work Schedule Section -->
+    <div class="section-header mt-4 d-flex justify-content-between align-items-center">
+      <h3>Work Schedule</h3>
+      <button *ngIf="!isViewMode" type="button" class="btn btn-sm btn-outline-primary" (click)="addWorkDay()">
+        <i class="bi bi-plus-circle me-1"></i> Add Work Day
+      </button>
+    </div>
+
+    <div class="work-days-container" formArrayName="days">
+      <div *ngFor="let workDay of workDaysArray.controls; let i = index" [formGroupName]="i" class="work-day-item">
+        <div class="form-row">
+          <div class="form-group">
+            <label [for]="'dayOfWeek' + i">Day of Week</label>
+            <select
+              [id]="'dayOfWeek' + i"
+              class="form-select"
+              formControlName="dayOfWeek">
+              <option *ngFor="let day of dayOfWeekOptions"
+                      [value]="day"
+                      [disabled]="isDaySelected(day, i)">
+                {{ day }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label [for]="'startTime' + i">Start Time</label>
+            <input
+              type="time"
+              [id]="'startTime' + i"
+              class="form-control"
+              formControlName="startTime">
+          </div>
+
+          <div class="form-group">
+            <label [for]="'endTime' + i">End Time</label>
+            <input
+              type="time"
+              [id]="'endTime' + i"
+              class="form-control"
+              formControlName="endTime">
+          </div>
+
+          <div class="form-group action-col" *ngIf="!isViewMode">
+            <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeWorkDay(i)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Status Toggle -->
+    <div class="active-member-section">
+      <div class="active-member-header">
+        <h3>Active Member <span>({{ memberForm.get('isActive')?.value ? 'Active' : 'Inactive' }})</span></h3>
+        <div class="toggle-switch">
+          <input
+            type="checkbox"
+            id="activeStatus"
+            formControlName="isActive"
+            class="toggle-input">
+          <label for="activeStatus" class="toggle-label"></label>
+        </div>
+      </div>
+      <p class="help-text">This member is currently {{ memberForm.get('isActive')?.value ? 'active' : 'inactive' }}
+        and {{ memberForm.get('isActive')?.value ? 'has' : 'does not have' }} full access to their assigned tasks and resources</p>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-cancel" (click)="onClose()">
+        {{ isViewMode ? 'Close' : 'Cancel' }}
+      </button>
+      <button *ngIf="!isViewMode" type="submit" class="btn btn-submit" [disabled]="!memberForm.valid || isSubmitting">
+        <span *ngIf="!isSubmitting">{{ isEditMode ? 'Save Changes' : 'Add Member' }}</span>
+        <span *ngIf="isSubmitting">
+          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          {{ isEditMode ? 'Saving...' : 'Adding...' }}
+        </span>
+      </button>
+    </div>
+  </form>
+</div>

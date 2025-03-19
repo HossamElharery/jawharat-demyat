@@ -1,0 +1,164 @@
+@import '../../../../../assets/scss/variables.scss';
+.search-container {
+  width: 100%;
+  max-width: 280px;
+  position: relative;
+
+  @media (max-width: 576px) {
+    max-width: 100%;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+  }
+
+  .search-input {
+    padding-left: 35px;
+    border-radius: $br-5px;
+    border: 1px solid #ced4da;
+  }
+}
+
+.status-filter {
+  border-radius: $br-5px;
+  border: 1px solid #ced4da;
+  min-width: 120px;
+}
+
+// Member avatar
+.member-avatar {
+  width: 36px;
+  height: 36px;
+  min-width: 36px; // Prevent shrinking on small screens
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+// Status badge
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-block;
+  white-space: nowrap; // Prevent wrapping
+
+  &.active {
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #27ae60;
+  }
+
+  &.inactive {
+    background-color: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+  }
+}
+
+// Table styling
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+
+  .table {
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 650px; // Ensures table doesn't collapse too much on small screens
+
+    th {
+      font-weight: 600;
+      color: #495057;
+      border-bottom: 2px solid #dee2e6;
+      padding: 12px;
+      white-space: nowrap; // Prevent header text wrapping
+    }
+
+    td {
+      vertical-align: middle;
+      padding: 12px;
+      border-bottom: 1px solid #dee2e6;
+    }
+  }
+}
+
+// Action buttons
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+
+  .btn-link {
+    padding: 6px;
+    line-height: 1;
+    border-radius: $br-5px;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    i {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// Add member button
+.add-member-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $primary-color;
+  border-color: $primary-color;
+  color: white;
+  border-radius: $br-5px;
+  padding: 8px 16px;
+
+  &:hover {
+    background-color: darken($primary-color, 5%);
+  }
+}
+
+// Header section responsive adjustments
+.header-section {
+  .dropdown-menu {
+    min-width: 120px;
+  }
+
+  @media (max-width: 768px) {
+    .search-container, .status-filter, .add-member-btn {
+      width: 100%;
+    }
+  }
+}
+
+// RTL support
+:host-context(.rtl) {
+  .search-container .search-icon {
+    left: unset;
+    right: 12px;
+  }
+
+  .search-container .search-input {
+    padding-left: 12px;
+    padding-right: 35px;
+  }
+
+  .member-avatar + .ms-2 {
+    margin-left: 0 !important;
+    margin-right: 0.5rem !important;
+  }
+
+  .add-member-btn i {
+    margin-right: 0 !important;
+    margin-left: 0.5rem;
+  }
+
+  .action-buttons {
+    flex-direction: row-reverse;
+  }
+}

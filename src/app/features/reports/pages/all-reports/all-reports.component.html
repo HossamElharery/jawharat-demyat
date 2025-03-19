@@ -1,0 +1,19 @@
+<div class="container-fluid report-container">
+  <div class="row">
+    <!-- Loop through all reports dynamically -->
+    <div class="col-md-4 mb-4" *ngFor="let report of reports">
+      <div class="report-card">
+        <div class="report-icon">
+          <img [src]="report.img" alt="Document Icon">
+        </div>
+        <h3 class="report-title">{{ report.title }}</h3>
+        <p class="report-description">
+          {{ report.description }}
+        </p>
+        <div class="report-action">
+          <a href="javascript:void(0)" class="view-report-btn" (click)="viewReport(report)">View Report</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,9 +1,7 @@
-
 <div class="container-fluid">
   <div class="header-section mb-4">
-    <div class="d-flex justify-content-between align-items-center gap-3 ">
-
-      <div class="d-flex align-items-center gap-3">
+    <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap">
+      <div class="d-flex align-items-center gap-3 flex-wrap">
         <div class="search-container position-relative">
           <i class="bi bi-search search-icon"></i>
           <input
@@ -18,7 +16,7 @@
             type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false">
-            {{ selectedStatus || 'In Stock' }}
+            {{ selectedStatus === 'instock' ? 'In Stock' : (selectedStatus === 'outofstock' ? 'Out Stock' : 'All') }}
           </button>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" (click)="filterByStatus('In Stock')">In Stock</a></li>
@@ -26,64 +24,81 @@
             <li><a class="dropdown-item" (click)="filterByStatus('All')">All</a></li>
           </ul>
         </div>
-
       </div>
-      <div class="d-flex align-items-center">
-        <div>
-          <div class="show-style">
-            <i class="bi bi-list"
+
+      <div class="d-flex align-items-center gap-3">
+        <div class="show-style">
+          <i class="bi bi-list"
             [ngClass]="{'active': currentView === 'list'}"
             (click)="toggleView('list')"></i>
-         <i class="bi bi-grid-3x2-gap"
+          <i class="bi bi-grid-3x2-gap"
             [ngClass]="{'active': currentView === 'grid'}"
             (click)="toggleView('grid')"></i>
-          </div>
         </div>
 
-        <button class="btn btn-warning add-user-btn" (click)="onAddInventory()">
+        <button class="btn btn-warning add-inventory-btn" (click)="onAddInventory()" *ngIf="canCreateInventory">
           <i class="bi bi-plus-lg me-2"></i>
           Add Inventory
         </button>
       </div>
     </div>
   </div>
-  <div [ngClass]="{'table-responsive': currentView === 'list'}">
-    <table class="table align-middle" *ngIf="currentView === 'list'">
+
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner-border text-warning" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading inventory products...</p>
+  </div>
+
+  <!-- Permission denied message -->
+  <div *ngIf="!canViewInventory" class="alert alert-warning">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    You do not have permission to view inventory products.
+  </div>
+
+  <!-- List View -->
+  <div [ngClass]="{'table-responsive': currentView === 'list'}" *ngIf="!isLoading && canViewInventory">
+    <table class="table align-middle" *ngIf="currentView === 'list' && filteredProducts.length > 0">
       <thead>
         <tr>
           <th>Image</th>
-          <th>Id</th>
+          <th>ID</th>
+          <th>Name</th>
           <th>Type</th>
+          <th>Stock</th>
           <th>Value</th>
           <th>Status</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of filteredUsers">
+        <tr *ngFor="let product of filteredProducts">
           <td>
             <div class="d-flex align-items-center">
-              <img [src]="user.image" class="user-avatar" alt="User avatar">
-              <span class="ms-2">{{ user.type }}</span>
+              <img [src]="getProductImageUrl(product)" class="product-avatar" alt="Product image">
             </div>
           </td>
-          <td>{{ user.id }}</td>
-          <td>{{ user.type }}</td>
-          <td>{{ user.value }}</td>
+          <td>{{ product.id.substring(0, 8) }}...</td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.type === 'machine' ? 'Machine' : 'Product' }}</td>
+          <td>{{ product.stock }}</td>
+          <td>{{ formatValue(product.value) }}</td>
           <td>
-            <span class="status-badge" [ngClass]="{'active': user.status === 'In Stock', 'Out Stock': user.status === 'In Stock'}">
-              {{ user.status }}
+            <span class="status-badge" [ngClass]="{'active': product.status === 'instock', 'inactive': product.status === 'outofstock'}">
+              {{ formatStatus(product.status) }}
             </span>
           </td>
           <td>
             <div class="action-buttons">
-              <button class="btn btn-link" (click)="onView(user)">
+              <button class="btn btn-link" (click)="onView(product)" title="View details">
                 <i class="bi bi-eye text-warning"></i>
               </button>
-              <button class="btn btn-link" (click)="onEdit(user)">
+              <button class="btn btn-link" (click)="onEdit(product)" *ngIf="canEditInventory" title="Edit product">
                 <i class="bi bi-pencil text-warning"></i>
               </button>
-              <button class="btn btn-link" (click)="onDelete(user)">
+              <button class="btn btn-link" (click)="onDelete(product)" *ngIf="canDeleteInventory" title="Delete product">
                 <i class="bi bi-trash text-warning"></i>
               </button>
             </div>
@@ -91,43 +106,81 @@
         </tr>
       </tbody>
     </table>
-  <!-- Grid View -->
-<div class="inventory-grid" *ngIf="currentView === 'grid'">
-  <div class="row g-4">
-    <div class="col-12 col-md-6 col-lg-4" *ngFor="let user of filteredUsers">
-      <div class="inventory-card">
-        <!-- Main Image Section -->
-        <div class="card-image-container">
-          <img [src]="user.image" alt="Product image">
-          <span class="status-tag">{{ user.status }}</span>
-        </div>
 
-        <!-- Product Info Section -->
-        <div class="product-info">
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <i class="bi bi-grid-3x3-gap-fill text-warning"></i>
-            <span class="product-type">{{ user.type }}</span>
-            <span class="product-value ms-auto">{{ user.value }}</span>
-          </div>
-          <div class="product-name">Product Name
-            <span class="product-id">{{ user.id }}</span>
-          </div>
-        </div>
+    <!-- Grid View -->
+    <div class="inventory-grid" *ngIf="currentView === 'grid' && filteredProducts.length > 0">
+      <div class="row g-4">
+        <div class="col-12 col-md-6 col-lg-4" *ngFor="let product of filteredProducts">
+          <div class="inventory-card">
+            <!-- Main Image Section -->
+            <div class="card-image-container">
+              <img [src]="getProductImageUrl(product)" alt="Product image">
+              <span class="status-tag" [ngClass]="{'in-stock': product.status === 'instock', 'out-stock': product.status === 'outofstock'}">
+                {{ formatStatus(product.status) }}
+              </span>
+            </div>
 
-        <!-- Action Buttons -->
-        <div class="card-actions">
-          <button class="btn btn-warning w-100 add-inventory-btn">
-            <i class="bi bi-pencil-fill me-2"></i>
-            Add Inventory
-          </button>
-          <button class="btn btn-outline-danger w-100 delete-btn">
-            <i class="bi bi-trash3-fill me-2"></i>
-            Delete Inventory
-          </button>
+            <!-- Product Info Section -->
+            <div class="product-info">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <i class="bi bi-grid-3x3-gap-fill text-warning"></i>
+                <span class="product-type">{{ product.type === 'machine' ? 'Machine' : 'Product' }}</span>
+                <span class="product-value ms-auto">{{ formatValue(product.value) }}</span>
+              </div>
+              <div class="product-name">{{ product.name }}
+                <span class="product-id">{{ product.id.substring(0, 8) }}...</span>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="card-actions">
+              <button class="btn btn-warning w-100 view-btn" (click)="onView(product)">
+                <i class="bi bi-eye-fill me-2"></i>
+                View Details
+              </button>
+              <div class="d-flex gap-2 mt-2">
+                <button class="btn btn-outline-primary flex-grow-1 edit-btn" (click)="onEdit(product)" *ngIf="canEditInventory">
+                  <i class="bi bi-pencil-fill me-2"></i>
+                  Edit
+                </button>
+                <button class="btn btn-outline-danger flex-grow-1 delete-btn" (click)="onDelete(product)" *ngIf="canDeleteInventory">
+                  <i class="bi bi-trash3-fill me-2"></i>
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Empty state if no products -->
+    <div class="empty-state" *ngIf="filteredProducts.length === 0">
+      <div class="empty-icon">
+        <i class="bi bi-box-seam"></i>
+      </div>
+      <h3>No Inventory Products Found</h3>
+      <p>Create a new inventory product to get started</p>
+      <button class="btn btn-warning add-inventory-btn" (click)="onAddInventory()" *ngIf="canCreateInventory">
+        <i class="bi bi-plus-lg me-2"></i>
+        Add Your First Inventory Product
+      </button>
+    </div>
+
+
   </div>
+    <!-- Pagination controls -->
+    <app-pagination
+      *ngIf="!isLoading && canViewInventory && totalProducts > 0"
+      [currentPage]="currentPage"
+      [totalPages]="totalPages"
+      [totalItemsCount]="totalProducts"
+      [perPage]="perPage"
+      [theme]="'warning'"
+      (pageChange)="onPageChange($event)"
+      (perPageChange)="onPerPageChange($event)">
+    </app-pagination>
 </div>
-  </div>
-</div>
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>
