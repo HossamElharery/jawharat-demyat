@@ -1,7 +1,7 @@
 <div class="payroll-modal">
   <div class="modal-header">
     <h1 class="modal-title">Payroll Details</h1>
-    <button class="close-button">
+    <button class="close-button" (click)="onClose()">
       <i class="bi bi-x"></i>
     </button>
   </div>
@@ -10,12 +10,12 @@
     <div class="id-section">
       <div class="row justify-content-between align-items-center">
         <div class="col">
-          <span class="payroll-id">#123456</span>
+          <span class="payroll-id">#{{ payroll.id }}</span>
         </div>
         <div class="col-auto">
           <div class="total-section">
             <span class="total-label">Total</span>
-            <span class="total-amount">5000 AED</span>
+            <span class="total-amount">{{ formatCurrency(payroll.netSalary) }}</span>
           </div>
         </div>
       </div>
@@ -25,15 +25,17 @@
       <div class="row align-items-center">
         <div class="col-auto">
           <div class="avatar">
-            <span>MO</span>
+            <span>{{ getInitials() }}</span>
           </div>
         </div>
         <div class="col">
-          <h2 class="employee-name">Mohamed Ali</h2>
-          <p class="job-title">Job Title</p>
+          <h2 class="employee-name">{{ payroll.employeeName }}</h2>
+          <p class="job-title">{{ payroll.employeeEmail }}</p>
         </div>
         <div class="col-auto">
-          <span class="status-badge">Pending</span>
+          <span class="status-badge" [ngClass]="getStatusClass()">
+            {{ payroll.status === 'paid' ? 'Paid' : 'Pending' }}
+          </span>
         </div>
       </div>
     </div>
@@ -45,7 +47,7 @@
             <i class="bi bi-wallet2"></i>
             <div class="detail-content">
               <span class="detail-label">Salary</span>
-              <span class="detail-value">15000 AED</span>
+              <span class="detail-value">{{ formatCurrency(payroll.salary) }}</span>
             </div>
           </div>
         </div>
@@ -54,7 +56,7 @@
             <i class="bi bi-clock"></i>
             <div class="detail-content">
               <span class="detail-label">Over Time</span>
-              <span class="detail-value">5000 AED</span>
+              <span class="detail-value">{{ formatCurrency(payroll.overtime) }}</span>
             </div>
           </div>
         </div>
@@ -63,7 +65,7 @@
             <i class="bi bi-receipt"></i>
             <div class="detail-content">
               <span class="detail-label">Expenses</span>
-              <span class="detail-value">5000 AED</span>
+              <span class="detail-value">{{ formatCurrency(payroll.expenses) }}</span>
             </div>
           </div>
         </div>
@@ -72,7 +74,14 @@
   </div>
 
   <div class="modal-footer">
-    <button class="btn btn-cancel">Cancel</button>
-    <button class="btn btn-pay">Pay</button>
+    <button class="btn btn-cancel" (click)="onClose()">Close</button>
+    <button
+      *ngIf="payroll.canPay && payroll.status !== 'paid'"
+      class="btn btn-pay"
+      [disabled]="isProcessing"
+      (click)="onPay()">
+      <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2" role="status"></span>
+      Pay
+    </button>
   </div>
 </div>

@@ -1,10 +1,13 @@
 @use '../../../../../assets/scss/variables.scss' as * ;
-.cdk-overlay-pane.mat-mdc-dialog-panel{
+
+.cdk-overlay-pane.mat-mdc-dialog-panel {
   max-width: 1200px;
 }
-::ng-deep .mdc-dialog--open .mat-mdc-dialog-surface{
+
+::ng-deep .mdc-dialog--open .mat-mdc-dialog-surface {
   background-color: transparent;
 }
+
 .payroll-modal {
   background: white;
   border-radius: $br-12px;
@@ -98,11 +101,19 @@
   }
 
   .status-badge {
-    background: #FEF3C7;
-    color: #D97706;
     padding: 6px 12px;
     border-radius: 20px;
     font-size: 14px;
+
+    &.pending-badge {
+      background: #FEF3C7;
+      color: #D97706;
+    }
+
+    &.paid-badge {
+      background: #D1FAE5;
+      color: #047857;
+    }
   }
 }
 
@@ -165,8 +176,13 @@
       color: white;
       border: none;
 
-      &:hover {
+      &:hover:not(:disabled) {
         opacity: 0.9;
+      }
+
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
       }
     }
   }

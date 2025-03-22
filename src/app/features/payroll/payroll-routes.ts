@@ -7,6 +7,12 @@ export default [
   {
     path: '',
     component: MainPayrollComponent,
+    data: {
+      breadcrumbs: [
+        { label: 'Dashboard', url: '/' },
+        { label: 'Payroll', url: '/payroll' }
+      ]
+    },
     children: [
       { path: '', component: PayrollComponent },
     ],

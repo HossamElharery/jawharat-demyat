@@ -8,7 +8,7 @@
               <mat-icon>{{stat.matIcon}}</mat-icon>
             </div>
             <div class="stat-text">
-              <h2 class="stat-value">{{stat.value}}</h2>
+              <h2 class="stat-value">{{ stat.value }} AED</h2>
               <p class="stat-title">{{stat.title}}</p>
             </div>
           </div>
@@ -16,9 +16,15 @@
       </mat-card>
     </div>
   </div>
-  <div class="header-section mb-4">
-    <div class="d-flex justify-content-between align-items-center gap-3">
 
+  <!-- Permission denied message -->
+  <div *ngIf="!canViewPayrolls" class="alert alert-warning">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    You do not have permission to view payrolls.
+  </div>
+
+  <div *ngIf="canViewPayrolls" class="header-section mb-4">
+    <div class="d-flex justify-content-between align-items-center gap-3">
       <div class="d-flex align-items-center gap-3">
         <div class="search-container position-relative">
           <i class="bi bi-search search-icon"></i>
@@ -34,7 +40,7 @@
             type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false">
-            {{ selectedStatus || 'Paid' }}
+            {{ selectedStatus || 'Pending' }}
           </button>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" (click)="filterByStatus('Paid')">Paid</a></li>
@@ -42,67 +48,30 @@
             <li><a class="dropdown-item" (click)="filterByStatus('All')">All</a></li>
           </ul>
         </div>
-
       </div>
     </div>
   </div>
-  <div class="table-responsive">
-    <!-- <table class="table align-middle">
-      <thead>
-        <tr>
-          <th>Employee Id</th>
-          <th>Employee</th>
-          <th>Salary</th>
-          <th>Overtime</th>
-          <th>Expenses</th>
-          <th>Net Salary</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of filteredUsers">
-          <td>
-            <div class="d-flex align-items-center">
-              <span class="ms-2">{{ user.employeeId }}</span>
-            </div>
-          </td>
-          <td>
-            <img [src]="user.avatarUrl" class="user-avatar" alt="User avatar">
-            {{ user.employee }}</td>
-          <td>{{ user.salary }}</td>
-          <td>{{ user.overtime }}</td>
-          <td>{{ user.expenses }}</td>
-          <td>{{ user.netSalary }}</td>
-          <td>
-            <span class="status-badge" [ngClass]="{'active': user.status === 'Paid', 'inactive': user.status === 'Pending'}">
-              {{ user.status }}
-            </span>
-          </td>
-          <td>
-            <div class="action-buttons">
 
-              <span class="action-pay_btn">Pay</span>
-              <!-- <button class="btn btn-link" (click)="onView(user)">
-                <i class="bi bi-eye text-warning"></i>
-              </button> -->
-              <!-- <button class="btn btn-link" (click)="onEdit(user)">
-                <i class="bi bi-pencil text-warning"></i>
-              </button>
-              <button class="btn btn-link" (click)="onDelete(user)">
-                <i class="bi bi-trash text-warning"></i>
-              </button> --
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table> -->
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="text-center my-4">
+    <div class="spinner-border text-warning" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Table component -->
+  <div *ngIf="!isLoading && canViewPayrolls" class="table-responsive">
     <app-attendance-table
       [data]="attendanceData"
       [columns]="tableColumns"
       [viewComponent]="PayrollViewComponent"
       (payClick)="onPay($event)"
+      (viewClick)="onViewPayroll($event)"
     ></app-attendance-table>
   </div>
-</div>
 
+  <!-- No data message -->
+  <div *ngIf="!isLoading && canViewPayrolls && attendanceData.length === 0" class="alert alert-info">
+    No payrolls found matching your criteria.
+  </div>
+</div>
