@@ -16,7 +16,7 @@ import { providePrimeNG } from 'primeng/config';
 import Lara from '@primeng/themes/lara';
 import { AuthInterceptor } from './core/interceptor/auth';
 import { HttpResponseInterceptor } from './core/interceptor/http-response';
-
+import Aura from '@primeng/themes/aura';
 // Factory for translations
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -50,7 +50,7 @@ export const appConfig: ApplicationConfig = {
     },
     providePrimeNG({
       theme: {
-        preset: Lara, // Ensure this is the light variant
+        preset: Aura , // Ensure this is the light variant
         // OR use theme name:
         // name: 'lara-light-blue'
       }

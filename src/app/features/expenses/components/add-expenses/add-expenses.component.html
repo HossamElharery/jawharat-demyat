@@ -1,1 +1,129 @@
-<p>add-expenses works!</p>
+<div class="modal-container">
+  <div class="modal-header">
+    <h1>{{ viewOnly ? 'Expense Details' : (isEditMode ? 'Edit Expense' : 'Add New Expense') }}</h1>
+    <button type="button" class="close-btn" (click)="onClose()" [disabled]="submitting">
+      <i class="pi pi-x"></i>
+    </button>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="text-center my-4">
+    <div class="spinner-border text-warning" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p>Loading expense details...</p>
+  </div>
+
+  <div class="modal-body" *ngIf="!isLoading">
+    <form [formGroup]="expenseForm">
+      <!-- Basic Information -->
+      <div class="section-title">Expense Information</div>
+
+      <!-- Title -->
+      <div class="form-group">
+        <label for="title">Expense Title</label>
+        <input pInputText type="text" id="title" formControlName="title" class="form-control w-100" placeholder="Enter expense title">
+        <div *ngIf="expenseForm.get('title')?.invalid && expenseForm.get('title')?.touched" class="error-message">
+          <span *ngIf="expenseForm.get('title')?.errors?.['required']">Title is required</span>
+          <span *ngIf="expenseForm.get('title')?.errors?.['minlength']">Title must be at least 3 characters</span>
+        </div>
+      </div>
+
+      <!-- Value -->
+      <div class="form-group">
+        <label for="value">Expense Value (AED)</label>
+        <p-inputNumber id="value" formControlName="value" [min]="0" mode="decimal"
+          locale="en-US" [minFractionDigits]="0" [maxFractionDigits]="2"
+          placeholder="Enter expense value" styleClass="w-100" [showButtons]="false">
+        </p-inputNumber>
+        <div *ngIf="expenseForm.get('value')?.invalid && expenseForm.get('value')?.touched" class="error-message">
+          <span *ngIf="expenseForm.get('value')?.errors?.['required']">Value is required</span>
+          <span *ngIf="expenseForm.get('value')?.errors?.['min']">Value must be greater than or equal to 0</span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea pInputTextarea formControlName="description" id="description" rows="4"
+          placeholder="Enter expense description" class="w-100">
+        </textarea>
+        <div *ngIf="expenseForm.get('description')?.invalid && expenseForm.get('description')?.touched" class="error-message">
+          <span *ngIf="expenseForm.get('description')?.errors?.['required']">Description is required</span>
+        </div>
+      </div>
+
+      <!-- Status information (for view mode) -->
+      <div *ngIf="viewOnly && data?.expense" class="status-info">
+        <div class="status-badge" [ngClass]="data?.expense?.status || ''">
+          {{ data?.expense?.status | titlecase }}
+        </div>
+        <div class="status-date">
+          <span class="status-label">Submitted on:</span>
+          <!-- {{ formatDate(data?.expense?.date || '') }} -->
+        </div>
+      </div>
+
+      <!-- File Upload -->
+      <div class="section-title">Supporting Documents</div>
+
+      <div class="form-group">
+        <div class="file-upload-container">
+          <!-- Upload box (not shown in view mode) -->
+          <div *ngIf="!viewOnly" class="upload-box" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+            <div class="upload-content">
+              <i class="pi pi-cloud-upload"></i>
+              <span class="upload-text">Click to upload</span>
+              <span>or Drag and Drop</span>
+              <span class="file-types">png, jpg, pdf</span>
+            </div>
+            <input type="file" class="file-input" (change)="onFileSelect($event)" multiple accept="image/*,.pdf">
+          </div>
+
+          <!-- File previews -->
+          <div class="files-list" *ngIf="uploadedFiles.length > 0">
+            <div class="file-item" *ngFor="let file of uploadedFiles; let i = index" [class.to-delete]="file.toDelete">
+              <div class="file-preview">
+                <i class="pi file-icon" [ngClass]="getFileTypeIcon(file.name || '')"></i>
+                <div class="file-details">
+                  <div class="file-name">{{ file.name || 'File ' + (i + 1) }}</div>
+                  <a *ngIf="canDownloadFile(file)" [href]="file.url" target="_blank" class="download-link">
+                    <i class="pi pi-download"></i> Download
+                  </a>
+                </div>
+              </div>
+              <button *ngIf="!viewOnly" pButton pRipple type="button" icon="pi pi-trash"
+                class="p-button-rounded p-button-danger p-button-text"
+                (click)="removeFile(i)" pTooltip="Remove file"></button>
+            </div>
+          </div>
+
+          <!-- No files message -->
+          <div *ngIf="uploadedFiles.length === 0" class="no-files-message">
+            <i class="pi pi-file"></i>
+            <p>No files attached</p>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn-cancel" (click)="onClose()" [disabled]="submitting">
+      {{ viewOnly ? 'Close' : 'Cancel' }}
+    </button>
+    <button *ngIf="!viewOnly" type="button" class="btn-submit" (click)="onSubmit()"
+      [disabled]="expenseForm.invalid || submitting">
+      <span *ngIf="!submitting">{{ isEditMode ? 'Update Expense' : 'Submit Expense' }}</span>
+      <span *ngIf="submitting">
+        <i class="pi pi-spin pi-spinner mr-2"></i>
+        {{ isEditMode ? 'Updating...' : 'Submitting...' }}
+      </span>
+    </button>
+  </div>
+</div>
