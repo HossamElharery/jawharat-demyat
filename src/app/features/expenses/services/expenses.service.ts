@@ -238,8 +238,9 @@ export class ExpensesService {
    * Get the full image URL from the path
    */
   getFileUrl(path: string): string {
-    if (!path) return 'assets/images/avatars/avatar-1.png';
-    return `${environment.apiUrl}${path}`;
+    // Remove the leading slash if present
+    const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+    return `${environment.apiBaseUrl}/${cleanPath}`;
   }
 
   /**

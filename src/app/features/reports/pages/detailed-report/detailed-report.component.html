@@ -1,0 +1,108 @@
+<div class="container-fluid">
+  <div class="header-section mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+      <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3">
+        <h2 class="report-title mb-0">{{ reportTitle }}</h2>
+        <div class="search-container position-relative w-100 w-sm-auto">
+          <i class="bi bi-search search-icon"></i>
+          <input
+            type="text"
+            class="form-control search-input"
+            placeholder="Search in report"
+            [formControl]="searchControl">
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary" (click)="goBack()">
+          <i class="bi bi-arrow-left me-2"></i>
+          Back to Reports
+        </button>
+        <button class="btn btn-warning export-btn" (click)="exportReport()">
+          <i class="bi bi-download me-2"></i>
+          Export
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Permission denied message -->
+  <div *ngIf="!canViewReport" class="alert alert-warning">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    You do not have permission to view this report.
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="text-center my-4">
+    <div class="spinner-border text-warning" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- No data message -->
+  <div *ngIf="!isLoading && canViewReport && reportData.length === 0" class="alert alert-info">
+    No data found for this report.
+  </div>
+
+  <!-- Report table -->
+  <div *ngIf="!isLoading && canViewReport && reportData.length > 0" class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th *ngFor="let column of columns">{{ column.header }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of reportData">
+          <td *ngFor="let column of columns">
+            <ng-container *ngIf="column.field === 'name' || column.field === 'employee.name'">
+              <div class="d-flex align-items-center">
+                <img
+                  [src]="item.imageUrl || getNestedValue(item, 'employee.imageUrl') || '../../../../../assets/images/Avatar.png'"
+                  class="user-avatar"
+                  alt="User avatar">
+                <span class="ms-2">{{ getNestedValue(item, column.field) }}</span>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="column.field !== 'name' && column.field !== 'employee.name'">
+              <!-- Status badges -->
+              <span
+                *ngIf="column.field === 'status' || column.field.endsWith('.status')"
+                [ngClass]="getStatusClass(getNestedValue(item, column.field))"
+                class="status-badge">
+                {{ getNestedValue(item, column.field) }}
+              </span>
+
+
+              <!-- Default text display -->
+              <span
+                *ngIf="column.field !== 'status' && column.field.endsWith('.status') === false && column.type !== 'image' && column.type !== 'imageArray'"
+                [ngClass]="{'text-danger': column.field === 'attendance.absent' && getNestedValue(item, column.field) > 0}">
+                {{ formatCellValue(getNestedValue(item, column.field), column.type) }}
+              </span>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination controls -->
+  <app-pagination
+    *ngIf="!isLoading && canViewReport && totalItems > 0"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    [totalItemsCount]="totalItems"
+    [perPage]="perPage"
+    [theme]="'warning'"
+    (pageChange)="onPageChange($event)"
+    (perPageChange)="onPerPageChange($event)">
+  </app-pagination>
+</div>

@@ -1,97 +1,58 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { ReportsService } from '../../services/reports.service';
+import { PermissionsService } from '../../../../core/services/permissions.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface Report {
-  id: number;
+  id: string;
   title: string;
   description: string;
   apiEndpoint: string;
-  img:string
+  img: string;
 }
 
 @Component({
   selector: 'app-all-reports',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './all-reports.component.html',
   styleUrl: './all-reports.component.scss'
 })
 export class AllReportsComponent implements OnInit {
   reports: Report[] = [];
+  canViewReports = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private router: Router,
+    private reportsService: ReportsService,
+    private permissionsService: PermissionsService
+  ) {}
 
   ngOnInit(): void {
-    // In a real app, you would fetch this from an API
-    // this.fetchReports();
+    // Check permissions
+    this.checkPermissions();
 
-    // For now, we'll use static data to match the image
-    this.reports = [
-      {
-        id: 1,
-        title: 'Employee Reports',
-        description: 'Lorem ipsum dolor sit amet consectetur. Odio faucibus aliquet imperdiet facilisi vitae diam. Nunc neque potenti viverra diam mi feugiat. Duis',
-        apiEndpoint: '/api/reports/employee',
-        img:'../../../../../assets/images/reports.png'
-      },
-      {
-        id: 2,
-        title: 'Absence Report',
-        description: 'Lorem ipsum dolor sit amet consectetur. Odio faucibus aliquet imperdiet facilisi vitae diam. Nunc neque potenti viverra diam mi feugiat. Duis',
-        apiEndpoint: '/api/reports/absence',
-        img:'../../../../../assets/images/reports.png'
-      },
-      {
-        id: 3,
-        title: 'Payroll Report',
-        description: 'Lorem ipsum dolor sit amet consectetur. Odio faucibus aliquet imperdiet facilisi vitae diam. Nunc neque potenti viverra diam mi feugiat. Duis',
-        apiEndpoint: '/api/reports/payroll',
-        img:'../../../../../assets/images/reports.png'
-      },
-      {
-        id: 4,
-        title: 'Inventory Report',
-        description: 'Lorem ipsum dolor sit amet consectetur. Odio faucibus aliquet imperdiet facilisi vitae diam. Nunc neque potenti viverra diam mi feugiat. Duis',
-        apiEndpoint: '/api/reports/inventory',
-        img:'../../../../../assets/images/reports.png'
-      },
-      {
-        id: 5,
-        title: 'Tasks Report',
-        description: 'Lorem ipsum dolor sit amet consectetur. Odio faucibus aliquet imperdiet facilisi vitae diam. Nunc neque potenti viverra diam mi feugiat. Duis',
-        apiEndpoint: '/api/reports/tasks',
-        img:'../../../../../assets/images/reports.png'
-      },
-      {
-        id: 6,
-        title: 'Holidays Report',
-        description: 'Lorem ipsum dolor sit amet consectetur. Odio faucibus aliquet imperdiet facilisi vitae diam. Nunc neque potenti viverra diam mi feugiat. Duis',
-        apiEndpoint: '/api/reports/holidays',
-        img:'../../../../../assets/images/reports.png'
-      }
-    ];
+    // Get report metadata
+    this.reports = this.reportsService.getReportMetadata();
   }
 
-  // This method would be used when API integration is ready
-  fetchReports(): void {
-    this.http.get<Report[]>('/api/reports').subscribe({
-      next: (data) => {
-        this.reports = data;
-      },
-      error: (error) => {
-        console.error('Error fetching reports:', error);
-      }
-    });
+  /**
+   * Check if user has permission to view reports
+   */
+  checkPermissions(): void {
+    this.canViewReports = this.permissionsService.hasPermission('view_reports');
   }
 
+  /**
+   * Navigate to detailed report view
+   */
   viewReport(report: Report): void {
-    // In a real application, navigate to the report or fetch the report data
-    console.log(`Viewing report: ${report.title}`);
-    // You could navigate to the report page using Angular Router
-    // this.router.navigate(['/reports', report.id]);
+    if (!this.canViewReports) {
+      return;
+    }
 
-    // Or you could open the report in a new window/tab
-    // window.open(report.apiEndpoint, '_blank');
+    this.router.navigate(['/reports/view', report.id]);
   }
 }

@@ -5,11 +5,11 @@
   </div>
 
   <p-table
-    [value]="attendanceData"
-
+    [value]="displayData"
     styleClass="p-datatable-sm p-datatable-gridlines"
     [scrollable]="true"
-    responsiveLayout="stack">
+    responsiveLayout="stack"
+    [loading]="!displayData || displayData.length === 0">
 
     <ng-template pTemplate="header">
       <tr>
@@ -40,8 +40,21 @@
         <td>
           <p-tag
             [value]="record.status"
-            [severity]="record.status === 'Attended' ? 'success' : 'danger'"
+            [severity]="record.status === 'Attended' ? 'success' :
+                       record.status === 'Absence' ? 'danger' :
+                       record.status === 'Holiday' ? 'info' : 'warn'"
           ></p-tag>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5" class="text-center p-4">
+          <div class="empty-message">
+            <i class="bi bi-calendar-x" style="font-size: 2rem; color: #ccc;"></i>
+            <p>No attendance records found</p>
+          </div>
         </td>
       </tr>
     </ng-template>

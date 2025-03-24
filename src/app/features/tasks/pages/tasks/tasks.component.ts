@@ -12,43 +12,27 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 import { AddTaskSidebarComponent } from '../../components/add-task-sidebar/add-task-sidebar.component';
 import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
-interface Member {
-  id: number;
+import { Task, TasksService } from '../../services/tasks.service';
+import { finalize } from 'rxjs/operators';
+import { environment } from '../../../../../environments/environment';
+import { ProjectsService } from '../../../projects/services/projects.service';
+import { ChipModule } from 'primeng/chip';
+
+// Use the global toast service from the HttpResponseInterceptor
+
+export interface TaskMember {
+  id: string;
   name: string;
-  image: string;
+  email: string;
+  imageUrl: string | null;
 }
-interface TaskModel {
-  id?: number;
-  title: string;
-  projectId: string;
-  priority: string;
-  dueDate: Date;
-  assignees: string[];
-  description: string;
-  attachments: File[];
-  subTasks: SubTask[];
-}
-interface SubTask {
-  title: string;
-  description: string;
-  completed: boolean;
-}
-interface Task {
-  id: number;
-  title: string;
-  description: string;
-  state: 'To Do' | 'In Progress' | 'Done'|string;
-  priority: 'Low' | 'Medium' | 'High';
-  assignedTo: Member[];
-  comments: number;
-  files: number;
-  deadline: string;
-}
+
 interface FilterOption {
   label: string;
   value: string;
   icon?: string;
 }
+
 @Component({
   selector: 'app-tasks',
   standalone: true,
@@ -63,40 +47,150 @@ interface FilterOption {
     IconComponent,
     DropdownModule,
     SelectButtonModule,
-    FormsModule,AddTaskSidebarComponent,
- ],
+    FormsModule,
+    AddTaskSidebarComponent,
+    ChipModule
+  ],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss'
 })
 export class TasksComponent implements OnInit {
   viewMode: 'kanban' | 'table' = 'kanban';
   draggedTask: Task | null = null;
+  isLoading: boolean = false;
+  tasks: Task[] = [];
+  projects: any[] = [];
+  members: any[] = []; // Will be populated from the backend
+
   filterOptions: FilterOption[] = [
     { label: 'All Tasks', value: 'all' },
-    { label: 'Recent Tasks', value: 'recent' },
-    { label: 'Completed', value: 'completed' },
-    { label: 'Pending', value: 'pending' },
-    { label: 'Important', value: 'important' }
+    { label: 'To Do', value: 'todo' },
+    { label: 'In Progress', value: 'inprogress' },
+    { label: 'Completed', value: 'completed' }
   ];
 
   memberOptions: FilterOption[] = [
-    { label: 'All Members', value: 'all' },
-    { label: 'Team Leads', value: 'leads' },
-    { label: 'Developers', value: 'devs' },
-    { label: 'Designers', value: 'designers' }
+    { label: 'All Members', value: 'all' }
+    // We'll add more from the API
   ];
 
   selectedFilter: string = 'all';
   selectedMember: string = 'all';
+
   @ViewChild('addTaskSidebar') addTaskSidebar!: AddTaskSidebarComponent;
 
+  constructor(
+    private tasksService: TasksService,
+    private projectsService: ProjectsService,
+   ) {}
+
+  ngOnInit() {
+    this.loadTasks();
+    this.loadProjects(); // Load projects for the dropdown
+  }
+
+  loadProjects() {
+    this.tasksService.getProjects()
+      .subscribe({
+        next: (response) => {
+          // Ensure result is an array before calling map
+          if (Array.isArray(response.result)) {
+            this.projects = response.result.map(project => ({
+              label: project.name,
+              value: project.id
+            }));
+          } else {
+            // Handle case where result is not an array
+            console.warn('Projects response is not an array:', response);
+            this.projects = [];
+          }
+        },
+        error: (error) => {
+          console.error('Error loading projects:', error);
+          this.projects = [];
+        }
+      });
+  }
+
+  loadTasks() {
+    this.isLoading = true;
+
+    // If using by-status endpoint for kanban view
+    if (this.viewMode === 'kanban') {
+      this.tasksService.getTasksByStatus()
+        .pipe(finalize(() => this.isLoading = false))
+        .subscribe({
+          next: (response) => {
+            // Process and organize tasks by status
+            this.tasks = [];
+
+            response.result.forEach(statusGroup => {
+              // Map API status to UI state
+              const state = this.mapStatusToState(statusGroup.status);
+
+              // Add state property to each task for UI
+              const tasksWithState = statusGroup.tasks.map(task => ({
+                ...task,
+                state
+              }));
+
+              this.tasks.push(...tasksWithState);
+            });
+          },
+          error: (error) => {
+            console.error('Error loading tasks by status:', error);
+            // this.toastService.error('Failed to load tasks');
+          }
+        });
+    } else {
+      // For table view, load all tasks
+      const status = this.selectedFilter !== 'all' ? this.selectedFilter : undefined;
+
+      this.tasksService.getTasks(1, 100, undefined, status)
+        .pipe(finalize(() => this.isLoading = false))
+        .subscribe({
+          next: (response) => {
+            this.tasks = response.result.tasks.map(task => ({
+              ...task,
+              state: this.mapStatusToState(task.status)
+            }));
+          },
+          error: (error) => {
+            console.error('Error loading tasks:', error);
+            // this.toastService.error('Failed to load tasks');
+          }
+        });
+    }
+  }
+
+  // Map API status values to UI state values
+  private mapStatusToState(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'todo': return 'To Do';
+      case 'inprogress': return 'In Progress';
+      case 'completed': return 'Done';
+      default: return status;
+    }
+  }
+
+  // Map UI state values back to API status values
+  private mapStateToStatus(state: string): string {
+    switch (state) {
+      case 'To Do': return 'todo';
+      case 'In Progress': return 'inprogress';
+      case 'Done': return 'completed';
+      default: return state.toLowerCase();
+    }
+  }
+
   openAddTaskSidebar() {
-    this.addTaskSidebar.openSidebar();
+    this.addTaskSidebar.openSidebar(undefined, 'add', this.projects);
   }
 
   onSidebarClose() {
-    // Handle any cleanup or refresh needed after closing
+    // No specific cleanup needed
   }
+
   getFilterLabel(): string {
     if (this.selectedFilter === 'all') {
       return 'Filter';
@@ -115,33 +209,13 @@ export class TasksComponent implements OnInit {
 
   onFilterChange(event: any): void {
     this.selectedFilter = event.value;
+    this.loadTasks(); // Reload tasks with the new filter
   }
 
   onMemberChange(event: any): void {
     this.selectedMember = event.value;
+    this.loadTasks(); // Reload tasks filtered by member
   }
-
-  members: Member[] = [
-    { id: 1, name: 'John Doe', image: '../../../../../assets/images/Ellipse 15.png' },
-    { id: 2, name: 'Jane Smith', image: '../../../../../assets/images/Ellipse 15.png' },
-    { id: 3, name: 'Bob Johnson', image: '../../../../../assets/images/Ellipse 15.png' }
-  ];
-
-  tasks: Task[] = Array(12).fill(null).map((_, index) => ({
-    id: index + 1,
-    title: 'Brainstorming',
-    description: "Brainstorming brings team members' diverse experience into play.",
-    state: index % 3 === 0 ? 'To Do' : index % 3 === 1 ? 'In Progress' : 'Done',
-    priority: 'Low',
-    assignedTo: this.members.slice(0, 2),
-    comments: 12,
-    files: 0,
-    deadline: '25/12/2024'
-  }));
-
-  constructor() {}
-
-  ngOnInit() {}
 
   getTasks(status: string): Task[] {
     return this.tasks.filter(task => task.state === status);
@@ -155,47 +229,108 @@ export class TasksComponent implements OnInit {
     this.draggedTask = null;
   }
 
-  onDrop(event: DragEvent, newState: 'To Do' | 'In Progress' | 'Done' |string) {
+  onDrop(event: DragEvent, newState: string) {
     if (this.draggedTask) {
-        const task = { ...this.draggedTask }; // Create a copy of the task
-        // Update task state
+      const taskId = this.draggedTask.id;
+      const newStatus = this.mapStateToStatus(newState);
+
+      // Check if the status has actually changed to avoid unnecessary API calls
+      if (this.draggedTask.status !== newStatus) {
+        // Optimistically update the UI
+        const previousStatus = this.draggedTask.status;
+        const previousState = this.draggedTask.state;
+
         this.draggedTask.state = newState;
+        this.draggedTask.status = newStatus;
 
-        // Call API to update task state before clearing draggedTask
-        this.updateTaskState(task, newState);
+        // Call API to update the task status
+        this.tasksService.updateTaskStatus(taskId, newStatus)
+          .subscribe({
+            next: (response) => {
+              // this.toastService.success('Task status updated successfully');
+            },
+            error: (error) => {
+              console.error('Error updating task status:', error);
+              // this.toastService.error('Failed to update task status');
 
-        // Clear dragged task
-        this.draggedTask = null;
+              // Revert the optimistic update on error
+              this.draggedTask!.state = previousState;
+              this.draggedTask!.status = previousStatus;
+            }
+          });
+      }
+
+      this.draggedTask = null;
     }
-}
-private async updateTaskState(task: Task, newState: string) {
-  try {
-      // Simulated API call - replace with actual API call
-      console.log(`Updating task ${task.id} to state: ${newState}`);
-      // await this.taskService.updateTask(task.id, { state: newState });
-  } catch (error) {
-      console.error('Error updating task state:', error);
-      // Handle error (e.g., show error message, revert state)
   }
-}
 
   get allTasks(): Task[] {
     return this.tasks;
   }
 
-  getColumnTasks(state: string): Task[] {
-    return this.tasks.filter(task => task.state === state);
-  }
-
   getTaskCount(state: string): number {
-    return this.getColumnTasks(state).length;
+    return this.getTasks(state).length;
   }
 
-  toggleView() {
-    this.viewMode = this.viewMode === 'kanban' ? 'table' : 'kanban';
+  viewTask(task: Task) {
+    // Instead of passing the task directly, pass the task ID and let the sidebar fetch the complete data
+    this.addTaskSidebar.openSidebar(task, 'view', this.projects);
   }
-  onTaskSaved(task: TaskModel) {
-    // Handle the saved task
-    console.log('Task saved:', task);
+
+  editTask(task: Task) {
+    this.addTaskSidebar.openSidebar(task, 'edit', this.projects);
+  }
+
+  deleteTask(task: Task) {
+    if (confirm('Are you sure you want to delete this task?')) {
+      this.isLoading = true;
+
+      this.tasksService.deleteTask(task.id)
+        .pipe(finalize(() => this.isLoading = false))
+        .subscribe({
+          next: (response) => {
+            // this.toastService.success('Task deleted successfully');
+            this.loadTasks(); // Reload tasks to reflect the deletion
+          },
+          error: (error) => {
+            console.error('Error deleting task:', error);
+            // this.toastService.error('Failed to delete task');
+          }
+        });
+    }
+  }
+
+  onTaskSaved(event: any) {
+    console.log('Task saved:', event);
+    this.loadTasks(); // Reload tasks to reflect the changes
+  }
+
+  // Helper methods for member display
+  getMemberImage(member: any): string {
+    if (!member) return '../../../../../assets/images/Ellipse 15.png';
+
+    // Check if member is properly formed object with imageUrl property
+    if (typeof member === 'object' && member !== null && 'imageUrl' in member && member.imageUrl) {
+      return this.getFileUrl(member.imageUrl);
+    }
+
+    return '../../../../../assets/images/Ellipse 15.png';
+  }
+
+  getMemberInitial(member: any): string {
+    if (!member) return 'U';
+
+    // Check if member is properly formed object with name property
+    if (typeof member === 'object' && member !== null && 'name' in member && member.name) {
+      return member.name.charAt(0).toUpperCase();
+    }
+
+    return 'U';
+  }
+
+  // Helper function to get file URL
+  getFileUrl(path: string): string {
+    if (!path) return '';
+    return path.startsWith('http') ? path : `${environment.apiBaseUrl}${path}`;
   }
 }

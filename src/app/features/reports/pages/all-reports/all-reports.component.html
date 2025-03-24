@@ -1,17 +1,31 @@
 <div class="container-fluid report-container">
-  <div class="row">
+  <!-- Permission denied message -->
+  <div *ngIf="!canViewReports" class="alert alert-warning mb-4">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    You do not have permission to view reports.
+  </div>
+
+  <div class="row g-4" *ngIf="canViewReports">
+    <div class="col-12 mb-4">
+      <h2 class="section-title">Reports</h2>
+      <p class="section-description">Access and analyze your business data through different report types.</p>
+    </div>
+
     <!-- Loop through all reports dynamically -->
     <div class="col-md-4 mb-4" *ngFor="let report of reports">
       <div class="report-card">
         <div class="report-icon">
-          <img [src]="report.img" alt="Document Icon">
+          <img [src]="report.img" alt="Report Icon">
         </div>
         <h3 class="report-title">{{ report.title }}</h3>
         <p class="report-description">
           {{ report.description }}
         </p>
         <div class="report-action">
-          <a href="javascript:void(0)" class="view-report-btn" (click)="viewReport(report)">View Report</a>
+          <a href="javascript:void(0)" class="view-report-btn" (click)="viewReport(report)">
+            <span>{{ 'View Report' }}</span>
+            <i class="bi bi-arrow-right ms-2"></i>
+          </a>
         </div>
       </div>
     </div>

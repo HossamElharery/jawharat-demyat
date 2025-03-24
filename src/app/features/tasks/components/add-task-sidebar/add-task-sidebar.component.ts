@@ -1,5 +1,4 @@
-// add-task-sidebar.component.ts
-import { Component, EventEmitter, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Sidebar, SidebarModule } from 'primeng/sidebar';
@@ -7,28 +6,22 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
-import { ChipModule } from 'primeng/chip';
 import { FileUploadModule } from 'primeng/fileupload';
 import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { TabsModule } from 'primeng/tabs';
+import { Task, TasksService } from '../../services/tasks.service';
+import { finalize } from 'rxjs/operators';
+import { environment } from '../../../../../environments/environment';
+import { FormsModule } from '@angular/forms';
+import { ToastService } from '../../../../core/services/toast.service';
+import { UsersService } from '../../../../features/users/services/users.service';
+import { ProjectsService } from '../../../projects/services/projects.service';
 
-type Mode = 'view' | 'edit' | 'add';
+export type Mode = 'view' | 'edit' | 'add';
 
-interface TaskModel {
-  id?: number;
-  title: string;
-  projectId: string;
-  priority: string;
-  state: string;
-  dueDate: Date;
-  assignees: string[];
-  description: string;
-  attachments: File[];
-  subTasks: SubTask[];
-}
-
-interface SubTask {
+export interface SubTask {
   title: string;
   description: string;
   completed: boolean;
@@ -40,23 +33,25 @@ interface SubTask {
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     SidebarModule,
     ButtonModule,
     InputTextModule,
     DropdownModule,
     CalendarModule,
-    ChipModule,
+    MultiSelectModule,
     FileUploadModule,
     TextareaModule,
-    ToastModule
+    ToastModule,
+    TabsModule
   ],
   encapsulation: ViewEncapsulation.None,
   templateUrl: './add-task-sidebar.component.html',
   styleUrls: ['./add-task-sidebar.component.scss']
 })
-export class AddTaskSidebarComponent {
+export class AddTaskSidebarComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
-  @Output() saved = new EventEmitter<TaskModel>();
+  @Output() saved = new EventEmitter<any>();
   @ViewChild('sidebar') sidebar!: Sidebar;
   @ViewChild('fileUpload') fileUpload: any;
 
@@ -64,61 +59,119 @@ export class AddTaskSidebarComponent {
   visible = false;
   mode: Mode = 'add';
   maxFileSize = 10000000; // 10MB
-  currentTask: TaskModel | null = null;
+  currentTask: Task | any = null;
+  isLoading = false;
+  taskId: string | null = null;
 
   // Header Info
   projectName: string = 'Project Name';
-  createdDate: string = 'Mar 23, 10:34 PM';
-  createdBy: string = 'Mohamed Ali';
+  createdDate: string = new Date().toLocaleString();
+  createdBy: string = 'User';
 
-  projects = [
-    { label: 'Project A', value: 'a' },
-    { label: 'Project B', value: 'b' },
-    { label: 'Project C', value: 'c' }
-  ];
-
+  // Dropdown options
+  projects: any[] = [];
   priorities = [
     { label: 'Low', value: 'low' },
     { label: 'Medium', value: 'medium' },
     { label: 'High', value: 'high' }
   ];
-
   states = [
     { label: 'To Do', value: 'todo' },
     { label: 'In Progress', value: 'inprogress' },
-    { label: 'Done', value: 'done' }
+    { label: 'Completed', value: 'completed' }
   ];
 
-  assigneesList = ['@mustafa', '@john', '@sarah'];
-  selectedAssignees: string[] = [];
+  // Tabs
+  activeTab: string = 'subtasks';
 
-  subTaskList = [
-    { title: 'Understanding Client brief', completed: true },
-    { title: 'Research Competition', completed: true },
-    { title: 'Define Target Audience', completed: false },
-    { title: 'Create Wireframes', completed: false }
-  ];
+  // Users and assignees
+  users: any[] = [];
+  assigneeOptions: any[] = [];
+  selectedAssignees: any[] = [];
 
-  attachmentsList = [
-    { name: 'Task Attachment Details.pdf', size: '12 MB', type: 'application/pdf' },
-    { name: 'Task Images.zip', size: '45 MB', type: 'application/zip' }
-  ];
+  // Comments
+  commentContent: string = '';
+  submittingComment: boolean = false;
+  comments: any[] = [];
+
+  // Attachments
+  uploadedFiles: File[] = [];
+  attachmentsList: any[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private messageService: MessageService
+    public tasksService: TasksService,
+    private usersService: UsersService,
+    private projectsService: ProjectsService,
+    private toastService: ToastService
   ) {
     this.initForm();
+  }
+
+  ngOnInit() {
+    // Load users for assignee dropdown
+    this.loadUsers();
+    // Load projects
+    this.loadProjects();
+  }
+
+  loadUsers() {
+    this.isLoading = true;
+    this.usersService.getUsers(1, 100)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe({
+        next: (response) => {
+          if (response.result && response.result.users) {
+            this.users = response.result.users;
+            this.assigneeOptions = this.users.map(user => ({
+              label: user.name,
+              value: user.id
+            }));
+          } else {
+            console.warn('No users found in the response:', response);
+            this.assigneeOptions = [];
+          }
+        },
+        error: (error) => {
+          console.error('Error loading users:', error);
+          // this.toastService.error('Failed to load users');
+          this.assigneeOptions = [];
+        }
+      });
+  }
+
+  loadProjects() {
+    this.isLoading = true;
+    this.projectsService.getProjects(1, 100)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe({
+        next: (response) => {
+          if (response.result && response.result.projects) {
+            this.projects = response.result.projects.map(project => ({
+              label: project.name,
+              value: project.id
+            }));
+          } else {
+            console.warn('No projects found in the response:', response);
+            this.projects = [];
+          }
+        },
+        error: (error) => {
+          console.error('Error loading projects:', error);
+          // this.toastService.error('Failed to load projects');
+          this.projects = [];
+        }
+      });
   }
 
   private initForm(): void {
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       projectId: ['', Validators.required],
-      priority: ['', Validators.required],
-      state: ['', Validators.required],
-      dueDate: [null, Validators.required],
-      assignees: [[]],
+      priority: ['low', Validators.required],
+      status: ['todo', Validators.required],
+      dueDate: [new Date(), Validators.required],
+      assignedTo: [[]],  // Now using MultiSelect component
       description: ['', [Validators.required, Validators.minLength(10)]],
       attachments: [[]],
       subTasks: this.fb.array([])
@@ -161,31 +214,29 @@ export class AddTaskSidebarComponent {
     this.closeSidebar();
   }
 
-  openSidebar(taskData?: TaskModel, mode: Mode = 'add'): void {
+  openSidebar(taskData?: Task, mode: Mode = 'add', projectsList: any[] = []): void {
     this.visible = true;
     this.mode = mode;
-    this.currentTask = taskData || null;
+
+    // Only use provided projects list if it's not empty
+    if (projectsList && projectsList.length > 0) {
+      this.projects = projectsList;
+    }
+
+    // Clear previous data
+    this.resetForm();
 
     if (taskData && (mode === 'edit' || mode === 'view')) {
-      const task = {
-        ...taskData,
-        dueDate: taskData.dueDate instanceof Date ? taskData.dueDate : new Date(taskData.dueDate)
-      };
-      this.taskForm.patchValue(task);
-      this.selectedAssignees = task.assignees;
-
-      while (this.subTasks.length) {
-        this.subTasks.removeAt(0);
-      }
-      task.subTasks.forEach(subTask => {
-        this.subTasks.push(this.fb.group(subTask));
-      });
+      this.taskId = taskData.id;
+      this.loadTaskDetails(taskData.id);
     } else {
-      this.taskForm.reset();
-      this.selectedAssignees = [];
-      while (this.subTasks.length) {
-        this.subTasks.removeAt(0);
-      }
+      // Reset form for new task
+      this.taskForm.reset({
+        priority: 'low',
+        status: 'todo',
+        dueDate: new Date(),
+        assignedTo: []
+      });
     }
 
     if (mode === 'view') {
@@ -195,10 +246,95 @@ export class AddTaskSidebarComponent {
     }
   }
 
+  private resetForm(): void {
+    this.taskId = null;
+    this.currentTask = null;
+    this.selectedAssignees = [];
+    this.attachmentsList = [];
+    this.uploadedFiles = [];
+    this.comments = [];
+    this.commentContent = '';
+
+    // Clear subtasks
+    while (this.subTasks.length) {
+      this.subTasks.removeAt(0);
+    }
+  }
+
+  private loadTaskDetails(taskId: string): void {
+    this.isLoading = true;
+
+    this.tasksService.getTaskById(taskId)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe({
+        next: (response) => {
+          this.currentTask = response.result;
+
+          // Format the task data for the form
+          const formattedTask = {
+            title: this.currentTask.title,
+            projectId: this.currentTask.projectId,
+            priority: this.currentTask.priority,
+            status: this.currentTask.status,
+            dueDate: new Date(this.currentTask.dueDate),
+            assignedTo: this.currentTask.assignedTo.map((user: { id: any; }) => user.id),
+            description: this.currentTask.description,
+            attachments: []
+          };
+
+          this.taskForm.patchValue(formattedTask);
+          this.selectedAssignees = formattedTask.assignedTo;
+
+          // Set up the subtasks
+          if (this.currentTask.subTasks && this.currentTask.subTasks.length > 0) {
+            this.currentTask.subTasks.forEach((subTask: { title: any; description: any; completed: any; }) => {
+              this.subTasks.push(this.fb.group({
+                title: subTask.title,
+                description: subTask.description,
+                completed: subTask.completed
+              }));
+            });
+          }
+
+          // Load comments if available
+          if (this.currentTask.comments) {
+            this.comments = this.currentTask.comments;
+          }
+
+          // Set up the attachments list for display
+          this.attachmentsList = this.currentTask.files.map((file: { id: any; name: any; path: any; }) => ({
+            id: file.id,
+            name: file.name || 'File',
+            path: file.path || '',
+            size: '12 MB', // Size not provided in the API
+            type: this.getFileTypeFromName(file.name || '')
+          }));
+
+          // Set project info if available
+          if (this.currentTask.project) {
+            this.projectName = this.currentTask.project.name;
+          }
+
+          // Set created info (placeholders - actual data might come from API)
+          this.createdDate = new Date().toLocaleString();
+          this.createdBy = 'User';
+
+          // If in view mode, disable the form
+          if (this.isViewMode) {
+            this.taskForm.disable();
+          }
+        },
+        error: (error) => {
+          console.error('Error loading task details:', error);
+          // this.toastService.error('Failed to load task details');
+          this.closeSidebar();
+        }
+      });
+  }
+
   closeSidebar(): void {
     this.visible = false;
-    this.taskForm.reset();
-    this.selectedAssignees = [];
+    this.resetForm();
     this.close.emit();
   }
 
@@ -207,42 +343,79 @@ export class AddTaskSidebarComponent {
     this.taskForm.enable();
   }
 
-  removeAssignee(assignee: string): void {
-    this.selectedAssignees = this.selectedAssignees.filter(a => a !== assignee);
-    this.taskForm.patchValue({ assignees: this.selectedAssignees });
-  }
+  // For file uploads
+  onUpload(event: any): void {
+    // If files are provided directly
+    if (event.files && event.files.length > 0) {
+      // For comment attachments (if active tab is comments)
+      if (this.activeTab === 'comments') {
+        this.uploadedFiles = [event.files[0]]; // Only keep one file for comments
+      } else {
+        // For regular task attachments, add all files
+        this.uploadedFiles = [...this.uploadedFiles, ...event.files];
+      }
 
-  addAssignee(assignee: string): void {
-    if (!this.selectedAssignees.includes(assignee)) {
-      this.selectedAssignees = [...this.selectedAssignees, assignee];
-      this.taskForm.patchValue({ assignees: this.selectedAssignees });
+      // Update the form control if we're on the main form
+      if (this.taskForm) {
+        this.taskForm.patchValue({ attachments: this.uploadedFiles });
+      }
+
+      // Clear the fileUpload component
+      if (this.fileUpload) {
+        this.fileUpload.clear();
+      }
     }
   }
 
-  onUpload(event: any): void {
-    const files = event.files;
-    const currentAttachments = this.taskForm.get('attachments')?.value || [];
+  removeAttachment(index: number): void {
+    if (index >= 0 && index < this.uploadedFiles.length) {
+      this.uploadedFiles.splice(index, 1);
 
-    files.forEach((file: File) => {
-      if (file.size <= this.maxFileSize) {
-        currentAttachments.push(file);
-      } else {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: `File ${file.name} exceeds maximum size of 10MB`
-        });
+      // Update the form control
+      if (this.taskForm) {
+        this.taskForm.patchValue({ attachments: this.uploadedFiles });
       }
-    });
-
-    this.taskForm.patchValue({ attachments: currentAttachments });
-    this.fileUpload.clear();
+    }
   }
 
-  removeAttachment(index: number): void {
-    const attachments = this.taskForm.get('attachments')?.value || [];
-    attachments.splice(index, 1);
-    this.taskForm.patchValue({ attachments });
+  removeExistingAttachment(fileId: string): void {
+    if (!fileId) return;
+
+    // In a real app, you would call an API to delete the file
+    // For now, we'll just remove it from the UI
+    this.attachmentsList = this.attachmentsList.filter(file => file.id !== fileId);
+  }
+
+  createComment() {
+    if (!this.commentContent.trim()) {
+      // this.toastService.warning('Please enter a comment');
+      return;
+    }
+
+    this.submittingComment = true;
+
+    const commentData = {
+      content: this.commentContent,
+      file: this.uploadedFiles.length > 0 ? this.uploadedFiles[0] : undefined
+    };
+
+    this.tasksService.createComment(this.taskId!, commentData)
+      .pipe(finalize(() => this.submittingComment = false))
+      .subscribe({
+        next: (response) => {
+          // this.toastService.success('Comment added successfully');
+          this.commentContent = '';
+          this.uploadedFiles = [];
+          // Refresh task details to show the new comment
+          if (this.taskId) {
+            this.loadTaskDetails(this.taskId);
+          }
+        },
+        error: (error) => {
+          console.error('Error adding comment:', error);
+          // this.toastService.error('Failed to add comment');
+        }
+      });
   }
 
   editTask() {
@@ -250,39 +423,134 @@ export class AddTaskSidebarComponent {
   }
 
   deleteTask() {
-    // handle delete action
-    console.log('Delete task');
+    if (this.taskId && confirm('Are you sure you want to delete this task?')) {
+      this.isLoading = true;
+
+      this.tasksService.deleteTask(this.taskId)
+        .pipe(finalize(() => this.isLoading = false))
+        .subscribe({
+          next: (response) => {
+            // this.toastService.success('Task deleted successfully');
+            this.closeSidebar();
+            // Refresh the task list
+            this.saved.emit({ action: 'delete', taskId: this.taskId });
+          },
+          error: (error) => {
+            console.error('Error deleting task:', error);
+            // this.toastService.error('Failed to delete task');
+          }
+        });
+    }
   }
 
   downloadAttachment(file: any) {
-    // handle download
-    console.log('Downloading file:', file);
+    if (!file || !file.path) {
+      // this.toastService.warning('File path not available');
+      return;
+    }
+
+    const url = this.tasksService.getFileUrl(file.path);
+    if (!url) {
+      // this.toastService.error('Could not generate download URL');
+      return;
+    }
+
+    // Open the file in a new tab
+    window.open(url, '_blank');
   }
 
   downloadAllAttachments() {
-    // handle download all
-    console.log('Downloading all attachments');
+    if (!this.attachmentsList || this.attachmentsList.length === 0) {
+      // this.toastService.warning('No attachments to download');
+      return;
+    }
+
+    // Download each attachment with a small delay to prevent browser blocking
+    this.attachmentsList.forEach((file, index) => {
+      setTimeout(() => {
+        this.downloadAttachment(file);
+      }, index * 500); // 500ms delay between downloads
+    });
   }
 
   onSubmit(): void {
     if (this.taskForm.valid) {
       const formData = this.taskForm.value;
-      this.saved.emit(formData);
 
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Success',
-        detail: `Task ${this.isEditMode ? 'updated' : 'created'} successfully`
-      });
+      // Format the date for the API
+      const dueDate = formData.dueDate instanceof Date
+        ? formData.dueDate.toISOString()
+        : formData.dueDate;
 
-      this.closeSidebar();
+      this.isLoading = true;
+
+      if (this.isEditMode && this.taskId) {
+        // Update existing task
+        const updateData: any = {
+          title: formData.title,
+          priority: formData.priority,
+          status: formData.status,
+          projectId: formData.projectId,
+          dueDate: dueDate,
+          description: formData.description,
+          assignedTo: formData.assignedTo || []
+        };
+
+        // Handle subtasks if any
+        if (this.subTasks.length > 0) {
+          updateData.subTasks = this.subTasks.value;
+        }
+
+        this.tasksService.updateTask(this.taskId, updateData)
+          .pipe(finalize(() => this.isLoading = false))
+          .subscribe({
+            next: (response) => {
+              // this.toastService.success('Task updated successfully');
+              this.saved.emit({ action: 'update', task: response.result });
+              this.closeSidebar();
+            },
+            error: (error) => {
+              console.error('Error updating task:', error);
+              // this.toastService.error('Failed to update task: ' + (error.error?.message || 'Unknown error'));
+            }
+          });
+      } else {
+        // Create new task
+        const createData: any = {
+          title: formData.title,
+          priority: formData.priority,
+          status: formData.status,
+          projectId: formData.projectId,
+          dueDate: dueDate,
+          description: formData.description,
+          assignedTo: formData.assignedTo || [],
+          files: this.uploadedFiles
+        };
+
+        // Add subtasks if any
+        if (this.subTasks.length > 0) {
+          createData.subTasks = this.subTasks.value;
+        }
+
+        this.tasksService.createTask(createData)
+          .pipe(finalize(() => this.isLoading = false))
+          .subscribe({
+            next: (response) => {
+              // this.toastService.success('Task created successfully');
+              this.saved.emit({ action: 'create', task: response.result });
+              this.closeSidebar();
+              // Reset the form after successful creation
+              this.resetForm();
+            },
+            error: (error) => {
+              console.error('Error creating task:', error);
+              // this.toastService.error('Failed to create task: ' + (error.error?.message || 'Unknown error'));
+            }
+          });
+      }
     } else {
       this.markFormGroupTouched(this.taskForm);
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Please fill in all required fields correctly'
-      });
+      // this.toastService.error('Please fill in all required fields correctly');
     }
   }
 
@@ -312,7 +580,9 @@ export class AddTaskSidebarComponent {
     return 'Invalid input';
   }
 
-  getPriorityClass(priority: string): string {
+  getPriorityClass(priority: string | undefined | null): string {
+    if (!priority) return '';
+
     switch (priority.toLowerCase()) {
       case 'low': return 'priority-low';
       case 'medium': return 'priority-medium';
@@ -321,12 +591,72 @@ export class AddTaskSidebarComponent {
     }
   }
 
-  getStateClass(state: string): string {
-    switch (state.toLowerCase()) {
+  getStatusClass(status: string | undefined | null): string {
+    if (!status) return '';
+
+    switch (status.toLowerCase()) {
       case 'todo': return 'state-todo';
       case 'inprogress': return 'state-progress';
-      case 'done': return 'state-done';
+      case 'completed': return 'state-done';
       default: return '';
+    }
+  }
+
+  // Helper method to get file icon based on file type or name
+  getFileIcon(fileIdentifier: string): string {
+    if (!fileIdentifier) return 'pi-file';
+
+    // Check if it's a mime type
+    if (fileIdentifier.includes('/')) {
+      if (fileIdentifier.includes('pdf')) return 'pi-file-pdf';
+      if (fileIdentifier.includes('image')) return 'pi-image';
+      if (fileIdentifier.includes('word')) return 'pi-file-word';
+      if (fileIdentifier.includes('excel')) return 'pi-file-excel';
+      if (fileIdentifier.includes('powerpoint')) return 'pi-file-powerpoint';
+      if (fileIdentifier.includes('zip')) return 'pi-file-archive';
+    } else {
+      // It's a filename, extract extension
+      const extension = fileIdentifier.split('.').pop()?.toLowerCase();
+
+      switch (extension) {
+        case 'pdf': return 'pi-file-pdf';
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif': return 'pi-image';
+        case 'doc':
+        case 'docx': return 'pi-file-word';
+        case 'xls':
+        case 'xlsx': return 'pi-file-excel';
+        case 'ppt':
+        case 'pptx': return 'pi-file-powerpoint';
+        case 'zip': return 'pi-file-archive';
+      }
+    }
+
+    return 'pi-file';
+  }
+
+  // Helper method to get file type from name
+  private getFileTypeFromName(fileName: string): string {
+    if (!fileName) return 'application/octet-stream';
+
+    const extension = fileName.split('.').pop()?.toLowerCase();
+
+    switch (extension) {
+      case 'pdf': return 'application/pdf';
+      case 'jpg':
+      case 'jpeg': return 'image/jpeg';
+      case 'png': return 'image/png';
+      case 'gif': return 'image/gif';
+      case 'doc':
+      case 'docx': return 'application/msword';
+      case 'xls':
+      case 'xlsx': return 'application/vnd.ms-excel';
+      case 'ppt':
+      case 'pptx': return 'application/vnd.ms-powerpoint';
+      case 'zip': return 'application/zip';
+      default: return 'application/octet-stream';
     }
   }
 }

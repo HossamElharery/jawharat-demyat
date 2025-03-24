@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
-import { NgFor, NgClass, CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { forkJoin } from 'rxjs';
 
 import {
   ApexAxisChartSeries,
@@ -21,6 +22,7 @@ import {
   ChartComponent
 } from "ng-apexcharts";
 import { AttendanceSectionComponent } from '../attendance-section/attendance-section.component';
+import { DashboardService } from '../../services/dashboard.service';
 
 // Type for Bar Chart
 export type ExpensesChartOptions = {
@@ -36,7 +38,6 @@ export type ExpensesChartOptions = {
   plotOptions: ApexPlotOptions;
   responsive: ApexResponsive[];
 };
-
 
 // Type for Donut Chart
 export type InventoryChartOptions = {
@@ -55,18 +56,6 @@ interface DataPoint {
   fillColor: string;
 }
 
-
-interface Request {
-  name: string;
-  job: string;
-  date: string;
-  status: string;
-  email: string;
-  country: string;
-  profile: number;
-  avatar: string;
-}
-
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -75,8 +64,8 @@ interface Request {
     MatCardModule,
     MatTableModule,
     CommonModule,
+    NgIf,
     AttendanceSectionComponent
-
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -86,31 +75,43 @@ export class DashboardComponent implements OnInit {
   statsData = [
     {
       icon: 'bi bi-people-fill',
-      value: '200',
+      value: '0',
       label: 'Total Employees',
       bgColor: '#4267B2'
     },
     {
       icon: 'bi bi-card-checklist',
-      value: '100',
+      value: '0',
       label: 'Inventory',
       bgColor: '#4B7B77'
     },
     {
       icon: 'bi bi-credit-card-2-front',
-      value: '20000',
+      value: '0',
       label: 'Payroll',
       suffix: 'AED',
       bgColor: '#4CAF50'
     },
     {
       icon: 'bi bi-wallet2',
-      value: '2000',
+      value: '0',
       label: 'Expenses',
       suffix: 'AED',
       bgColor: '#FF5252'
     }
   ];
+
+  // Attendance Data
+  attendanceData: any[] = [];
+
+  // Inventory statistics
+  totalInventory = 0;
+  machinesPercentage = '0%';
+  productsPercentage = '0%';
+
+  // Loading state
+  loading = true;
+  loadingError = false;
 
   // Expenses Chart
   @ViewChild("expensesChart") expensesChart!: ChartComponent;
@@ -120,13 +121,13 @@ export class DashboardComponent implements OnInit {
   @ViewChild("inventoryChart") inventoryChart!: ChartComponent;
   public inventoryChartOptions: Partial<InventoryChartOptions>;
 
-  constructor() {
-    // Initialize Expenses Chart
+  constructor(private dashboardService: DashboardService) {
+    // Initialize Expenses Chart with empty data (will be populated in ngOnInit)
     this.expensesChartOptions = {
       series: [
         {
           name: "Expenses",
-          data: [390, 480, 450, 330, 440, 500, 580, 440, 550]
+          data: []
         }
       ],
       chart: {
@@ -134,7 +135,7 @@ export class DashboardComponent implements OnInit {
         width: '100%',
         type: "bar",
         toolbar: {
-          show: true, // Enable toolbar
+          show: true,
           tools: {
             download: true,
             selection: false,
@@ -210,7 +211,7 @@ export class DashboardComponent implements OnInit {
         }
       ],
       xaxis: {
-        categories: ['01', '02', '03', '04', '05', '06', '07', '08', '09'],
+        categories: [],
         labels: {
           style: {
             colors: '#999999',
@@ -240,9 +241,9 @@ export class DashboardComponent implements OnInit {
       }
     };
 
-    // Initialize Inventory Chart
+    // Initialize Inventory Chart with empty data (will be populated in ngOnInit)
     this.inventoryChartOptions = {
-      series: [80, 20],
+      series: [0, 0],
       chart: {
         type: "donut",
         height: 350
@@ -273,28 +274,153 @@ export class DashboardComponent implements OnInit {
         }
       ]
     };
-
-    // Highlight specific month in expenses chart
-    const highlightedMonth: string = '08';
-    const categories: string[] = this.expensesChartOptions.xaxis?.categories as string[] || [];
-    const monthIndex: number = categories.findIndex(
-      (month: string): boolean => month === highlightedMonth
-    );
-
-    if (this.expensesChartOptions.series && this.expensesChartOptions.series[0]) {
-      const data: number[] = this.expensesChartOptions.series[0].data as number[];
-      this.expensesChartOptions.series[0].data = data.map(
-        (value: number, index: number): DataPoint => ({
-          x: categories[index],
-          y: value,
-          fillColor: index === monthIndex ? '#EFA70C' : '#FFF3E0'
-        })
-      );
-    }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadDashboardData();
+  }
 
-  displayedColumns: string[] = ['employee', 'designation', 'type', 'checkIn', 'status'];
+  loadDashboardData(): void {
+    this.loading = true;
+    this.loadingError = false;
 
+    // Use forkJoin to make parallel API calls
+    forkJoin({
+      statistics: this.dashboardService.getStatistics(),
+      inventory: this.dashboardService.getTopInventory(),
+      expenses: this.dashboardService.getExpensesOverview(),
+      attendance: this.dashboardService.getAttendanceRecords()
+    }).subscribe({
+      next: (results) => {
+        // Update stats cards
+        const stats = results.statistics.result;
+        this.statsData[0].value = stats.totalEmployees.toString();
+        this.statsData[1].value = stats.inventoryCount.toString();
+        this.statsData[2].value = stats.totalPayroll.toString();
+        this.statsData[3].value = stats.totalExpenses.toString();
+
+        // Update inventory chart
+        const inventoryData = results.inventory.result;
+        this.totalInventory = inventoryData.totalInventory;
+        this.machinesPercentage = inventoryData.machines;
+        this.productsPercentage = inventoryData.products;
+
+        // Extract percentages as numbers for the chart
+        const machinesPercent = parseFloat(inventoryData.machines.replace('%', ''));
+        const productsPercent = parseFloat(inventoryData.products.replace('%', ''));
+
+        // Update inventory chart
+        this.inventoryChartOptions.series = [productsPercent, machinesPercent];
+
+        // Update expenses chart
+        const expensesData = results.expenses.result;
+
+        if (expensesData.length > 0) {
+          // Extract dates and totals for the chart
+          const categories = expensesData.map(item => {
+            const date = new Date(item.date);
+            // Format as "Mar 17" or whatever format you prefer
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+          });
+
+          const values = expensesData.map(item => item.total);
+
+          // Update chart options
+          this.expensesChartOptions.xaxis = {
+            ...this.expensesChartOptions.xaxis,
+            categories,
+            labels: {
+              style: {
+                colors: '#999999',
+                fontSize: '12px'
+              },
+              rotate: 0,
+              trim: false,
+              hideOverlappingLabels: false
+            }
+          };
+
+          // Update chart data
+          this.expensesChartOptions.series = [{
+            name: "Expenses",
+            data: values.map((value, index) => ({
+              x: categories[index],
+              y: value,
+              fillColor: '#FFF3E0' // Default color
+            }))
+          }];
+
+          // Highlight the highest expense month
+          if (values.length > 0) {
+            const maxValue = Math.max(...values);
+            const maxIndex = values.findIndex(v => v === maxValue);
+
+            if (maxIndex !== -1 && this.expensesChartOptions.series[0].data) {
+              (this.expensesChartOptions.series[0].data[maxIndex] as DataPoint).fillColor = '#EFA70C';
+            }
+          }
+
+          // Adjust y-axis max value based on actual data
+          if (values.length > 0) {
+            const maxValue = Math.max(...values);
+            this.expensesChartOptions.yaxis = {
+              ...this.expensesChartOptions.yaxis,
+              max: Math.ceil(maxValue * 1.2) // 20% padding above max value
+            };
+          }
+        }
+
+        // Update attendance data
+        console.log('Attendance API response:', results.attendance);
+
+        // Handle the nested structure of the attendance API response
+        try {
+          if (Array.isArray(results.attendance)) {
+            // Direct array
+            this.attendanceData = results.attendance;
+          } else if (results.attendance && typeof results.attendance === 'object') {
+            // Handle object response
+            const attendanceObj = results.attendance as any;
+
+            // Check for nested data structure from your API
+            if (attendanceObj.result && attendanceObj.result.data && Array.isArray(attendanceObj.result.data)) {
+              console.log('Found attendance data in result.data');
+              this.attendanceData = attendanceObj.result.data;
+            }
+            // Check for data directly in result
+            else if (attendanceObj.result && Array.isArray(attendanceObj.result)) {
+              console.log('Found attendance data in result');
+              this.attendanceData = attendanceObj.result;
+            }
+            // Check for data directly in the object
+            else if (attendanceObj.data && Array.isArray(attendanceObj.data)) {
+              console.log('Found attendance data directly');
+              this.attendanceData = attendanceObj.data;
+            } else {
+              // If we can't find an array, initialize an empty one
+              console.warn('Could not find attendance data array in response');
+              this.attendanceData = [];
+            }
+          } else {
+            this.attendanceData = [];
+          }
+        } catch (error) {
+          console.error('Error processing attendance data:', error);
+          this.attendanceData = [];
+        }
+
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading dashboard data:', error);
+        this.loading = false;
+        this.loadingError = true;
+      }
+    });
+  }
+
+  // Refresh dashboard data
+  refreshData(): void {
+    this.loadDashboardData();
+  }
 }

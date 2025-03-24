@@ -1,10 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { AvatarModule } from 'primeng/avatar';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
-interface AttendanceRecord {
+import { AttendanceRecord } from '../../services/dashboard.service';
+
+// Define display data structure for the table
+interface DisplayRecord {
+  id: string;
   name: string;
   designation: string;
   type: string;
@@ -12,69 +16,90 @@ interface AttendanceRecord {
   status: string;
   avatar: string;
 }
+
 @Component({
   selector: 'app-attendance-section',
-  imports: [CommonModule , TableModule,AvatarModule,TagModule , ButtonModule],
+  standalone: true,
+  imports: [CommonModule, TableModule, AvatarModule, TagModule, ButtonModule],
   templateUrl: './attendance-section.component.html',
   styleUrl: './attendance-section.component.scss'
 })
-export class AttendanceSectionComponent {
-  attendanceData: AttendanceRecord[] = [
-      {
-        name: 'Leasie Watson',
-        designation: 'Worker',
-        type: 'Full Time',
-        checkIn: '09:27 AM',
-        status: 'Attended',
-        avatar: '../../../../../assets/images/leasie.png'
-      },
-      {
-        name: 'Darlene Robertson',
-        designation: 'Super Visor',
-        type: 'Full Time',
-        checkIn: '10:15 AM',
-        status: 'Absence',
-        avatar: '../../../../../assets/images/darlene.png'
-      },
-      {
-        name: 'Jacob Jones',
-        designation: 'Worker',
-        type: 'Full Time',
-        checkIn: '10:24 AM',
-        status: 'Absence',
-        avatar: '../../../../../assets/images/jacob.png'
-      },
-      {
-        name: 'Kathryn Murphy',
-        designation: 'Manger',
-        type: 'Full Time',
-        checkIn: '09:10 AM',
-        status: 'Attended',
-        avatar: '../../../../../assets/images/kathryn.png'
-      },
-      {
-        name: 'Leslie Alexander',
-        designation: 'Worker',
-        type: 'Full Time',
-        checkIn: '09:15 AM',
-        status: 'Attended',
-        avatar: '../../../../../assets/images/leslie.png'
-      },
-      {
-        name: 'Ronald Richards',
-        designation: 'Worker',
-        type: 'Full Time',
-        checkIn: '09:29 AM',
-        status: 'Attended',
-        avatar: '../../../../../assets/images/ronald.png'
-      },
-      {
-        name: 'Jenny Wilson',
-        designation: 'Worker',
-        type: 'Full Time',
-        checkIn: '11:30 AM',
-        status: 'Absence',
-        avatar: '../../../../../assets/images/jenny.png'
+export class AttendanceSectionComponent implements OnChanges {
+  @Input() attendanceData: AttendanceRecord[] = [];
+
+  // Transformed data for the table
+  displayData: DisplayRecord[] = [];
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('AttendanceSection ngOnChanges, data:', this.attendanceData);
+    if (changes['attendanceData']) {
+      this.transformAttendanceData();
+    }
+  }
+
+  // Transform API data to match the template's expected structure
+  transformAttendanceData(): void {
+    // Safety check
+    if (!this.attendanceData || !Array.isArray(this.attendanceData) || this.attendanceData.length === 0) {
+      console.log('No attendance data to transform');
+      this.displayData = [];
+      return;
+    }
+
+    console.log(`Transforming ${this.attendanceData.length} attendance records`);
+
+    // Map API data to display format
+    this.displayData = this.attendanceData.map(record => {
+      // Convert status from API format to display format
+      let displayStatus = 'Unknown';
+      if (record.status) {
+        switch (record.status.toLowerCase()) {
+          case 'present':
+            displayStatus = 'Attended';
+            break;
+          case 'absent':
+            displayStatus = 'Absence';
+            break;
+          case 'holiday':
+            displayStatus = 'Holiday';
+            break;
+          case 'leave':
+            displayStatus = 'Leave';
+            break;
+          default:
+            displayStatus = record.status.charAt(0).toUpperCase() + record.status.slice(1);
+        }
       }
-    ];
+
+      return {
+        id: record.id || '',
+        name: record.employeeName || 'Unknown',
+        designation: 'Staff', // Default designation if not provided
+        type: 'Full Time', // Default type if not provided
+        checkIn: record.checkIn ? this.formatTime(record.checkIn) : 'N/A',
+        status: displayStatus,
+        // Use default avatar if none provided
+        avatar: record.employeeImage || '../../../../../assets/images/' + this.getRandomAvatar()
+      };
+    });
+  }
+
+  // Format the check-in time for display
+  formatTime(time: string): string {
+    if (!time) return 'N/A';
+
+    const date = new Date(time);
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  }
+
+  // Generate a random avatar from the existing ones for demo purposes
+  getRandomAvatar(): string {
+    const avatars = ['leasie.png', 'darlene.png', 'jacob.png', 'kathryn.png', 'leslie.png', 'ronald.png', 'jenny.png'];
+    const randomIndex = Math.floor(Math.random() * avatars.length);
+    return avatars[randomIndex];
+  }
 }

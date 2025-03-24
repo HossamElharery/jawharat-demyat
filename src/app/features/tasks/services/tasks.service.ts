@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { catchError, map } from 'rxjs/operators';
 
 export interface Task {
   id: string;
@@ -17,12 +18,7 @@ export interface Task {
     name: string;
     creatorId?: string;
   };
-  assignedTo: {
-    id: string;
-    name: string;
-    imageUrl: string | null;
-    email: string;
-  }[];
+  assignedTo: any[];
   files: {
     id: string;
     name?: string;
@@ -35,8 +31,7 @@ export interface Task {
   commentCount?: number;
   totalSubTasks?: number;
   subTasksDone?: number;
-  // UI specific property for kanban view
-  state?: string;
+  state?: string; // UI specific property for kanban view
 }
 
 export interface SubTask {
@@ -80,6 +75,7 @@ export interface TaskCreateDTO {
   description: string;
   assignedTo?: string[];
   files?: File[];
+  subTasks?: SubTask[];
 }
 
 export interface TaskUpdateDTO {
@@ -90,6 +86,7 @@ export interface TaskUpdateDTO {
   dueDate?: string;
   description?: string;
   assignedTo?: string[];
+  subTasks?: SubTask[];
 }
 
 export interface CommentCreateDTO {
@@ -102,8 +99,25 @@ export interface ProjectsResponse {
   result: {
     id: string;
     name: string;
-    creatorId: string;
+    creatorId?: string;
   }[];
+}
+
+export interface CommentResponse {
+  message: string;
+  result: {
+    id: string;
+    content: string;
+    filePath?: string;
+    createdById: string;
+    taskId: string;
+    createdAt: string;
+    createdBy?: {
+      id: string;
+      name: string;
+      imageUrl?: string;
+    };
+  };
 }
 
 @Injectable({
@@ -185,6 +199,11 @@ export class TasksService {
       });
     }
 
+    // Append subtasks if available
+    if (task.subTasks && task.subTasks.length > 0) {
+      formData.append('subTasks', JSON.stringify(task.subTasks));
+    }
+
     return this.http.post<TaskResponse>(this.apiUrl, formData);
   }
 
@@ -200,12 +219,26 @@ export class TasksService {
     if (task.dueDate) formData.append('dueDate', task.dueDate);
     if (task.description) formData.append('description', task.description);
 
+    // For assignedTo, we need to pass it as an array
+    if (task.assignedTo && task.assignedTo.length > 0) {
+      task.assignedTo.forEach(assigneeId => {
+        formData.append('assignedTo[]', assigneeId);
+      });
+    }
+
+    // Append subtasks if available
+    if (task.subTasks && task.subTasks.length > 0) {
+      formData.append('subTasks', JSON.stringify(task.subTasks));
+    }
+
     return this.http.put<TaskResponse>(`${this.apiUrl}/${id}`, formData);
   }
 
   // Update task status only (for drag and drop)
   updateTaskStatus(id: string, status: string): Observable<TaskResponse> {
-    return this.updateTask(id, { status });
+    const formData = new FormData();
+    formData.append('status', status);
+    return this.http.put<TaskResponse>(`${this.apiUrl}/${id}`, formData);
   }
 
   // Delete a task
@@ -215,7 +248,8 @@ export class TasksService {
 
   // Assign members to a task
   assignMembers(taskId: string, memberIds: string[]): Observable<TaskResponse> {
-    return this.http.put<TaskResponse>(`${this.apiUrl}/${taskId}`, { assignedTo: memberIds });
+    const body = { assignedTo: memberIds };
+    return this.http.put<TaskResponse>(`${this.apiUrl}/${taskId}`, body);
   }
 
   // Remove a member from a task
@@ -224,7 +258,7 @@ export class TasksService {
   }
 
   // Create a comment on a task
-  createComment(taskId: string, comment: CommentCreateDTO): Observable<any> {
+  createComment(taskId: string, comment: CommentCreateDTO): Observable<CommentResponse> {
     const formData = new FormData();
     formData.append('content', comment.content);
 
@@ -232,16 +266,37 @@ export class TasksService {
       formData.append('file', comment.file);
     }
 
-    return this.http.post<any>(`${this.apiUrl}/${taskId}/comment`, formData);
+    return this.http.post<CommentResponse>(`${this.apiUrl}/${taskId}/comment`, formData);
   }
 
   // Get projects for task assignment
   getProjects(): Observable<ProjectsResponse> {
-    return this.http.get<ProjectsResponse>(this.projectsUrl);
+    return this.http.get<ProjectsResponse>(this.projectsUrl).pipe(
+      map(response => {
+        // Check if response.result is an array
+        if (!Array.isArray(response.result)) {
+          // If not an array, wrap it in an array to prevent error
+          return {
+            message: response.message,
+            result: Array.isArray(response.result) ? response.result : []
+          };
+        }
+        return response;
+      }),
+      catchError(error => {
+        console.error('Error fetching projects:', error);
+        // Return empty result to prevent crashes
+        return of({
+          message: 'Error fetching projects',
+          result: []
+        });
+      })
+    );
   }
 
   // Get file URL
   getFileUrl(path: string): string {
+    if (!path) return '';
     // Remove the leading slash if present
     const cleanPath = path.startsWith('/') ? path.substring(1) : path;
     return `${environment.apiBaseUrl}/${cleanPath}`;

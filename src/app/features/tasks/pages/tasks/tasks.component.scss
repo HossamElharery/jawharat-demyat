@@ -3,7 +3,60 @@
 .tasks-main {
   padding: 1rem;
   background-color: $bk-blue;
-  min-height: 100vh;
+  min-height: calc(100vh - 60px);
+  position: relative;
+
+  // Loading overlay
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+
+    .spinner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 80px;
+      height: 80px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  // Empty state message
+  .no-tasks-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    background-color: white;
+    border-radius: 8px;
+    margin-top: 20px;
+
+    .message-container {
+      text-align: center;
+      padding: 20px;
+
+      h3 {
+        margin-top: 16px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      p {
+        margin-bottom: 20px;
+        color: #666;
+      }
+    }
+  }
 
   .tasks-header {
     display: flex;
@@ -53,67 +106,266 @@
     }
   }
 
+  .white-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
 
+    .project-name-section {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
 
-  .action-bar {
+      @media (max-width: 767px) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .left-section {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+
+        h2 {
+          margin: 0;
+          font-size: 24px;
+          font-weight: 600;
+          color: #1D2939;
+
+          @media (max-width: 767px) {
+            font-size: 20px;
+          }
+        }
+
+        .icon-buttons {
+          display: flex;
+          gap: 12px;
+        }
+      }
+
+      .right-section {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+
+        @media (max-width: 767px) {
+          width: 100%;
+          justify-content: space-between;
+          margin-top: 16px;
+        }
+
+        .invite-btn {
+          height: 40px;
+          padding: 0 16px;
+          background: #FFFFFF;
+          border: 1px solid #E0E0E0;
+          border-radius: 8px;
+          color: $primary-color;
+          font-weight: 500;
+
+          .pi-plus {
+            font-size: 14px;
+            margin-right: 8px;
+          }
+
+          &:hover {
+            background: rgba($primary-color, 0.04);
+          }
+        }
+
+        .members-group {
+          display: flex;
+          align-items: center;
+
+          img, .avatar-placeholder {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid #FFFFFF;
+            margin-left: -8px;
+            overflow: hidden;
+
+            &:first-child {
+              margin-left: 0;
+            }
+
+            @media (max-width: 767px) {
+              width: 32px;
+              height: 32px;
+            }
+          }
+
+          .avatar-placeholder {
+            background-color: #6366F1;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+          }
+
+          .more-count {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #F4D7DA;
+            color: #D25B68;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: -8px;
+            border: 2px solid #FFFFFF;
+
+            @media (max-width: 767px) {
+              width: 32px;
+              height: 32px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .actions-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
 
-    .left-actions, .right-actions {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    @media (max-width: 767px) {
+      flex-direction: column;
+      align-items: stretch;
     }
 
-    button {
+    .left-buttons {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      background: #fff;
-      border: 1px solid #E0E0E0;
-      color: #666;
-      padding: 0.5rem 1rem;
-      border-radius: $br-5px;
-      font-weight: 500;
+      gap: 12px;
+      flex-wrap: wrap;
 
-      i {
-        font-size: 1rem;
+      @media (max-width: 767px) {
+        width: 100%;
+        justify-content: space-between;
       }
 
-      &:hover {
-        background: #f8f9fa;
-      }
-    }
+      ::ng-deep {
+        .custom-dropdown {
+          .p-dropdown {
+            min-width: 140px;
 
-    .view-toggles {
-      display: flex;
-      gap: 0.5rem;
-      padding-left: 1rem;
-      margin-left: 1rem;
-      border-left: 1px solid #E0E0E0;
-
-      button {
-        padding: 0.5rem;
-        min-width: 2.5rem;
-
-        &.active {
-          background: $primary-color;
-          color: #fff;
-          border-color: $primary-color;
+            @media (max-width: 767px) {
+              width: calc(50% - 6px);
+            }
+          }
         }
       }
     }
 
-    .btn-new {
-      background: $primary-color;
-      color: #fff;
-      border: none;
+    .right-buttons {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
 
-      &:hover {
-        background: darken($primary-color, 5%);
+      @media (max-width: 767px) {
+        width: 100%;
+        justify-content: space-between;
       }
+
+      .secondary-btn {
+        @media (max-width: 767px) {
+          order: 2;
+          flex: 1;
+        }
+      }
+
+      .view-buttons {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-left: 24px;
+        border-left: 1px solid #E0E0E0;
+
+        @media (max-width: 767px) {
+          padding-left: 0;
+          border-left: none;
+          order: 1;
+        }
+      }
+
+      .add-task-btn {
+        @media (max-width: 767px) {
+          order: 3;
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .secondary-btn {
+    height: 40px;
+    padding: 0 16px;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    color: #787486;
+    font-weight: 500;
+
+    i {
+      font-size: 16px;
+      margin-right: 8px;
+    }
+
+    &:hover {
+      background: #F9FAFB;
+    }
+  }
+
+  .view-btn {
+    width: 36px;
+    height: 38px;
+    padding: 0;
+    background: #868686;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    color: #787486;
+
+    i {
+      font-size: 16px;
+    }
+
+    &.active {
+      background: $primary-color;
+      border-color: $primary-color;
+      color: #FFFFFF;
+    }
+
+    &:hover:not(.active) {
+      background: $primary-color;
+    }
+  }
+
+  .add-task-btn {
+    height: 40px;
+    padding: 0 16px;
+    background: $primary-color;
+    border: none;
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-weight: 500;
+
+    &:hover {
+      background: darken($primary-color, 5%);
     }
   }
 
@@ -121,14 +373,21 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
-
     overflow: auto;
+
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+    }
+
     .kanban-column {
       background-color: #F0F0F0;
-      // padding: 10px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+
       .status-line {
         height: 4px;
-        width: 100%; // Ensures full width
+        width: 100%;
         border-radius: 2px;
         margin-top: 0;
       }
@@ -144,6 +403,7 @@
       &.done .status-line {
         background-color: #8BC48A;
       }
+
       .column-header {
         display: flex;
         justify-content: space-between;
@@ -164,6 +424,9 @@
             &.to-do { background-color: #5030E5; }
             &.in-progress { background-color: #FFA500; }
             &.done { background-color: #8BC48A; }
+            &.todo { background-color: #5030E5; }
+            &.inprogress { background-color: #FFA500; }
+            &.completed { background-color: #8BC48A; }
           }
 
           .status-title {
@@ -181,23 +444,40 @@
 
       .task-list {
         min-height: 100px;
-
         padding: 10px;
+        flex-grow: 1;
+
         &.p-droppable-enter {
           background: rgba($primary-color, 0.05);
-          border-radius: $br-12px;
+          border-radius: 8px;
+        }
+
+        .empty-column {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 150px;
+          color: #999;
+          text-align: center;
+
+          p {
+            margin: 4px 0;
+          }
         }
       }
 
       .task-card {
         background: #fff;
-        border-radius: $br-12px;
+        border-radius: 8px;
         padding: 1.25rem;
         margin-bottom: 1rem;
-        cursor: move;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
 
         &:hover {
-          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+          transform: translateY(-2px);
         }
 
         .card-header {
@@ -212,13 +492,29 @@
             color: $primary-color;
             border-radius: 1rem;
             font-size: 0.875rem;
+            text-transform: capitalize;
+
+            &.high {
+              background: #FEECEC;
+              color: #DB4444;
+            }
+
+            &.medium {
+              background: #FFF8E7;
+              color: #E9B949;
+            }
+
+            &.low {
+              background: #F1FAFF;
+              color: #4AA3DF;
+            }
           }
 
           .menu-trigger {
             color: #666;
             cursor: pointer;
             padding: 0.25rem;
-            border-radius: $br-5px;
+            border-radius: 4px;
 
             &:hover {
               background: rgba(0,0,0,0.05);
@@ -230,12 +526,14 @@
           font-size: 1rem;
           font-weight: 600;
           margin: 0 0 0.5rem 0;
+          color: #333;
         }
 
         p {
           color: #6c757d;
           font-size: 0.875rem;
           margin-bottom: 1rem;
+          line-height: 1.4;
         }
 
         .card-footer {
@@ -247,16 +545,41 @@
             display: flex;
             align-items: center;
 
-            img {
+            img, .avatar-placeholder {
               width: 24px;
               height: 24px;
               border-radius: 50%;
               border: 2px solid white;
               margin-left: -0.5rem;
+              overflow: hidden;
 
               &:first-child {
                 margin-left: 0;
               }
+            }
+
+            .avatar-placeholder {
+              background-color: #6366F1;
+              color: white;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 10px;
+              font-weight: bold;
+            }
+
+            .more-members {
+              width: 24px;
+              height: 24px;
+              border-radius: 50%;
+              background: #F4D7DA;
+              color: #D25B68;
+              font-size: 10px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin-left: -0.5rem;
+              border: 2px solid white;
             }
           }
 
@@ -277,10 +600,9 @@
     }
   }
 
-
   .table-view {
     background: #FFFFFF;
-    border-radius: $br-12px;
+    border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     margin-top: 1rem;
     padding: 1.5rem;
@@ -322,34 +644,20 @@
             }
 
             // Task Status
-            .status-indicator {
+            .state-indicator {
               display: flex;
               align-items: center;
               gap: 0.5rem;
 
               .status-dot {
-                width: 6px;
-                height: 6px;
+                width: 8px;
+                height: 8px;
                 border-radius: 50%;
                 display: inline-block;
 
-                &.todo {
-                  background-color: #5030E5;
-                }
-
-                &.in-progress {
-                  background-color: #FFA500;
-                }
-
-                &.done {
-                  background-color: #8BC48A;
-                }
-              }
-
-              .status-text {
-                &.done {
-                  color: #8BC48A;
-                }
+                &.todo, &.to-do { background-color: #5030E5; }
+                &.inprogress, &.in-progress { background-color: #FFA500; }
+                &.done, &.completed { background-color: #8BC48A; }
               }
             }
 
@@ -361,20 +669,21 @@
               font-weight: 500;
               display: inline-flex;
               align-items: center;
+              text-transform: capitalize;
 
               &.low {
-                background-color: #FEF2E5;
-                color: #D58D49;
+                background: #F1FAFF;
+                color: #4AA3DF;
               }
 
               &.medium {
-                background-color: #FFF5E5;
-                color: #FFA500;
+                background: #FFF8E7;
+                color: #E9B949;
               }
 
               &.high {
-                background-color: #FFE5E5;
-                color: #FF0000;
+                background: #FEECEC;
+                color: #DB4444;
               }
             }
 
@@ -383,19 +692,34 @@
               display: flex;
               align-items: center;
 
-              img {
+              img, .avatar-placeholder {
                 width: 24px;
                 height: 24px;
                 border-radius: 50%;
                 border: 2px solid white;
                 margin-left: -8px;
+                overflow: hidden;
 
                 &:first-child {
                   margin-left: 0;
                 }
               }
 
-              .members-count {
+              .avatar-placeholder {
+                background-color: #6366F1;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 10px;
+                font-weight: bold;
+
+                &.small {
+                  font-size: 8px;
+                }
+              }
+
+              .more-members {
                 width: 24px;
                 height: 24px;
                 border-radius: 50%;
@@ -407,62 +731,24 @@
                 align-items: center;
                 justify-content: center;
                 margin-left: -8px;
+                border: 2px solid white;
               }
             }
 
-            // Files Count
-            .files-count {
-              color: #6C757D;
-              font-weight: 500;
-            }
-
-            // Deadline
-            .deadline {
-              color: #6C757D;
-            }
-
             // Actions
-            .actions {
+            .action-buttons {
               display: flex;
               gap: 1rem;
               align-items: center;
 
-              button {
-                width: 32px;
-                height: 32px;
-                border-radius: $br-5px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border: none;
-                background: transparent;
+              .action-icon {
                 cursor: pointer;
-                padding: 0;
+                padding: 0.25rem;
+                border-radius: 4px;
                 transition: background-color 0.2s;
 
-                i {
-                  font-size: 1rem;
-                }
-
-                &.view-btn {
-                  color: #6C757D;
-                  &:hover {
-                    background: rgba(108, 117, 125, 0.1);
-                  }
-                }
-
-                &.edit-btn {
-                  color: #00A3FF;
-                  &:hover {
-                    background: rgba(0, 163, 255, 0.1);
-                  }
-                }
-
-                &.delete-btn {
-                  color: #FF3B30;
-                  &:hover {
-                    background: rgba(255, 59, 48, 0.1);
-                  }
+                &:hover {
+                  background-color: rgba(0, 0, 0, 0.05);
                 }
               }
             }
@@ -478,517 +764,37 @@
         }
       }
     }
-
-    // Custom Scrollbar
-    .p-datatable-wrapper {
-      max-height: calc(100vh - 300px);
-      overflow-y: auto;
-
-      &::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background: #F1F1F1;
-        border-radius: 3px;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: #C1C1C1;
-        border-radius: 3px;
-
-        &:hover {
-          background: #A8A8A8;
-        }
-      }
-    }
-  }
-}
-.white-card {
-  background: #FFFFFF;
-  border-radius: 16px;
-  padding: 20px 24px;
-  margin-bottom: 24px;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
-
-  .project-name-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .left-section {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-
-      h2 {
-        margin: 0;
-        font-size: 24px;
-        font-weight: 600;
-        color: #1D2939;
-      }
-
-      .icon-buttons {
-        display: flex;
-        gap: 12px;
-
-        .icon-btn {
-          width: 36px;
-          height: 36px;
-          border: none;
-          background: transparent;
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          color: $primary-color;
-          transition: all 0.2s;
-
-          &:hover {
-            background-color: rgba($primary-color, 0.08);
-          }
-
-          i {
-            font-size: 20px;
-          }
-        }
-      }
-    }
-
-    .right-section {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-
-      .invite-btn {
-        height: 40px;
-        padding: 0 16px;
-        background: #FFFFFF;
-        border: 1px solid #E0E0E0;
-        border-radius: 8px;
-        color: $primary-color;
-        font-weight: 500;
-
-        .pi-plus {
-          font-size: 14px;
-          margin-right: 8px;
-        }
-
-        &:hover {
-          background: rgba($primary-color, 0.04);
-        }
-      }
-
-      .members-group {
-        display: flex;
-        align-items: center;
-
-        img {
-          width: 38px;
-          height: 38px;
-          border-radius: 50%;
-          border: 2px solid #FFFFFF;
-          margin-left: -8px;
-
-          &:first-child {
-            margin-left: 0;
-          }
-        }
-
-        .more-count {
-          width: 38px;
-          height: 38px;
-          border-radius: 50%;
-          background: #F4D7DA;
-          color: #D25B68;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 12px;
-          font-weight: 500;
-          margin-left: -8px;
-          border: 2px solid #FFFFFF;
-        }
-      }
-    }
-  }
-}
-
-.actions-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
-
-  .left-buttons, .right-buttons {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .secondary-btn {
-    height: 40px;
-    padding: 0 16px;
-    background: #FFFFFF;
-    border: 1px solid #E0E0E0;
-    border-radius: 8px;
-    color: #787486;
-    font-weight: 500;
-
-    i {
-      font-size: 16px;
-      margin-right: 8px;
-    }
-
-    &:hover {
-      background: #F9FAFB;
-    }
-  }
-
-  .view-buttons {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding-left: 24px;
-    // margin-left: 12px;
-    border-left: 1px solid #E0E0E0;
-
-    .view-btn {
-      width: 36px;
-      height: 38px;
-      padding: 0;
-      background: #868686;
-      border: 1px solid #E0E0E0;
-      border-radius: 8px;
-      color: #787486;
-
-      i {
-        font-size: 16px;
-      }
-
-      &.active {
-        background: $primary-color;
-        border-color: $primary-color;
-        color: #FFFFFF;
-      }
-
-      &:hover:not(.active) {
-        background: $primary-color;
-      }
-    }
-  }
-
-  .add-task-btn {
-    height: 40px;
-    padding: 0 16px;
-    background: $primary-color;
-    border: none;
-    border-radius: 8px;
-    color: #FFFFFF;
-    font-weight: 500;
-
-    &:hover {
-      background: darken($primary-color, 5%);
-    }
-  }
-}
-.left-buttons {
-  display: flex;
-  gap: 12px;
-
-  ::ng-deep {
-    .custom-dropdown {
-      .p-dropdown {
-        background: #FFFFFF;
-        border: 1px solid #E0E0E0;
-        border-radius: 8px;
-        min-width: 160px;
-        height: 40px;
-
-        &:not(.p-disabled).p-focus {
-          box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
-          border-color: $primary-color;
-        }
-
-        .p-dropdown-label {
-          padding: 0.5rem 1rem;
-        }
-
-        .selected-item {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: #64748B;
-
-          app-icon {
-            font-size: 16px;
-          }
-
-          span {
-            font-weight: 500;
-          }
-        }
-
-        .p-dropdown-trigger {
-          width: 40px;
-          background: transparent;
-          color: #64748B;
-
-          &:hover {
-            color: $primary-color;
-          }
-        }
-      }
-
-      .p-dropdown-panel {
-        border: 1px solid #E0E0E0;
-        border-radius: 8px;
-        margin-top: 4px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-        .p-dropdown-items {
-          padding: 0.5rem 0;
-
-          .p-dropdown-item {
-            padding: 0.75rem 1rem;
-            color: #64748B;
-            transition: all 0.2s;
-
-            &:hover {
-              background: rgba($primary-color, 0.04);
-              color: $primary-color;
-            }
-
-            &.p-highlight {
-              background: rgba($primary-color, 0.08);
-              color: $primary-color;
-              font-weight: 500;
-            }
-          }
-        }
-
-        .dropdown-item {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-      }
-    }
   }
 }
 
 // Add to your global styles or component styles
-.p-dropdown-panel {
-  .p-dropdown-header {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid #E0E0E0;
+::ng-deep {
+  .p-dropdown-panel {
+    .p-dropdown-header {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #E0E0E0;
 
-    .p-dropdown-filter {
-      padding-right: 1.75rem;
-      margin-right: -1.75rem;
+      .p-dropdown-filter {
+        padding-right: 1.75rem;
+        margin-right: -1.75rem;
 
-      &:focus {
-        box-shadow: none;
-        border-color: $primary-color;
-      }
-    }
-
-    .p-dropdown-filter-icon {
-      right: 0.75rem;
-      color: #64748B;
-    }
-  }
-}
-
-@mixin mobile {
-  @media (max-width: 767px) {
-    @content;
-  }
-}
-
-@mixin tablet {
-  @media (min-width: 768px) and (max-width: 1023px) {
-    @content;
-  }
-}
-
-.white-card {
-  background: #FFFFFF;
-  border-radius: 16px;
-  padding: 20px 24px;
-  margin-bottom: 24px;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
-
-  .project-name-section {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-
-    @include mobile {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .left-section {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-
-      h2 {
-        margin: 0;
-        font-size: 24px;
-        font-weight: 600;
-        color: #1D2939;
-
-        @include mobile {
-          font-size: 20px;
+        &:focus {
+          box-shadow: none;
+          border-color: $primary-color;
         }
       }
 
-      .icon-buttons {
-        display: flex;
-        gap: 12px;
-      }
-    }
-
-    .right-section {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-
-      @include mobile {
-        width: 100%;
-        justify-content: space-between;
-        margin-top: 16px;
-      }
-
-      .invite-btn {
-        white-space: nowrap;
-      }
-
-      .members-group {
-        display: flex;
-        align-items: center;
-        flex-shrink: 0;
-
-        img {
-          width: 38px;
-          height: 38px;
-
-          @include mobile {
-            width: 32px;
-            height: 32px;
-          }
-        }
-      }
-    }
-  }
-}
-
-.actions-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
-
-  @include mobile {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-
-    @include mobile {
-      width: 100%;
-      justify-content: space-between;
-    }
-
-    ::ng-deep {
-      .custom-dropdown {
-        .p-dropdown {
-          min-width: 140px;
-
-          @include mobile {
-            width: calc(50% - 6px);
-          }
-        }
+      .p-dropdown-filter-icon {
+        right: 0.75rem;
+        color: #64748B;
       }
     }
   }
 
-  .right-buttons {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-
-    @include mobile {
-      width: 100%;
-      justify-content: space-between;
-    }
-
-    .secondary-btn {
-      @include mobile {
-        order: 2;
-        flex: 1;
-      }
-    }
-
-    .view-buttons {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding-left: 24px;
-      border-left: 1px solid #E0E0E0;
-
-      @include mobile {
-        padding-left: 0;
-        border-left: none;
-        order: 1;
-      }
-    }
-
-    .add-task-btn {
-      @include mobile {
-        order: 3;
-        width: 100%;
-      }
-    }
-  }
-}
-
-// Tablet-specific adjustments
-@include tablet {
-  .white-card {
-    .project-name-section {
-      .right-section {
-        .invite-btn {
-          padding: 0 12px;
-        }
-      }
-    }
-  }
-
-  .actions-section {
-    .left-buttons {
-      ::ng-deep {
-        .custom-dropdown {
-          .p-dropdown {
-            min-width: 120px;
-          }
-        }
-      }
+  // Custom styling for PrimeNG buttons
+  .p-button {
+    &.p-button-text {
+      color: $primary-color;
     }
   }
 }

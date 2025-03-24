@@ -12,6 +12,7 @@
   --toast-text-color: #ffffff;
   --toast-border-radius: 8px;
   --toast-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  --p-tabs-tabpanel-background:#ffffff !important;
 }
 
 @mixin mobile {
@@ -89,7 +90,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     padding: 10px;
   }
   .p-select-list-container{
-    background-color: white;
+    // background-color: white;
     padding: 10px;
   }
   .p-select:not(.p-disabled):hover{
@@ -642,3 +643,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .p-inputtext:disabled{
   color:white !important;
 }
+.p-drawer-content{
+  padding: 0 !important;
+  background: white;
+}
+.p-drawer-header {
+  display: none !important;}
+  .p-fileupload-advanced{
+    border: none !important;
+  }
+  .p-fileupload-header,.p-fileupload-content{
+    background: #ffffff !important;
+  }
+  .p-paginator{
+    background:white !important;
+  }
