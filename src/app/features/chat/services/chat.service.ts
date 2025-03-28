@@ -26,7 +26,13 @@ export interface Chat {
   latestMessageId: string | null;
   createdAt: string;
   updatedAt: string;
-  latestMessage?: ChatMessage;
+  latestMessage?: {
+    id: string;
+    content: string;
+    senderId: string;
+    createdAt: string;
+    seenAt: string | null;
+  };
   participants: ChatParticipant[];
 }
 
@@ -36,24 +42,13 @@ export interface CreateChatDto {
 
 export interface SendMessageDto {
   chatId: string;
-  content: string;
+  content?: string;
   attachment?: File;
 }
 
 export interface ApiResponse<T> {
   message: string;
   result: T;
-}
-
-export interface PaginatedResponse<T> {
-  message: string;
-  result: T[];
-  pagination?: {
-    currentPage: number;
-    perPage: number;
-    totalPages: number;
-    totalCount: number;
-  };
 }
 
 @Injectable({
@@ -75,7 +70,7 @@ export class ChatService {
   /**
    * Get all chats for the current user
    */
-  getAllChats(page: number = 1, perPage: number = 20): Observable<ApiResponse<Chat[]>> {
+  getAllChats(page: number = 1, perPage: number = 100): Observable<ApiResponse<Chat[]>> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('perPage', perPage.toString());
@@ -100,7 +95,10 @@ export class ChatService {
   sendMessage(message: SendMessageDto): Observable<ApiResponse<ChatMessage>> {
     const formData = new FormData();
     formData.append('chatId', message.chatId);
-    formData.append('content', message.content);
+
+    if (message.content) {
+      formData.append('content', message.content);
+    }
 
     if (message.attachment) {
       formData.append('attachment', message.attachment);
@@ -129,8 +127,12 @@ export class ChatService {
     }
 
     // Otherwise, construct URL from API base and path
-    const baseUrl = environment.apiUrl.split('/api')[0]; // Get base URL without /api/v1
-    return `${baseUrl}${attachmentPath}`;
+    if (environment.apiBaseUrl) {
+      return `${environment.apiBaseUrl}${attachmentPath}`;
+    } else {
+      const baseUrl = environment.apiUrl.split('/api')[0];
+      return `${baseUrl}${attachmentPath}`;
+    }
   }
 
   /**

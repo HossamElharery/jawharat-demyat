@@ -3,8 +3,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from './chat.service';
-import { MembersService } from '../../members/services/members.service';
-import { UsersService } from '../../users/services/users.service';
+import { MembersService,MemberBasicResponseDto } from '../../members/services/members.service';
+ import { UsersService, UserResponseDto  } from '../../users/services/users.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 export interface ChatParticipantType {
   id: string;
@@ -21,7 +22,8 @@ export interface ChatParticipantType {
 export class ChatParticipantService {
   constructor(
     private membersService: MembersService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private authService: AuthService
   ) {}
 
   /**
@@ -32,26 +34,34 @@ export class ChatParticipantService {
       // Get users
       this.usersService.getUsers(1, 100, search).subscribe({
         next: usersResponse => {
-          const userParticipants: any[] = usersResponse.result.users.map(user => ({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            imageUrl: user.imageUrl,
-            role: user.role,
-            type: 'user'
-          }));
+          const currentUser = this.authService.getCurrentUser();
+          const currentUserId = currentUser?.id;
+
+          const userParticipants: any[] = usersResponse.result.users
+            // Filter out current user
+            .filter(user => currentUserId !== user.id)
+            .map(user => ({
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              imageUrl: user.imageUrl,
+              role: user.role,
+              type: 'user'
+            }));
 
           // Get members
           this.membersService.getMembers(1, 100, search).subscribe({
             next: membersResponse => {
-              const memberParticipants: ChatParticipantType[] = membersResponse.result.members.map(member => ({
-                id: member.id,
-                name: member.name,
-                email: member.email,
-                imageUrl: member.imageUrl,
-                role: member.role,
-                type: 'member'
-              }));
+              const memberParticipants: ChatParticipantType[] = membersResponse.result.members
+                .filter(member => currentUserId !== member.id)
+                .map(member => ({
+                  id: member.id,
+                  name: member.name,
+                  email: member.email,
+                  imageUrl: member.imageUrl,
+                  role: member.role,
+                  type: 'member'
+                }));
 
               // Combine and emit
               observer.next([...userParticipants, ...memberParticipants]);
@@ -72,16 +82,15 @@ export class ChatParticipantService {
   }
 
   /**
-   * Search for participants
+   * Search participants with client-side filtering
    */
-  searchParticipants(query: string): Observable<ChatParticipantType[]> {
-    if (!query || query.length < 2) {
-      return new Observable(observer => {
-        observer.next([]);
-        observer.complete();
-      });
-    }
+  searchParticipants(query: string, participants: ChatParticipantType[]): ChatParticipantType[] {
+    if (!query) return participants;
 
-    return this.getAllPossibleParticipants(query);
+    const lowerQuery = query.toLowerCase();
+    return participants.filter(participant =>
+      participant.name.toLowerCase().includes(lowerQuery) ||
+      participant.email.toLowerCase().includes(lowerQuery)
+    );
   }
 }

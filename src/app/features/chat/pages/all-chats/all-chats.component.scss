@@ -650,6 +650,57 @@
   }
 }
 
+.dialog-section {
+  margin-bottom: 20px;
+}
+
+.dialog-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.first-message-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-family: inherit;
+  resize: vertical;
+  font-size: 14px;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+  }
+}
+
+.attachment-button-dialog {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #666;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+
+  svg {
+    margin-right: 8px;
+  }
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+}
+
+.attachment-controls {
+  margin-top: 10px;
+}
+
 .participant-item {
   display: flex;
   align-items: center;
@@ -661,6 +712,7 @@
     border-radius: 50%;
     margin-right: 10px;
     object-fit: cover;
+    background-color: #f5f5f5;
   }
 
   .participant-details {

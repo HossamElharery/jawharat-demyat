@@ -15,8 +15,10 @@ import { Dialog } from 'primeng/dialog';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { AutoComplete, AutoCompleteCompleteEvent } from 'primeng/autocomplete';
-import { Avatar } from 'primeng/avatar';
-import { Badge } from 'primeng/badge';
+ import { AvatarModule } from 'primeng/avatar';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @Component({
   selector: 'app-all-chats',
@@ -25,11 +27,11 @@ import { Badge } from 'primeng/badge';
     CommonModule,
     FormsModule,
     Dialog,
-    Button,
-    InputText,
+    SelectButtonModule,
+    InputTextModule,
     AutoComplete,
-    Avatar,
-    Badge
+    AvatarModule ,
+    ButtonModule
   ],
   templateUrl: './all-chats.component.html',
   styleUrl: './all-chats.component.scss'
@@ -53,7 +55,12 @@ export class AllChatsComponent implements OnInit, OnDestroy {
   showNewChatDialog: boolean = false;
   participantQuery: string = '';
   filteredParticipants: ChatParticipantType[] = [];
+  allParticipants: ChatParticipantType[] = [];
   selectedParticipant: ChatParticipantType | null = null;
+  firstMessage: string = '';
+  sendingFirstMessage: boolean = false;
+  newChatAttachment: File | null = null;
+  newChatPreviewUrl: string | null = null;
 
   // Pagination
   currentPage: number = 1;
@@ -77,6 +84,9 @@ export class AllChatsComponent implements OnInit, OnDestroy {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.currentUserId = currentUser.id;
+      console.log('Current user ID:', this.currentUserId);
+    } else {
+      console.warn('No current user found');
     }
 
     // Load initial chats
@@ -115,6 +125,7 @@ export class AllChatsComponent implements OnInit, OnDestroy {
     const sub = this.chatService.getAllChats().subscribe({
       next: (response) => {
         this.chats = response.result;
+        console.log('Loaded chats:', this.chats);
 
         // If we had a selected chat, update its reference
         if (this.selectedChat) {
@@ -128,7 +139,7 @@ export class AllChatsComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error loading chats:', error);
-        this.toastService.error('Failed to load chats');
+        // this.toastService..error('Failed to load chats');
         this.loading = false;
       }
     });
@@ -159,7 +170,7 @@ export class AllChatsComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error loading messages:', error);
-        this.toastService.error('Failed to load messages');
+        // this.toastService..error('Failed to load messages');
         this.messageLoading = false;
       }
     });
@@ -222,7 +233,7 @@ export class AllChatsComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error sending message:', error);
-        this.toastService.error('Failed to send message');
+        // this.toastService..error('Failed to send message');
         this.messageLoading = false;
       }
     });
@@ -258,7 +269,7 @@ export class AllChatsComponent implements OnInit, OnDestroy {
 
     const sub = this.chatService.deleteChat(this.selectedChat.id).subscribe({
       next: (response) => {
-        this.toastService.success('Chat deleted successfully');
+        // this.toastService..success('Chat deleted successfully');
         this.selectedChat = null;
         this.messages = [];
 
@@ -267,7 +278,7 @@ export class AllChatsComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error deleting chat:', error);
-        this.toastService.error('Failed to delete chat');
+        // this.toastService..error('Failed to delete chat');
       }
     });
 
@@ -278,58 +289,126 @@ export class AllChatsComponent implements OnInit, OnDestroy {
     this.showNewChatDialog = true;
     this.selectedParticipant = null;
     this.participantQuery = '';
-    this.filteredParticipants = [];
+    this.firstMessage = '';
+    this.newChatAttachment = null;
+    this.newChatPreviewUrl = null;
+
+    // Load all participants immediately
+    this.loadAllParticipants();
   }
 
-  searchParticipants(event: AutoCompleteCompleteEvent) {
-    const query = event.query;
-
-    const sub = this.participantService.searchParticipants(query).subscribe({
+  loadAllParticipants() {
+    const sub = this.participantService.getAllPossibleParticipants().subscribe({
       next: (participants) => {
-        this.filteredParticipants = participants;
+        this.allParticipants = participants;
+        this.filteredParticipants = [...participants]; // Initially show all
       },
       error: (error) => {
-        console.error('Error searching participants:', error);
-        this.filteredParticipants = [];
+        console.error('Error loading participants:', error);
+        // this.toastService..error('Failed to load users');
       }
     });
 
     this.chatSubscriptions.push(sub);
+  }
+
+  searchParticipants(event: AutoCompleteCompleteEvent) {
+    const query = event.query.toLowerCase();
+
+    // Client-side filtering
+    this.filteredParticipants = this.allParticipants.filter(participant =>
+      participant.name.toLowerCase().includes(query) ||
+      participant.email.toLowerCase().includes(query)
+    );
+  }
+
+  onNewChatFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.newChatAttachment = input.files[0];
+
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.newChatPreviewUrl = reader.result as string;
+      };
+      reader.readAsDataURL(this.newChatAttachment);
+    }
+  }
+
+  clearNewChatAttachment() {
+    this.newChatAttachment = null;
+    this.newChatPreviewUrl = null;
   }
 
   createNewChat() {
     if (!this.selectedParticipant) {
-      this.toastService.warning('Please select a participant');
+      // this.toastService..warning('Please select a participant');
       return;
     }
 
+    this.sendingFirstMessage = true;
+
+    // First create/get the chat
     const sub = this.chatService.createOrGetChat([this.selectedParticipant.id]).subscribe({
       next: (response) => {
-        this.showNewChatDialog = false;
+        const chatId = response.result.id;
 
-        // Refresh chats and select the new one
-        this.loadChats();
-
-        // Find and select the new chat
-        setTimeout(() => {
-          const newChat = this.chats.find(chat => {
-            return chat.participants.some(p => p.id === this.selectedParticipant?.id);
-          });
-
-          if (newChat) {
-            this.selectChat(newChat);
-          }
-
-          this.toastService.success('Chat created successfully');
-        }, 500);
+        // If there's a message or attachment, send it
+        if (this.firstMessage.trim() || this.newChatAttachment) {
+          this.sendFirstMessage(chatId);
+        } else {
+          this.finishChatCreation(chatId);
+        }
       },
       error: (error) => {
         console.error('Error creating chat:', error);
-        this.toastService.error('Failed to create chat');
+        // this.toastService..error('Failed to create chat');
+        this.sendingFirstMessage = false;
       }
     });
 
     this.chatSubscriptions.push(sub);
+  }
+
+  sendFirstMessage(chatId: string) {
+    const messageDto = {
+      chatId: chatId,
+      content: this.firstMessage.trim(),
+      attachment: this.newChatAttachment || undefined
+    };
+
+    const sub = this.chatService.sendMessage(messageDto).subscribe({
+      next: (response) => {
+        this.finishChatCreation(chatId);
+      },
+      error: (error) => {
+        console.error('Error sending first message:', error);
+        // this.toastService..warning('Chat created but failed to send first message');
+        this.finishChatCreation(chatId);
+      }
+    });
+
+    this.chatSubscriptions.push(sub);
+  }
+
+  finishChatCreation(chatId: string) {
+    this.showNewChatDialog = false;
+    this.sendingFirstMessage = false;
+
+    // Refresh chats
+    this.loadChats();
+
+    // Find and select the new chat
+    setTimeout(() => {
+      const newChat = this.chats.find(chat => chat.id === chatId);
+
+      if (newChat) {
+        this.selectChat(newChat);
+      }
+
+      // this.toastService..success('Chat created successfully');
+    }, 500);
   }
 
   filterChats() {
@@ -348,7 +427,18 @@ export class AllChatsComponent implements OnInit, OnDestroy {
 
   getOtherParticipant(chat: Chat): ChatParticipant {
     // Find the other participant (not current user)
-    return chat.participants.find(p => p.id !== this.currentUserId) || chat.participants[0];
+    const otherParticipant = chat.participants.find(p => p.id !== this.currentUserId);
+
+    // If no other participant found (or we can't determine current user), return the first participant
+    if (!otherParticipant) {
+      console.log('Could not find other participant, using first participant', {
+        currentUserId: this.currentUserId,
+        participants: chat.participants
+      });
+      return chat.participants[0];
+    }
+
+    return otherParticipant;
   }
 
   isCurrentUser(senderId: string): boolean {
@@ -361,6 +451,17 @@ export class AllChatsComponent implements OnInit, OnDestroy {
 
   formatMessageTime(dateString: string): string {
     return this.chatService.formatMessageDate(dateString);
+  }
+
+  getSenderName(senderId: string): string {
+    if (!this.selectedChat) return '';
+
+    if (senderId === this.currentUserId) {
+      return 'You';
+    }
+
+    const sender = this.selectedChat.participants.find(p => p.id === senderId);
+    return sender ? sender.name : 'Unknown User';
   }
 
   private scrollToBottom() {

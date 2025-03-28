@@ -45,7 +45,7 @@
            [class.unread]="chat.latestMessage && chat.latestMessage.senderId !== currentUserId && !chat.latestMessage.seenAt"
            (click)="selectChat(chat)">
         <div class="avatar-container">
-          <img [src]="getOtherParticipant(chat).imageUrl || '../../../../../assets/images/avatar-placeholder.png'"
+          <img [src]="getOtherParticipant(chat).imageUrl || '../../../../../assets/images/inventory_1.png'"
                [alt]="getOtherParticipant(chat).name"
                class="avatar">
         </div>
@@ -57,7 +57,7 @@
           <div class="message-preview">
             <span class="preview-text" *ngIf="chat.latestMessage">
               <ng-container *ngIf="chat.latestMessage.senderId === currentUserId">You: </ng-container>
-              {{ chat.latestMessage.content || (chat.latestMessage.attachment ? 'Attachment' : '') }}
+              {{ chat.latestMessage.content || 'Attachment' }}
             </span>
             <span class="preview-text" *ngIf="!chat.latestMessage">No messages yet</span>
 
@@ -82,7 +82,7 @@
     <!-- Chat header -->
     <div class="chat-header">
       <div class="user-info">
-        <img [src]="getOtherParticipant(selectedChat).imageUrl || '../../../../../assets/images/avatar-placeholder.png'"
+        <img [src]="getOtherParticipant(selectedChat).imageUrl || '../../../../../assets/images/inventory_1.png'"
              [alt]="getOtherParticipant(selectedChat).name"
              class="avatar">
         <div class="user-details">
@@ -238,27 +238,70 @@
 </div>
 
 <!-- New Chat Dialog -->
-<p-dialog header="New Chat" [(visible)]="showNewChatDialog" [modal]="true" [style]="{width: '450px'}">
+<p-dialog header="New Chat" [(visible)]="showNewChatDialog" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false">
   <div class="new-chat-dialog">
-    <p>Select a user to start a new conversation:</p>
-    <p-autoComplete [(ngModel)]="selectedParticipant" [suggestions]="filteredParticipants"
-                   (completeMethod)="searchParticipants($event)" field="name"
-                   [minLength]="2" [dropdown]="true" [forceSelection]="true">
-      <ng-template let-participant pTemplate="item">
-        <div class="participant-item">
-          <img [src]="participant.imageUrl || '../../../../../assets/images/avatar-placeholder.png'"
-               alt="avatar" class="participant-avatar">
-          <div class="participant-details">
-            <span class="participant-name">{{participant.name}}</span>
-            <span class="participant-email">{{participant.email}}</span>
+    <div class="dialog-section">
+      <label class="dialog-label">Select a user to chat with:</label>
+      <p-autoComplete [(ngModel)]="selectedParticipant" [suggestions]="filteredParticipants"
+                     (completeMethod)="searchParticipants($event)" field="name"
+                     [dropdown]="true" [forceSelection]="true" [minLength]="0"
+                     placeholder="Search or select a user">
+        <ng-template let-participant pTemplate="item">
+          <div class="participant-item">
+            <img [src]="participant.imageUrl || '../../../../../assets/images/inventory_1.png'"
+                 alt="avatar" class="participant-avatar">
+            <div class="participant-details">
+              <span class="participant-name">{{participant.name}}</span>
+              <span class="participant-email">{{participant.email}}</span>
+            </div>
           </div>
+        </ng-template>
+      </p-autoComplete>
+    </div>
+
+    <div class="dialog-section" *ngIf="selectedParticipant">
+      <label class="dialog-label">Send a message (optional):</label>
+      <textarea [(ngModel)]="firstMessage" class="first-message-textarea"
+                placeholder="Type your message here..."></textarea>
+
+      <!-- Attachment preview -->
+      <div class="attachment-preview" *ngIf="newChatAttachment && newChatPreviewUrl">
+        <div class="preview-wrapper">
+          <img *ngIf="isImage(newChatAttachment.name)" [src]="newChatPreviewUrl" alt="Attachment preview">
+          <div *ngIf="!isImage(newChatAttachment.name)" class="file-preview">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+              <polyline points="13 2 13 9 20 9"></polyline>
+            </svg>
+            <span>{{ newChatAttachment.name }}</span>
+          </div>
+          <button class="remove-attachment" (click)="clearNewChatAttachment()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
         </div>
-      </ng-template>
-    </p-autoComplete>
+      </div>
+
+      <!-- Attachment button -->
+      <div class="attachment-controls">
+        <label class="attachment-button-dialog">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+          </svg>
+          <span>Add attachment</span>
+          <input type="file" (change)="onNewChatFileSelect($event)" style="display: none;">
+        </label>
+      </div>
+    </div>
   </div>
 
   <ng-template pTemplate="footer">
-    <button pButton label="Cancel" icon="pi pi-times" (click)="showNewChatDialog = false" class="p-button-text"></button>
-    <button pButton label="Start Chat" icon="pi pi-check" (click)="createNewChat()" [disabled]="!selectedParticipant"></button>
+    <button pButton label="Cancel" icon="pi pi-times" (click)="showNewChatDialog = false"
+            class="p-button-text" [disabled]="sendingFirstMessage"></button>
+    <button pButton label="Start Chat" icon="pi pi-check" (click)="createNewChat()"
+            [disabled]="!selectedParticipant || sendingFirstMessage"
+            [loading]="sendingFirstMessage"></button>
   </ng-template>
 </p-dialog>
