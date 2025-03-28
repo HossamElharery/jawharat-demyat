@@ -1,4 +1,4 @@
-@import '../../../../assets/scss/variables.scss';
+@use  '../../../../assets/scss/variables.scss' as*;
 
 .login-container {
   display: flex;
@@ -203,7 +203,7 @@
     transition: background-color 0.3s;
 
     &:hover {
-      background-color: darken(#F9CD3D, 5%);
+      background-color: #F9CD3D
     }
   }
 }

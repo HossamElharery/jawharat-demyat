@@ -1,4 +1,4 @@
-@import '../../../../../assets/scss/variables.scss';
+@use '../../../../../assets/scss/variables.scss' as*;
 
 .modal-container {
   position: relative;
@@ -228,7 +228,7 @@
       color: white;
 
       &:hover:not(:disabled) {
-        background-color: darken($primary-color, 5%);
+        background-color:$primary-color
       }
 
       &:disabled {

@@ -244,7 +244,7 @@
         font-size: 14px;
 
         &:hover {
-          color: darken($primary-color, 10%);
+          color: $primary-color
         }
       }
     }
@@ -519,7 +519,7 @@
         }
 
         &:hover:not([aria-selected="true"]) {
-          color: darken(#4B5563, 10%);
+          color: #4B5563 ;
           border-bottom-color: #E5E7EB;
         }
       }
@@ -883,7 +883,7 @@
     font-size: 14px;
 
     &:hover {
-      color: darken($primary-color, 10%);
+      color: $primary-color
     }
   }
 }

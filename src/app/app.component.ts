@@ -10,7 +10,7 @@ import { ToastModule } from 'primeng/toast';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  title = 'eliterz-management-system';
+  title = 'jawharat-demyat';
   private readonly LANG_KEY = 'selectedLanguage';
 
   constructor(private translate: TranslateService) {}

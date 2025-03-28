@@ -70,7 +70,7 @@
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: darken($primary-color, 10%);
+    background-color:$primary-color
   }
 }
 
@@ -152,7 +152,7 @@
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: darken($primary-color, 10%);
+    background-color:$primary-color
   }
 }
 
@@ -632,7 +632,7 @@
   }
 
   &:hover:not(:disabled) {
-    background-color: darken($primary-color, 10%);
+    background-color:$primary-color
   }
 
   svg {

@@ -78,7 +78,7 @@
     color: white;
 
     &:hover {
-      background-color: darken($primary-color, 5%);
+      background-color: $primary-color
     }
 
     @include mobile {
