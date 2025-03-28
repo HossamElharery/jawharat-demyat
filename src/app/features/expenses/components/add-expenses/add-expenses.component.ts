@@ -3,11 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { ExpensesService, Expense, ExpenseFile } from '../../services/expenses.service';
-import { Button } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
+ import { InputText } from 'primeng/inputtext';
 import { InputNumber } from 'primeng/inputnumber';
-import { InputTextarea } from 'primeng/inputtextarea';
-import { Tooltip } from 'primeng/tooltip';
+ import { Tooltip } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs/operators';
 
@@ -33,10 +31,8 @@ interface UploadedFile {
     CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
-    Button,
     InputText,
     InputNumber,
-    InputTextarea,
     Tooltip
   ],
   templateUrl: './add-expenses.component.html',

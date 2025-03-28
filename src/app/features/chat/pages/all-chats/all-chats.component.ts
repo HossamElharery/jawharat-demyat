@@ -1,191 +1,392 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface User {
-  id: number;
-  name: string;
-  avatar: string;
-  online?: boolean;
-}
-
-interface Message {
-  id: number;
-  senderId: number;
-  text: string;
-  timestamp: string;
-  isRead: boolean;
-  date: string;
-}
-
-interface Conversation {
-  id: number;
-  user: User;
-  messages: Message[];
-  lastMessage?: Message;
-  unread: number;
-  timeAgo: string;
-}
+import {
+  ChatService,
+  Chat,
+  ChatMessage,
+  ChatParticipant
+} from '../../services/chat.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { Subscription, interval } from 'rxjs';
+import { ChatParticipantService, ChatParticipantType } from '../../services/chat-participant.service';
+import { ToastService } from '../../../../core/services/toast.service';
+import { Dialog } from 'primeng/dialog';
+import { Button } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
+import { AutoComplete, AutoCompleteCompleteEvent } from 'primeng/autocomplete';
+import { Avatar } from 'primeng/avatar';
+import { Badge } from 'primeng/badge';
 
 @Component({
   selector: 'app-all-chats',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    Dialog,
+    Button,
+    InputText,
+    AutoComplete,
+    Avatar,
+    Badge
+  ],
   templateUrl: './all-chats.component.html',
   styleUrl: './all-chats.component.scss'
 })
-export class AllChatsComponent implements OnInit {
-  conversations: Conversation[] = [];
-  selectedConversation: Conversation | null = null;
-  currentUser: User = { id: 0, name: 'Current User', avatar: 'assets/avatar.png' };
+export class AllChatsComponent implements OnInit, OnDestroy {
+  // Chat data
+  chats: Chat[] = [];
+  selectedChat: Chat | null = null;
+  messages: ChatMessage[] = [];
   newMessage: string = '';
   searchQuery: string = '';
+  loading: boolean = false;
+  messageLoading: boolean = false;
+  currentUserId: string = '';
+
+  // Attachment handling
+  selectedFile: File | null = null;
+  previewUrl: string | null = null;
+
+  // New chat dialog
+  showNewChatDialog: boolean = false;
+  participantQuery: string = '';
+  filteredParticipants: ChatParticipantType[] = [];
+  selectedParticipant: ChatParticipantType | null = null;
+
+  // Pagination
+  currentPage: number = 1;
+  perPage: number = 20;
+  totalMessages: number = 0;
+  loadingMoreMessages: boolean = false;
+
+  // Auto-refresh
+  private refreshSubscription?: Subscription;
+  private chatSubscriptions: Subscription[] = [];
+
+  constructor(
+    private chatService: ChatService,
+    private authService: AuthService,
+    private participantService: ChatParticipantService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit() {
-    // Mock data - replace with API call later
-    this.initMockData();
-    // Select the first conversation by default
-    if (this.conversations.length > 0) {
-      this.selectedConversation = this.conversations[0];
+    // Get current user
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.currentUserId = currentUser.id;
+    }
+
+    // Load initial chats
+    this.loadChats();
+
+    // Set up auto-refresh (every 30 seconds)
+    this.refreshSubscription = interval(30000).subscribe(() => {
+      this.refreshCurrentData();
+    });
+  }
+
+  ngOnDestroy() {
+    // Clean up subscriptions
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+
+    this.chatSubscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  refreshCurrentData() {
+    // Refresh chats list
+    this.loadChats(false);
+
+    // Refresh current chat messages if one is selected
+    if (this.selectedChat) {
+      this.loadMessages(this.selectedChat.id, false);
     }
   }
 
-  selectConversation(conversation: Conversation) {
-    this.selectedConversation = conversation;
-    // Mark messages as read
-    conversation.messages.forEach(msg => {
-      if (msg.senderId !== this.currentUser.id) {
-        msg.isRead = true;
+  loadChats(showLoading: boolean = true) {
+    if (showLoading) {
+      this.loading = true;
+    }
+
+    const sub = this.chatService.getAllChats().subscribe({
+      next: (response) => {
+        this.chats = response.result;
+
+        // If we had a selected chat, update its reference
+        if (this.selectedChat) {
+          const updatedChat = this.chats.find(c => c.id === this.selectedChat?.id);
+          if (updatedChat) {
+            this.selectedChat = updatedChat;
+          }
+        }
+
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading chats:', error);
+        this.toastService.error('Failed to load chats');
+        this.loading = false;
       }
     });
-    conversation.unread = 0;
+
+    this.chatSubscriptions.push(sub);
+  }
+
+  selectChat(chat: Chat) {
+    this.selectedChat = chat;
+    this.messages = [];
+    this.loadMessages(chat.id);
+  }
+
+  loadMessages(chatId: string, showLoading: boolean = true) {
+    if (showLoading) {
+      this.messageLoading = true;
+    }
+
+    const sub = this.chatService.getMessagesForChat(chatId).subscribe({
+      next: (response) => {
+        this.messages = response.result;
+        this.messageLoading = false;
+
+        // Scroll to bottom of messages
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 100);
+      },
+      error: (error) => {
+        console.error('Error loading messages:', error);
+        this.toastService.error('Failed to load messages');
+        this.messageLoading = false;
+      }
+    });
+
+    this.chatSubscriptions.push(sub);
+  }
+
+  loadMoreMessages() {
+    if (!this.selectedChat || this.loadingMoreMessages) return;
+
+    this.loadingMoreMessages = true;
+    this.currentPage++;
+
+    const sub = this.chatService.getMessagesForChat(this.selectedChat.id, this.currentPage, this.perPage).subscribe({
+      next: (response) => {
+        // Prepend older messages
+        this.messages = [...response.result, ...this.messages];
+        this.loadingMoreMessages = false;
+      },
+      error: (error) => {
+        console.error('Error loading more messages:', error);
+        this.loadingMoreMessages = false;
+        this.currentPage--; // Revert page increment on error
+      }
+    });
+
+    this.chatSubscriptions.push(sub);
   }
 
   sendMessage() {
-    if (!this.newMessage.trim() || !this.selectedConversation) return;
+    if (!this.newMessage.trim() && !this.selectedFile) return;
+    if (!this.selectedChat) return;
 
-    const newMsg: Message = {
-      id: Math.floor(Math.random() * 1000),
-      senderId: this.currentUser.id,
-      text: this.newMessage,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      isRead: false,
-      date: 'Today'
+    const messageDto = {
+      chatId: this.selectedChat.id,
+      content: this.newMessage.trim(),
+      attachment: this.selectedFile || undefined
     };
 
-    this.selectedConversation.messages.push(newMsg);
-    this.selectedConversation.lastMessage = newMsg;
-    this.newMessage = '';
+    this.messageLoading = true;
+    const sub = this.chatService.sendMessage(messageDto).subscribe({
+      next: (response) => {
+        // Add new message to the list
+        this.messages.push(response.result);
+
+        // Clear input and attachment
+        this.newMessage = '';
+        this.selectedFile = null;
+        this.previewUrl = null;
+
+        // Refresh chats to update latest message
+        this.loadChats(false);
+
+        this.messageLoading = false;
+
+        // Scroll to bottom
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 100);
+      },
+      error: (error) => {
+        console.error('Error sending message:', error);
+        this.toastService.error('Failed to send message');
+        this.messageLoading = false;
+      }
+    });
+
+    this.chatSubscriptions.push(sub);
   }
 
-  private initMockData() {
-    const users: User[] = [
-      { id: 1, name: 'Angelie Crison', avatar: '../../../../../assets/images/inventory_1.png', online: true },
-      { id: 2, name: 'Jakob Saris', avatar: '../../../../../assets/images/inventory_1.png' },
-      { id: 3, name: 'Emery Korsgard', avatar: '../../../../../assets/images/inventory_1.png' },
-      { id: 4, name: 'Jeremy Zucker', avatar: '../../../../../assets/images/inventory_1.png' },
-      { id: 5, name: 'Nadia Lauren', avatar: '../../../../../assets/images/leslie.png' },
-      { id: 6, name: 'Jason Statham', avatar: '../../../../../assets/images/jenny.png' },
-      { id: 7, name: 'Angel Kimberly', avatar: '../../../../../assets/images/inventory_1.png' },
-      { id: 8, name: 'Jason Momoa', avatar: '../../../../../assets/images/kathryn.png' }
-    ];
+  onFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
 
-    const messageTemplates = [
-      { text: "Thank you very much. I'm glad...", read: false },
-      { text: "You : Sure! let me tell you about...", read: true },
-      { text: "Thank's. You are very helpful...", read: false },
-      { text: "You : Sure! let me teach you about...", read: true },
-      { text: "Is there anything I can help? Just...", read: false },
-      { text: "You : Sure! let me share about...", read: true },
-      { text: "Okay. I know very well about it...", read: false },
-      { text: "You : Sure! let me tell you about...", read: true }
-    ];
-
-    const timeAgo = ["1 m Ago", "2 m Ago", "3 m Ago", "4 m Ago", "5 m Ago", "6 m Ago", "7 m Ago", "7 m Ago"];
-
-    // Create conversations with messages
-    this.conversations = users.map((user, index) => {
-      // Create some mock messages for each conversation
-      const messages: Message[] = [];
-
-      // Add mock greeting message
-      messages.push({
-        id: index * 100 + 1,
-        senderId: user.id,
-        text: `Hi there! This is ${user.name}.`,
-        timestamp: '11:45',
-        isRead: true,
-        date: 'Today'
-      });
-
-      // Add the message from templates
-      const templateMsg = messageTemplates[index];
-      const lastMessage: Message = {
-        id: index * 100 + 2,
-        senderId: templateMsg.text.startsWith('You :') ? this.currentUser.id : user.id,
-        text: templateMsg.text,
-        timestamp: '11:52',
-        isRead: templateMsg.read,
-        date: 'Today'
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result as string;
       };
-      messages.push(lastMessage);
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
 
-      // For the first conversation (Angelie), add the question about task
-      if (index === 0) {
-        messages.push({
-          id: index * 100 + 3,
-          senderId: this.currentUser.id,
-          text: "Morning Angelie, I have question about My Task",
-          timestamp: '11:52',
-          isRead: true,
-          date: 'Today'
-        });
+  clearAttachment() {
+    this.selectedFile = null;
+    this.previewUrl = null;
+  }
 
-        messages.push({
-          id: index * 100 + 4,
-          senderId: user.id,
-          text: "Yes sure, Any problem with your assignment?",
-          timestamp: '11:53',
-          isRead: true,
-          date: 'Today'
-        });
+  deleteChat() {
+    if (!this.selectedChat) return;
 
-        messages.push({
-          id: index * 100 + 5,
-          senderId: this.currentUser.id,
-          text: "How to make a responsive display from the dashboard?",
-          timestamp: '11:53',
-          isRead: true,
-          date: 'Today'
-        });
+    if (!confirm('Are you sure you want to delete this chat?')) {
+      return;
+    }
 
-        messages.push({
-          id: index * 100 + 6,
-          senderId: this.currentUser.id,
-          text: "Is there a plugin to do this task?",
-          timestamp: '11:52',
-          isRead: true,
-          date: 'Today'
-        });
+    const sub = this.chatService.deleteChat(this.selectedChat.id).subscribe({
+      next: (response) => {
+        this.toastService.success('Chat deleted successfully');
+        this.selectedChat = null;
+        this.messages = [];
 
-        messages.push({
-          id: index * 100 + 7,
-          senderId: user.id,
-          text: "Thank you very much. I'm glad you asked about the assignment",
-          timestamp: '11:53',
-          isRead: true,
-          date: 'Today'
-        });
+        // Refresh chats list
+        this.loadChats();
+      },
+      error: (error) => {
+        console.error('Error deleting chat:', error);
+        this.toastService.error('Failed to delete chat');
       }
-
-      return {
-        id: user.id,
-        user: user,
-        messages: messages,
-        lastMessage: lastMessage,
-        unread: templateMsg.read ? 0 : 1,
-        timeAgo: timeAgo[index]
-      };
     });
+
+    this.chatSubscriptions.push(sub);
+  }
+
+  showCreateChatDialog() {
+    this.showNewChatDialog = true;
+    this.selectedParticipant = null;
+    this.participantQuery = '';
+    this.filteredParticipants = [];
+  }
+
+  searchParticipants(event: AutoCompleteCompleteEvent) {
+    const query = event.query;
+
+    const sub = this.participantService.searchParticipants(query).subscribe({
+      next: (participants) => {
+        this.filteredParticipants = participants;
+      },
+      error: (error) => {
+        console.error('Error searching participants:', error);
+        this.filteredParticipants = [];
+      }
+    });
+
+    this.chatSubscriptions.push(sub);
+  }
+
+  createNewChat() {
+    if (!this.selectedParticipant) {
+      this.toastService.warning('Please select a participant');
+      return;
+    }
+
+    const sub = this.chatService.createOrGetChat([this.selectedParticipant.id]).subscribe({
+      next: (response) => {
+        this.showNewChatDialog = false;
+
+        // Refresh chats and select the new one
+        this.loadChats();
+
+        // Find and select the new chat
+        setTimeout(() => {
+          const newChat = this.chats.find(chat => {
+            return chat.participants.some(p => p.id === this.selectedParticipant?.id);
+          });
+
+          if (newChat) {
+            this.selectChat(newChat);
+          }
+
+          this.toastService.success('Chat created successfully');
+        }, 500);
+      },
+      error: (error) => {
+        console.error('Error creating chat:', error);
+        this.toastService.error('Failed to create chat');
+      }
+    });
+
+    this.chatSubscriptions.push(sub);
+  }
+
+  filterChats() {
+    if (!this.searchQuery.trim()) {
+      this.loadChats();
+      return;
+    }
+
+    // Client-side filtering for now
+    // Could be replaced with server-side filtering if API supports it
+    this.chats = this.chats.filter(chat => {
+      const participantNames = chat.participants.map(p => p.name.toLowerCase());
+      return participantNames.some(name => name.includes(this.searchQuery.toLowerCase()));
+    });
+  }
+
+  getOtherParticipant(chat: Chat): ChatParticipant {
+    // Find the other participant (not current user)
+    return chat.participants.find(p => p.id !== this.currentUserId) || chat.participants[0];
+  }
+
+  isCurrentUser(senderId: string): boolean {
+    return senderId === this.currentUserId;
+  }
+
+  getAttachmentUrl(path: string | null | undefined): string {
+    return this.chatService.getAttachmentUrl(path);
+  }
+
+  formatMessageTime(dateString: string): string {
+    return this.chatService.formatMessageDate(dateString);
+  }
+
+  private scrollToBottom() {
+    const messagesContainer = document.querySelector('.messages-container');
+    if (messagesContainer) {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+  }
+
+  isImage(path: string | null | undefined): boolean {
+    if (!path) return false;
+
+    const ext = path.split('.').pop()?.toLowerCase();
+    return ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].includes(ext || '');
+  }
+
+  isPdf(path: string | null | undefined): boolean {
+    if (!path) return false;
+
+    const ext = path.split('.').pop()?.toLowerCase();
+    return ext === 'pdf';
+  }
+
+  getFileNameFromPath(path: string | null | undefined): string {
+    if (!path) return 'unknown';
+
+    return path.split('/').pop() || 'file';
   }
 }

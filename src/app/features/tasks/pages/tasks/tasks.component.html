@@ -170,7 +170,7 @@
               </span>
               <span class="metric" *ngIf="task.fileCount !== undefined  ">
                 <i class="pi pi-paperclip"></i>
-                {{task.fileCount || task.files?.length || 0}}
+                {{task.fileCount || task?.files?.length || 0}}
               </span>
             </div>
           </div>
