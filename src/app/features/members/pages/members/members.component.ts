@@ -10,6 +10,7 @@ import { PermissionsService } from '../../../../core/services/permissions.servic
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { AddMemberComponent } from '../../components/add-member/add-member.component';
 import { MemberBasicResponseDto, MembersService, PayType } from '../../services/members.service';
+import { ImageUrlPipe } from '../../../../shared/pipes/image-url.pipe';
 
 interface Member {
   id: string;
@@ -19,7 +20,7 @@ interface Member {
   jobTitle: string;
   payType: PayType;
   status: 'Active' | 'In Active';
-  avatarUrl: string;
+  avatarUrl: any;
   country?: string;
   location?: string;
 }
@@ -33,7 +34,8 @@ interface Member {
     ReactiveFormsModule,
     MatDialogModule,
     PaginationComponent,
-    TranslateModule
+    TranslateModule,
+    ImageUrlPipe
   ],
   templateUrl: './members.component.html',
   styleUrls: ['./members.component.scss']
@@ -60,7 +62,7 @@ export class MembersComponent implements OnInit {
     private membersService: MembersService,
     private permissionsService: PermissionsService,
     private authService: AuthService,
-    private messageService: MessageService
+    private messageService: MessageService,
   ) {}
 
   ngOnInit(): void {
@@ -170,7 +172,7 @@ export class MembersComponent implements OnInit {
       jobTitle: apiMember.jobTitle,
       payType: apiMember.payType,
       status: apiMember.isActive ? 'Active' : 'In Active',
-      avatarUrl: apiMember.imageUrl || '../../../../../assets/images/Avatar.png'
+      avatarUrl: apiMember.imageUrl
     };
   }
 

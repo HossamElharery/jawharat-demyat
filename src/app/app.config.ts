@@ -25,13 +25,23 @@ export function HttpLoaderFactory(http: HttpClient) {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withInterceptorsFromDi()),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpResponseInterceptor,
+      multi: true
+    },
     provideRouter(routes, withInMemoryScrolling({
       anchorScrolling: 'enabled',
       scrollPositionRestoration: 'enabled'
     })),
     importProvidersFrom(
       TranslateModule.forRoot({
-        defaultLanguage: 'ar',
+        defaultLanguage: 'en',
         loader: {
           provide: TranslateLoader,
           useFactory: HttpLoaderFactory,
@@ -43,14 +53,9 @@ export const appConfig: ApplicationConfig = {
     LanguageService,
     provideAnimationsAsync(),
     MessageService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpResponseInterceptor,
-      multi: true
-    },
     providePrimeNG({
       theme: {
-        preset: Aura , // Ensure this is the light variant
+        preset: Aura, // Ensure this is the light variant
         // OR use theme name:
         // name: 'lara-light-blue'
       }

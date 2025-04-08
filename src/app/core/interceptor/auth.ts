@@ -7,17 +7,17 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { ToastService } from '../services/toast.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private isRefreshing = false;
-
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
@@ -36,6 +36,7 @@ export class AuthInterceptor implements HttpInterceptor {
           // Token expired or invalid
           this.authService.logout();
           this.router.navigate(['/login']);
+          this.toastService.error('Your session has expired. Please login again.');
         }
         return throwError(() => error);
       })

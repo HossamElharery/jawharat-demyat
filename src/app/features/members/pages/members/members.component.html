@@ -70,7 +70,7 @@
         <tr *ngFor="let member of filteredMembers">
           <td>
             <div class="d-flex align-items-center">
-              <img [src]="member.avatarUrl" class="member-avatar" alt="Member avatar">
+              <img [src]="member.avatarUrl | imageUrl" class="member-avatar" alt="Member avatar">
               <span class="ms-2">{{ member.name }}</span>
             </div>
           </td>

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,25 @@ export class CookieService {
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + days);
 
-    const cookieValue = encodeURIComponent(value) + '; expires=' + expirationDate.toUTCString() + '; path=/; Secure; SameSite=Strict';
+    // Build base cookie string
+    let cookieValue = encodeURIComponent(value) + '; expires=' + expirationDate.toUTCString() + '; path=/';
+
+    // Add secure flag only if using HTTPS
+    if (window.location.protocol === 'https:') {
+      cookieValue += '; Secure';
+    }
+
+    // Use Less restrictive SameSite policy for cross-domain setups
+    cookieValue += '; SameSite=Lax';
+
+    // Set domain for production environment if needed
+    if (environment.production) {
+      // Uncomment and configure if needed for your domain
+      // const domain = window.location.hostname.includes('yourdomain.com') ?
+      //   '; domain=.yourdomain.com' : '';
+      // cookieValue += domain;
+    }
+
     document.cookie = name + '=' + cookieValue;
   }
 

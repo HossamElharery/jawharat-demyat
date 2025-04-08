@@ -18,11 +18,11 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     const savedLang = localStorage.getItem(this.LANG_KEY);
     const browserLang = navigator.language.split('-')[0];
-    const defaultLang = savedLang || 'ar'; // Set Arabic as default
+    const defaultLang = savedLang || 'en'; // Set  default
 
     // Set available languages and default
     this.translate.addLangs(['ar', 'en']);
-    this.translate.setDefaultLang('ar');
+    this.translate.setDefaultLang('en');
 
     // Use the saved/default language
     this.translate.use(defaultLang);

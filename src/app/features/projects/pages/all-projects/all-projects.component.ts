@@ -14,6 +14,7 @@ import { debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
 import { AuthService } from '../../../../core/services/auth.service';
 import { PermissionsService } from '../../../../core/services/permissions.service';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
+import { ImageUrlPipe } from "../../../../shared/pipes/image-url.pipe";
 
 interface Project {
   id: string;
@@ -21,14 +22,14 @@ interface Project {
   creator: {
     id: string;
     name: string;
-    avatar: string;
+    avatar: any;
   };
   creationDate: string;
   members: {
     id: string;
     name: string;
     email?: string;
-    avatar: string;
+    avatar: any;
   }[];
 }
 
@@ -46,8 +47,9 @@ interface Project {
     AvatarGroupModule,
     ConfirmDialogModule,
     DialogModule,
-    PaginationComponent
-  ],
+    PaginationComponent,
+    ImageUrlPipe
+],
   templateUrl: './all-projects.component.html',
   styleUrl: './all-projects.component.scss',
   providers: [ConfirmationService]
@@ -176,14 +178,14 @@ export class AllProjectsComponent implements OnInit {
       creator: {
         id: apiProject.creator.id,
         name: apiProject.creator.name,
-        avatar: apiProject.creator.imageUrl || 'assets/images/avatars/avatar-1.png'
+        avatar: apiProject.creator.imageUrl
       },
       creationDate: new Date().toLocaleDateString(), // Using a placeholder as creation date isn't in the API response
       members: Array.isArray(apiProject.members) ? apiProject.members.map(member => ({
         id: member.id,
         name: member.name,
         email: member.email,
-        avatar: member.imageUrl || 'assets/images/avatars/avatar-2.png'
+        avatar: member.imageUrl
       })) : []
     };
   }

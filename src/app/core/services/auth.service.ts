@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { CookieService } from './cookie.service';
 import { environment } from '../../../environments/environment';
 
 export interface User {
@@ -57,8 +56,7 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router,
-    private cookieService: CookieService
+    private router: Router
   ) {
     this.checkAuthStatus();
   }
@@ -93,8 +91,8 @@ export class AuthService {
   private handleLoginSuccess(response: LoginResponse): void {
     const { token, user } = response.result;
 
-    // Store token in cookie with expiration matching token
-    this.cookieService.setCookie(this.TOKEN_KEY, token, 30); // 30 days
+    // Store token in localStorage
+    localStorage.setItem(this.TOKEN_KEY, token);
 
     // Store user data in localStorage
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
@@ -109,7 +107,7 @@ export class AuthService {
    */
   logout(): void {
     // Clear token and user data
-    this.cookieService.deleteCookie(this.TOKEN_KEY);
+    localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
 
     // Update subjects
@@ -124,7 +122,7 @@ export class AuthService {
    * Get current auth token
    */
   getToken(): string | null {
-    return this.cookieService.getCookie(this.TOKEN_KEY);
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 
   /**

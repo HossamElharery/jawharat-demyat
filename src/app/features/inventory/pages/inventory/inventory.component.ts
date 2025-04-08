@@ -10,6 +10,7 @@ import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ButtonModule } from 'primeng/button';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
+import { ImageUrlPipe } from '../../../../shared/pipes/image-url.pipe';
 
 @Component({
   selector: 'app-inventory',
@@ -21,7 +22,7 @@ import { PaginationComponent } from '../../../../shared/components/pagination/pa
     MatDialogModule,
     ConfirmDialogModule,
     ButtonModule,
-    PaginationComponent
+    PaginationComponent,ImageUrlPipe
   ],
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.scss',

@@ -6,18 +6,18 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class LanguageService {
   private readonly LANG_KEY = 'selectedLanguage';
-  currentLang = signal('ar');
+  currentLang = signal('en');
   currentDir = signal('rtl');
   private rtlLanguages = ['ar', 'he', 'fa', 'ur'];
 
   constructor(private translate: TranslateService) {
     this.translate.addLangs(['ar', 'en']);
-    this.translate.setDefaultLang('ar');
+    this.translate.setDefaultLang('en');
     this.initializeLanguage();
   }
 
   private initializeLanguage() {
-    const savedLang = localStorage.getItem(this.LANG_KEY) || 'ar';
+    const savedLang = localStorage.getItem(this.LANG_KEY) || 'en';
     this.setLanguage(savedLang);
   }
 

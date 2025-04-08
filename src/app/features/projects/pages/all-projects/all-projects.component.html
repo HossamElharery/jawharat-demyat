@@ -35,7 +35,7 @@
         <div class="body-cell project-title">{{project.title}}</div>
         <div class="body-cell creator">
           <div class="creator-info">
-            <img [src]="project.creator.avatar" alt="Creator Avatar" class="creator-avatar">
+            <img [src]="project.creator.avatar | imageUrl" alt="Creator Avatar" class="creator-avatar">
             <span class="creator-name">{{project.creator.name}}</span>
           </div>
         </div>
