@@ -5,8 +5,8 @@ import { AvatarModule } from 'primeng/avatar';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { AttendanceRecord } from '../../services/dashboard.service';
+import { ImageUrlPipe } from '../../../../shared/pipes/image-url.pipe';
 
-// Define display data structure for the table
 interface DisplayRecord {
   id: string;
   name: string;
@@ -14,20 +14,19 @@ interface DisplayRecord {
   type: string;
   checkIn: string;
   status: string;
-  avatar: string;
+  avatar: any;
 }
 
 @Component({
   selector: 'app-attendance-section',
   standalone: true,
-  imports: [CommonModule, TableModule, AvatarModule, TagModule, ButtonModule],
+  imports: [CommonModule, TableModule, AvatarModule, TagModule, ButtonModule, ImageUrlPipe],
   templateUrl: './attendance-section.component.html',
   styleUrl: './attendance-section.component.scss'
 })
 export class AttendanceSectionComponent implements OnChanges {
   @Input() attendanceData: AttendanceRecord[] = [];
 
-  // Transformed data for the table
   displayData: DisplayRecord[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -37,10 +36,8 @@ export class AttendanceSectionComponent implements OnChanges {
     }
   }
 
-  // Transform API data to match the template's expected structure
   transformAttendanceData(): void {
-    // Safety check
-    if (!this.attendanceData || !Array.isArray(this.attendanceData) || this.attendanceData.length === 0) {
+     if (!this.attendanceData || !Array.isArray(this.attendanceData) || this.attendanceData.length === 0) {
       console.log('No attendance data to transform');
       this.displayData = [];
       return;
@@ -48,10 +45,8 @@ export class AttendanceSectionComponent implements OnChanges {
 
     console.log(`Transforming ${this.attendanceData.length} attendance records`);
 
-    // Map API data to display format
-    this.displayData = this.attendanceData.map(record => {
-      // Convert status from API format to display format
-      let displayStatus = 'Unknown';
+     this.displayData = this.attendanceData.map(record => {
+       let displayStatus = 'Unknown';
       if (record.status) {
         switch (record.status.toLowerCase()) {
           case 'present':
@@ -74,17 +69,15 @@ export class AttendanceSectionComponent implements OnChanges {
       return {
         id: record.id || '',
         name: record.employeeName || 'Unknown',
-        designation: 'Staff', // Default designation if not provided
-        type: 'Full Time', // Default type if not provided
+        designation: 'Staff',
+        type: 'Full Time',
         checkIn: record.checkIn ? this.formatTime(record.checkIn) : 'N/A',
         status: displayStatus,
-        // Use default avatar if none provided
-        avatar: record.employeeImage || '../../../../../assets/images/' + this.getRandomAvatar()
+
+        avatar: record.employeeImage || null
       };
     });
   }
-
-  // Format the check-in time for display
   formatTime(time: string): string {
     if (!time) return 'N/A';
 
@@ -94,12 +87,5 @@ export class AttendanceSectionComponent implements OnChanges {
       minute: '2-digit',
       hour12: true
     });
-  }
-
-  // Generate a random avatar from the existing ones for demo purposes
-  getRandomAvatar(): string {
-    const avatars = ['leasie.png', 'darlene.png', 'jacob.png', 'kathryn.png', 'leslie.png', 'ronald.png', 'jenny.png'];
-    const randomIndex = Math.floor(Math.random() * avatars.length);
-    return avatars[randomIndex];
   }
 }

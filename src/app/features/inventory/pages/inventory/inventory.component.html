@@ -153,8 +153,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Empty state if no products -->
     <div class="empty-state" *ngIf="filteredProducts.length === 0">
       <div class="empty-icon">
         <i class="bi bi-box-seam"></i>
@@ -167,7 +165,6 @@
       </button>
     </div>
   </div>
-    <!-- Pagination controls -->
     <app-pagination
       *ngIf="!isLoading && canViewInventory && totalProducts > 0"
       [currentPage]="currentPage"
@@ -180,5 +177,4 @@
     </app-pagination>
 </div>
 
-<!-- Confirmation Dialog -->
 <p-confirmDialog></p-confirmDialog>
