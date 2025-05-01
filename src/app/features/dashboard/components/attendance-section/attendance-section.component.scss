@@ -148,14 +148,14 @@
       }
     }
 
-    .employee-info {
-      flex-direction: row-reverse;
-    }
+    // .employee-info {
+    //   flex-direction: row-reverse;
+    // }
   }
 
   @media screen and (max-width: 768px) {
-    .p-datatable-tbody > tr > td {
-      flex-direction: row-reverse;
-    }
+    // .p-datatable-tbody > tr > td {
+    //   flex-direction: row-reverse;
+    // }
   }
 }

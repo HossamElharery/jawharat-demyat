@@ -6,17 +6,23 @@
   display: flex;
   flex-direction: column;
   border-right: 1px solid #e9ecef;
-  border-radius: $br-12px;
-  position: relative;
+  border-radius: 0; /* Remove border radius for perfect edge alignment */
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
   transition: all 0.3s ease;
   width: 240px;
   height: 100vh;
+  z-index: 1030;
+  margin: 0; /* No margin */
+  overflow: hidden; /* Prevent content overflow */
 
   // Create a wrapper for the scrollable content
   .sidebar-content {
     height: 100%;
     overflow-y: auto;
-    padding-right: 0.5rem; // Add some padding for the scrollbar
+    padding-right: 0.5rem; /* Add some padding for the scrollbar */
 
     &::-webkit-scrollbar {
       display: none;
@@ -51,6 +57,7 @@
       flex-direction: column;
       gap: 0.5rem;
 
+      margin: 0 !important;
       .lang-btn {
         width: 36px;
         padding: 0.4rem 0;
@@ -63,25 +70,28 @@
   }
 }
 
+/* CRITICAL: The toggle button styling */
 .toggle-btn {
-  position: absolute;
-  right: -12px;
-  top: 50px;
-  width: 38px;
-  height: 38px;
+  position: fixed;
+  width: 24px; /* Smaller width */
+  height: 60px; /* Taller height */
   background: #ffffff;
   border: 1px solid #e9ecef;
-  border-radius: 50%;
+  border-left: none; /* No left border for seamless look */
+  border-radius: 0 4px 4px 0; /* Round only right corners */
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 1050;
   padding: 0;
   transition: all 0.3s ease;
+  top: 50%;
+  transform: translateY(-50%);
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
 
   &:hover {
-    background: #f8f9fa;
+    background: $primary-color;
   }
 
   i {
@@ -89,6 +99,16 @@
     color: #495057;
   }
 }
+
+/* Default toggle position for desktop */
+// .toggle-btn {
+//   left: 240px; /* Position exactly at edge of expanded sidebar */
+// }
+
+/* Toggle position when sidebar is collapsed on desktop */
+// .sidebar-container.collapsed ~ .toggle-btn {
+//   left: 80px; /* Position exactly at edge of collapsed sidebar */
+// }
 
 .logo-section {
   display: flex;
@@ -253,7 +273,7 @@
 .language-toggle {
   display: flex;
   justify-content: space-between;
-  background-color: #f5f5f5;
+  // background-color: #f5f5f5;
   border-radius: 0.5rem;
   padding: 0;
   margin: 0;
@@ -300,25 +320,32 @@
 // Responsive styles
 @media (max-width: 992px) {
   .sidebar-container {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 1030;
-    height: 100vh;
-    transform: translateX(0);
-
     &.collapsed {
-      // transform: translateX(-100%);
+      transform: translateX(-100%); /* Hide sidebar when collapsed */
+    }
+  }
 
-      .toggle-btn {
-        right: -24px;
-        background: #EFA70C;
-        border-color: #EFA70C;
+  /* Mobile toggle button positioning */
+  .toggle-btn {
+    left: 0; /* Position at edge of screen */
+    width: 24px; /* Narrower button */
+    height: 60px; /* Taller button */
+    border-radius: 0 4px 4px 0; /* Round right corners only */
+    border-left: none; /* No left border */
+    background: #EFA70C; /* Highlight color */
 
-        i {
-          color: #ffffff;
-        }
-      }
+    i {
+      color: #ffffff; /* White icon */
+    }
+  }
+
+  /* When sidebar is expanded on mobile */
+  .sidebar-container:not(.collapsed) ~ .toggle-btn {
+    left: 240px; /* Move to exact edge of sidebar */
+    background: #ffffff;
+
+    i {
+      color: #495057;
     }
   }
 }
@@ -328,6 +355,11 @@
     width: 100%;
     max-width: 280px;
   }
+
+  /* Adjust for wider sidebar on smaller screens */
+  .sidebar-container:not(.collapsed) ~ .toggle-btn {
+    left: 280px; /* Match exact sidebar width */
+  }
 }
 
 /* RTL Support */
@@ -335,26 +367,61 @@
   .sidebar-container {
     border-right: none;
     border-left: 1px solid #e9ecef;
+    right: 0;
+    left: auto;
   }
 
+  /* Default RTL toggle position for desktop */
   .toggle-btn {
-    right: auto;
-    left: -12px;
+    left: auto;
+    // right: 240px;
+    border-right: none; /* No right border for seamless look */
+    border-left: 1px solid #e9ecef;
+    border-radius: 4px 0 0 4px; /* Round left corners only */
+
+    i {
+      transform: scaleX(-1); /* Flip icon horizontally for RTL */
+    }
   }
 
-  &.collapsed .toggle-btn {
-    right: auto;
-    left: -24px;
-  }
-
-  .main-nav .nav-link i,
-  .bottom-nav .nav-link i {
-    margin-right: 0;
-    margin-left: 0 ;
+  /* RTL toggle position when sidebar is collapsed on desktop */
+  .sidebar-container.collapsed ~ .toggle-btn {
+    left: auto;
+    // right: 80px;
   }
 
   .language-toggle .lang-btn .lang-icon {
     margin-right: 0;
     margin-left: 0.5rem;
+  }
+
+  /* RTL mobile styles */
+  @media (max-width: 992px) {
+    .sidebar-container {
+      &.collapsed {
+        transform: translateX(100%); /* Hide to the right in RTL */
+      }
+    }
+
+    /* Mobile RTL toggle */
+    .toggle-btn {
+      left: auto;
+      right: 0;
+      border-radius: 4px 0 0 4px; /* Round left corners only */
+      border-right: none; /* No right border */
+      border-left: 1px solid #e9ecef;
+    }
+
+    /* When sidebar is expanded on mobile in RTL */
+    .sidebar-container:not(.collapsed) ~ .toggle-btn {
+      left: auto;
+      right: 240px;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar-container:not(.collapsed) ~ .toggle-btn {
+        right: 280px; /* Match exact sidebar width */
+      }
+    }
   }
 }

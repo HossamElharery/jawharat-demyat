@@ -1,10 +1,5 @@
 <div class="sidebar-container" [ngClass]="{'collapsed': isCollapsed}">
-  <!-- Toggle Button - Keep outside of scrollable area -->
-  <button class="toggle-btn" (click)="toggleSidebar()">
-    <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'"></i>
-  </button>
-
-  <!-- Wrap scrollable content -->
+  <!-- Sidebar content goes inside the container -->
   <div class="sidebar-content">
     <!-- Logo -->
     <div class="logo-section mb-4">
@@ -68,7 +63,7 @@
         <li class="nav-item language-switcher">
           <div class="language-toggle" [class.compact]="isCollapsed">
             <button
-              class="lang-btn"
+              class="lang-btn mx-1"
               [class.active]="languageService.currentLang() === 'en'"
               (click)="switchLang('en')">
               <span class="lang-icon">🇺🇸</span>
@@ -83,8 +78,12 @@
             </button>
           </div>
         </li>
-
       </ul>
     </nav>
   </div>
 </div>
+
+<!-- Toggle button outside the sidebar container but still part of the component -->
+<button class="toggle-btn" (click)="toggleSidebar()">
+  <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'"></i>
+</button>
