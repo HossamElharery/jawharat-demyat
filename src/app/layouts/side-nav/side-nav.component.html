@@ -8,63 +8,83 @@
   <div class="sidebar-content">
     <!-- Logo -->
     <div class="logo-section mb-4">
-      <img src="../../../assets/images/logo.png" alt="Jawharat Demyat" class="logo">
-      <h2 *ngIf="!isCollapsed">Jawharat Demyat</h2>
+      <img src="../../../assets/images/logo.png" alt="{{ 'sidebar.company_name' | translate }}" class="logo">
+      <h2 *ngIf="!isCollapsed">{{ 'sidebar.company_name' | translate }}</h2>
     </div>
 
-  <!-- User Profile -->
-  <div class="user-profile mb-4">
-    <div class="profile-image">
-      <img src="../../../assets/images/Avatar.png" alt="User Profile" class="rounded-circle">
+    <!-- User Profile -->
+    <div class="user-profile mb-4">
+      <div class="profile-image">
+        <img src="../../../assets/images/Avatar.png" alt="User Profile" class="rounded-circle">
+      </div>
+      <div class="user-info" *ngIf="!isCollapsed">
+        <h3>{{ 'sidebar.hello' | translate }} {{userName}}!</h3>
+        <p class="email">{{userEmail}}</p>
+      </div>
     </div>
-    <div class="user-info" *ngIf="!isCollapsed">
-      <h3>Hello {{userName}}!</h3>
-      <p class="email">{{userEmail}}</p>
-    </div>
+
+    <!-- Main Navigation - Using filtered visibleNavigationItems -->
+    <nav class="main-nav">
+      <ul class="nav row p-0">
+        <li class="nav-item" [ngClass]="isCollapsed ? 'col-12' : 'col-6'" *ngFor="let item of visibleNavigationItems">
+          <a [routerLink]="item.link"
+             [routerLinkActiveOptions]="{ exact: true }"
+             class="nav-link flex-column"
+             [ngClass]="item.class"
+             routerLinkActive="active"
+             #rla="routerLinkActive"
+             (click)="onNavClick()"
+             [attr.background-color]="item.activeColor">
+            <i class="bi bi-{{item.icon}}"></i>
+            <span *ngIf="!isCollapsed">{{ 'navigation.' + item.label.toLowerCase() | translate }}</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Bottom Navigation - Using filtered visibleBottomItems -->
+    <nav class="bottom-nav">
+      <ul class="nav flex-column p-0">
+        <li class="nav-item w-100" *ngFor="let item of visibleBottomItems">
+          <!-- Use routerLink for navigation items, click for action items -->
+          <a *ngIf="item.link"
+             [routerLink]="item.link"
+             class="nav-link p-0"
+             [ngClass]="item.class">
+            <i class="bi bi-{{item.icon}}"></i>
+            <span *ngIf="!isCollapsed">{{ 'navigation.' + item.label.toLowerCase().replace(' ', '_') | translate }}</span>
+          </a>
+
+          <a *ngIf="!item.link && item.action"
+             (click)="item.action()"
+             class="nav-link p-0"
+             [ngClass]="item.class"
+             style="cursor: pointer;">
+            <i class="bi bi-{{item.icon}}"></i>
+            <span *ngIf="!isCollapsed">{{ 'navigation.' + item.label.toLowerCase().replace(' ', '_') | translate }}</span>
+          </a>
+        </li>
+
+        <li class="nav-item language-switcher">
+          <div class="language-toggle" [class.compact]="isCollapsed">
+            <button
+              class="lang-btn"
+              [class.active]="languageService.currentLang() === 'en'"
+              (click)="switchLang('en')">
+              <span class="lang-icon">🇺🇸</span>
+              <span class="lang-text" *ngIf="!isCollapsed">English</span>
+            </button>
+            <button
+              class="lang-btn"
+              [class.active]="languageService.currentLang() === 'ar'"
+              (click)="switchLang('ar')">
+              <span class="lang-icon">🇸🇦</span>
+              <span class="lang-text" *ngIf="!isCollapsed">العربية</span>
+            </button>
+          </div>
+        </li>
+
+      </ul>
+    </nav>
   </div>
-
-  <!-- Main Navigation - Using filtered visibleNavigationItems -->
-  <nav class="main-nav">
-    <ul class="nav row">
-      <li class="nav-item" [ngClass]="isCollapsed ? 'col-12' : 'col-6'" *ngFor="let item of visibleNavigationItems">
-        <a [routerLink]="item.link"
-           [routerLinkActiveOptions]="{ exact: true }"
-           class="nav-link flex-column"
-           [ngClass]="item.class"
-           routerLinkActive="active"
-           #rla="routerLinkActive"
-           (click)="onNavClick()"
-           [attr.background-color]="item.activeColor">
-          <i class="bi bi-{{item.icon}}"></i>
-          <span *ngIf="!isCollapsed">{{item.label}}</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
-
-  <!-- Bottom Navigation - Using filtered visibleBottomItems -->
-  <nav class="bottom-nav">
-    <ul class="nav flex-column">
-      <li class="nav-item" *ngFor="let item of visibleBottomItems">
-        <!-- Use routerLink for navigation items, click for action items -->
-        <a *ngIf="item.link"
-           [routerLink]="item.link"
-           class="nav-link p-0"
-           [ngClass]="item.class">
-          <i class="bi bi-{{item.icon}}"></i>
-          <span *ngIf="!isCollapsed">{{item.label}}</span>
-        </a>
-
-        <a *ngIf="!item.link && item.action"
-           (click)="item.action()"
-           class="nav-link p-0"
-           [ngClass]="item.class"
-           style="cursor: pointer;">
-          <i class="bi bi-{{item.icon}}"></i>
-          <span *ngIf="!isCollapsed">{{item.label}}</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
-</div>
 </div>

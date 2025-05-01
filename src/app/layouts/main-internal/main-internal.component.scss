@@ -1,10 +1,8 @@
- @use "../../../assets/scss/variables.scss" as *;
+@use "../../../assets/scss/variables.scss" as *;
 
 .dashboard-bk{
   background-color: $bk-blue
 }
-
-
 
 .dashboard-container {
   display: flex;
@@ -84,6 +82,55 @@
   .main-content-wrapper {
     .content-area {
       padding: 1rem;
+    }
+  }
+}
+
+/* RTL Support */
+:host-context([dir="rtl"]) {
+  .dashboard-container {
+    &.sidebar-collapsed {
+      .sidebar-wrapper {
+        width: 80px;
+      }
+
+      .main-content-wrapper {
+        margin-left: 0;
+        margin-right: 80px;
+      }
+    }
+  }
+
+  .sidebar-wrapper {
+    right: 0;
+    left: auto;
+  }
+
+  .main-content-wrapper {
+    margin-left: 0;
+    margin-right: 240px;
+  }
+
+  // Responsive styles for RTL
+  @media (max-width: 992px) {
+    .dashboard-container {
+      &.sidebar-collapsed {
+        .sidebar-wrapper {
+          transform: translateX(100%);
+        }
+
+        .main-content-wrapper {
+          margin-right: 0;
+        }
+      }
+    }
+
+    .main-content-wrapper {
+      margin-right: 0;
+    }
+
+    .sidebar-wrapper {
+      transform: translateX(0);
     }
   }
 }

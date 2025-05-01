@@ -1,22 +1,103 @@
 {
+  "common": {
+    "loading": "Loading...",
+    "search": "Search",
+    "search_placeholder": "Search for anything",
+    "view_all": "View All",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "send": "Send",
+    "required": "Required",
+    "optional": "Optional",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "members": "Members",
+    "tasks": "Tasks",
+    "inventory": "Inventory",
+    "expenses": "Expenses",
+    "payroll": "Payroll",
+    "reports": "Reports",
+    "chat": "Chat",
+    "projects": "Projects",
+    "settings": "Settings",
+    "feedback": "Send Feedback",
+    "knowledge_base": "Knowledge Base",
+    "logout": "Logout"
+  },
   "login": {
-    "title": "Login",
-    "subtitle": "Enter your credentials to access the management system",
-    "email": "E-mail",
+    "title": "Welcome Back!",
+    "subtitle": "Login to access your account",
+    "email": "Email Address",
     "password": "Password",
     "submit": "Login",
     "processing": "Logging in",
-    "error": "Login failed. Please check your credentials."
+    "forgot_password": "Forgot Password?",
+    "no_account": "Don't have an account?",
+    "sign_up": "Sign Up"
   },
   "validation": {
     "email_required": "Email is required",
-    "email_invalid": "Please enter a valid email",
+    "email_invalid": "Please enter a valid email address",
     "password_required": "Password is required",
-    "password_length": "Password must be at least 6 characters"
+    "password_length": "Password must be at least 4 characters",
+    "name_required": "Name is required",
+    "phone_required": "Phone number is required",
+    "field_required": "This field is required"
   },
-  "auth": {
-    "session_expired": "Your session has expired. Please login again.",
-    "unauthorized": "You are not authorized to access this resource."
+  "dashboard": {
+    "title": "Dashboard",
+    "total_employees": "Total Employees",
+    "inventory": "Inventory",
+    "payroll": "Payroll",
+    "expenses": "Expenses",
+    "expenses_overview": "Expenses Overview",
+    "top_inventory": "Top Inventory",
+    "total_inventory": "Total Inventory",
+    "attendance_overview": "Attendance Overview",
+    "loading_dashboard": "Loading dashboard data...",
+    "try_again": "Try Again",
+    "monthly": "Monthly",
+    "employee_name": "Employee Name",
+    "designation": "Designation",
+    "type": "Type",
+    "check_in_time": "Check In Time",
+    "status": "Status",
+    "attended": "Attended",
+    "absence": "Absence",
+    "holiday": "Holiday",
+    "leave": "Leave",
+    "machines": "Machines",
+    "products": "Products"
+  },
+  "chat": {
+    "search_name": "Search Name",
+    "new_chat": "New Chat",
+    "loading_chats": "Loading chats...",
+    "no_chats": "No chats found",
+    "start_chat": "Start a new chat",
+    "load_earlier": "Load earlier messages",
+    "loading_messages": "Loading messages...",
+    "no_messages": "No messages yet",
+    "send_message": "Send a message to start the conversation",
+    "send_your_message": "Send your message...",
+    "select_user": "Select a user to chat with:",
+    "select_or_search": "Search or select a user",
+    "first_message": "Send a message (optional):",
+    "type_message": "Type your message here...",
+    "add_attachment": "Add attachment",
+    "start_chat_btn": "Start Chat",
+    "select_chat_prompt": "Select a chat or start a new conversation",
+    "real_time_chat": "Chat with team members and clients in real-time"
   },
   "pagination": {
     "showing": "Showing",
@@ -24,6 +105,26 @@
     "of": "of",
     "items": "items",
     "show": "Show",
-    "items_per_page": "per page"
+    "items_per_page": "items per page"
+  },
+  "attendance": {
+    "employee_name": "Employee Name",
+    "designation": "Designation",
+    "type": "Type",
+    "check_in": "Check In Time",
+    "status": "Status",
+    "no_records": "No attendance records found",
+    "staff": "Staff",
+    "full_time": "Full Time",
+    "part_time": "Part Time"
+  },
+  "sidebar": {
+    "hello": "Hello",
+    "company_name": "Jawharat Demyat"
+  },
+  "errors": {
+    "failed_to_load": "Failed to load data",
+    "session_expired": "Your session has expired. Please login again.",
+    "unknown_error": "An error occurred. Please try again later."
   }
 }

@@ -19,6 +19,7 @@ import { AutoComplete, AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-all-chats',
@@ -31,7 +32,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
     InputTextModule,
     AutoComplete,
     AvatarModule ,
-    ButtonModule
+    ButtonModule,TranslateModule
   ],
   templateUrl: './all-chats.component.html',
   styleUrl: './all-chats.component.scss'

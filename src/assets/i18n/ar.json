@@ -1,29 +1,130 @@
 {
+  "common": {
+    "loading": "جاري التحميل...",
+    "search": "بحث",
+    "search_placeholder": "ابحث عن أي شيء",
+    "view_all": "عرض الكل",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "submit": "إرسال",
+    "back": "رجوع",
+    "next": "التالي",
+    "send": "إرسال",
+    "required": "مطلوب",
+    "optional": "اختياري",
+    "yes": "نعم",
+    "no": "لا"
+  },
+  "navigation": {
+    "dashboard": "لوحة التحكم",
+    "users": "المستخدمون",
+    "members": "الأعضاء",
+    "tasks": "المهام",
+    "inventory": "المخزون",
+    "expenses": "المصروفات",
+    "payroll": "الرواتب",
+    "reports": "التقارير",
+    "chat": "المحادثات",
+    "projects": "المشاريع",
+    "settings": "الإعدادات",
+    "feedback": "إرسال ملاحظات",
+    "knowledge_base": "قاعدة المعرفة",
+    "logout": "تسجيل الخروج"
+  },
   "login": {
-    "title": "تسجيل الدخول",
-    "subtitle": "أدخل بيانات الاعتماد الخاصة بك للوصول إلى نظام الإدارة",
+    "title": "مرحبًا بعودتك!",
+    "subtitle": "تسجيل الدخول للوصول إلى حسابك",
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
     "submit": "تسجيل الدخول",
     "processing": "جاري تسجيل الدخول",
-    "error": "فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد الخاصة بك."
+    "forgot_password": "نسيت كلمة المرور؟",
+    "no_account": "ليس لديك حساب؟",
+    "sign_up": "إنشاء حساب"
   },
   "validation": {
     "email_required": "البريد الإلكتروني مطلوب",
-    "email_invalid": "يرجى إدخال بريد إلكتروني صالح",
+    "email_invalid": "يرجى إدخال بريد إلكتروني صحيح",
     "password_required": "كلمة المرور مطلوبة",
-    "password_length": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل"
+    "password_length": "يجب أن تتكون كلمة المرور من 4 أحرف على الأقل",
+    "name_required": "الاسم مطلوب",
+    "phone_required": "رقم الهاتف مطلوب",
+    "field_required": "هذا الحقل مطلوب"
   },
-  "auth": {
-    "session_expired": "انتهت جلستك. الرجاء تسجيل الدخول مرة أخرى.",
-    "unauthorized": "غير مصرح لك بالوصول إلى هذا المورد."
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "total_employees": "إجمالي الموظفين",
+    "inventory": "المخزون",
+    "payroll": "الرواتب",
+    "expenses": "المصروفات",
+    "expenses_overview": "نظرة عامة على المصروفات",
+    "top_inventory": "أعلى المخزون",
+    "total_inventory": "إجمالي المخزون",
+    "attendance_overview": "نظرة عامة على الحضور",
+    "loading_dashboard": "جاري تحميل بيانات لوحة التحكم...",
+    "try_again": "حاول مرة أخرى",
+    "monthly": "شهري",
+    "employee_name": "اسم الموظف",
+    "designation": "المسمى الوظيفي",
+    "type": "النوع",
+    "check_in_time": "وقت الحضور",
+    "status": "الحالة",
+    "attended": "حضر",
+    "absence": "غائب",
+    "holiday": "عطلة",
+    "leave": "إجازة",
+    "machines": "آلات",
+    "products": "منتجات"
+  },
+  "chat": {
+    "search_name": "بحث عن اسم",
+    "new_chat": "محادثة جديدة",
+    "loading_chats": "جاري تحميل المحادثات...",
+    "no_chats": "لا توجد محادثات",
+    "start_chat": "بدء محادثة جديدة",
+    "load_earlier": "تحميل الرسائل السابقة",
+    "loading_messages": "جاري تحميل الرسائل...",
+    "no_messages": "لا توجد رسائل بعد",
+    "send_message": "أرسل رسالة لبدء المحادثة",
+    "send_your_message": "أرسل رسالتك...",
+    "select_user": "اختر مستخدمًا للدردشة معه:",
+    "select_or_search": "ابحث أو اختر مستخدمًا",
+    "first_message": "إرسال رسالة (اختياري):",
+    "type_message": "اكتب رسالتك هنا...",
+    "add_attachment": "إضافة مرفق",
+    "start_chat_btn": "بدء المحادثة",
+    "select_chat_prompt": "اختر محادثة أو ابدأ محادثة جديدة",
+    "real_time_chat": "تحدث مع أعضاء الفريق والعملاء في الوقت الفعلي"
   },
   "pagination": {
     "showing": "عرض",
     "to": "إلى",
-    "of": "من أصل",
-    "items": "سجلاً",
+    "of": "من",
+    "items": "عناصر",
     "show": "عرض",
-    "items_per_page": "لكل صفحة"
+    "items_per_page": "عناصر في الصفحة"
+  },
+  "attendance": {
+    "employee_name": "اسم الموظف",
+    "designation": "المسمى الوظيفي",
+    "type": "النوع",
+    "check_in": "وقت الحضور",
+    "status": "الحالة",
+    "no_records": "لا توجد سجلات حضور",
+    "staff": "موظف",
+    "full_time": "دوام كامل",
+    "part_time": "دوام جزئي"
+  },
+  "sidebar": {
+    "hello": "مرحبًا",
+    "company_name": "جوهرة دمياط"
+  },
+  "errors": {
+    "failed_to_load": "فشل تحميل البيانات",
+    "session_expired": "انتهت جلستك. يرجى تسجيل الدخول مرة أخرى.",
+    "unknown_error": "حدث خطأ. يرجى المحاولة مرة أخرى لاحقًا."
   }
 }

@@ -4,6 +4,7 @@ import { MatTableModule } from '@angular/material/table';
 import { CommonModule, NgIf } from '@angular/common';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { forkJoin } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 import {
   ApexAxisChartSeries,
@@ -23,6 +24,7 @@ import {
 } from "ng-apexcharts";
 import { AttendanceSectionComponent } from '../attendance-section/attendance-section.component';
 import { DashboardService } from '../../services/dashboard.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 // Type for Bar Chart
 export type ExpensesChartOptions = {
@@ -65,7 +67,8 @@ interface DataPoint {
     MatTableModule,
     CommonModule,
     NgIf,
-    AttendanceSectionComponent
+    AttendanceSectionComponent,
+    TranslateModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -121,7 +124,10 @@ export class DashboardComponent implements OnInit {
   @ViewChild("inventoryChart") inventoryChart!: ChartComponent;
   public inventoryChartOptions: Partial<InventoryChartOptions>;
 
-  constructor(private dashboardService: DashboardService) {
+  constructor(
+    private dashboardService: DashboardService,
+    private translateService: TranslateService
+  ) {
     // Initialize Expenses Chart with empty data (will be populated in ngOnInit)
     this.expensesChartOptions = {
       series: [
@@ -241,7 +247,7 @@ export class DashboardComponent implements OnInit {
       }
     };
 
-    // Initialize Inventory Chart with empty data (will be populated in ngOnInit)
+    // Initialize Inventory Chart
     this.inventoryChartOptions = {
       series: [0, 0],
       chart: {
@@ -249,7 +255,7 @@ export class DashboardComponent implements OnInit {
         height: 350
       },
       colors: ['#EFA70C', '#4B7B77'],
-      labels: ["Products", "Machines"],
+      labels: [], // Will be set with translations
       plotOptions: {
         pie: {
           donut: {
@@ -274,6 +280,36 @@ export class DashboardComponent implements OnInit {
         }
       ]
     };
+
+    // Set translated labels for inventory chart
+    this.translateService.get(['dashboard.products', 'dashboard.machines']).subscribe(translations => {
+      this.inventoryChartOptions.labels = [translations['dashboard.products'], translations['dashboard.machines']];
+    });
+
+    // Subscribe to language changes to update chart labels
+    this.translateService.onLangChange.subscribe(() => {
+      this.translateService.get(['dashboard.products', 'dashboard.machines']).subscribe(translations => {
+        this.inventoryChartOptions.labels = [translations['dashboard.products'], translations['dashboard.machines']];
+
+        // Force chart update
+        if (this.inventoryChart) {
+          this.inventoryChart.updateOptions({
+            labels: [translations['dashboard.products'], translations['dashboard.machines']]
+          });
+        }
+
+        // Update expense chart title if it exists
+        if (this.expensesChart) {
+          this.translateService.get('dashboard.expenses_overview').subscribe(text => {
+            this.expensesChart.updateOptions({
+              title: {
+                text: text
+              }
+            });
+          });
+        }
+      });
+    });
   }
 
   ngOnInit(): void {

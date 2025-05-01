@@ -120,33 +120,42 @@
     }
   }
 }
-// .attendance-overview {
-//   margin-top: 20px;
 
-//   .attendance-table {
-//     width: 100%;
-//     th, td {
-//       padding: 10px;
-//       text-align: left;
-//     }
-
-//     .attended {
-//       color: green;
-//       font-weight: bold;
-//     }
-
-//     .absence {
-//       color: red;
-//       font-weight: bold;
-//     }
-//   }
-// }
 @media (max-width: 576px) {
-
   .attendance-section {
     .header{
       flex-direction: column;
     }
   }
+}
 
+/* RTL Support */
+:host-context([dir="rtl"]) {
+  :host ::ng-deep {
+    .p-datatable {
+      .p-datatable-thead > tr > th {
+        &:first-child {
+          padding-left: 1rem;
+          padding-right: 0;
+        }
+      }
+
+      .p-datatable-tbody > tr > td {
+        &:first-child {
+          padding-left: 1rem;
+          padding-right: 0;
+        }
+      }
+    }
+
+    .employee-info {
+      flex-direction: row-reverse;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .p-datatable-tbody > tr > td {
+      flex-direction: row-reverse;
+    }
+  }
 }

@@ -1,6 +1,6 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, effect } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../shared/services/language.service';
 import { CommonModule } from '@angular/common';
 import { SidebarService } from '../../shared/services/sidebar.service';
@@ -9,7 +9,7 @@ import { PermissionsService } from '../../core/services/permissions.service';
 
 interface NavItem {
   icon: string;
-  label: string;
+  label: string; // This is the translation key
   link: string;
   class: string;
   activeColor: string;
@@ -19,7 +19,7 @@ interface NavItem {
 
 interface BottomNavItem {
   icon: string;
-  label: string;
+  label: string; // This is the translation key
   link?: string;  // Make link optional
   action?: () => void;  // Add an optional action function
   class: string;
@@ -39,6 +39,32 @@ export class SideNavComponent {
   userRole: string = '';
   isCollapsed: boolean = false;
 
+  // These use translation keys instead of hardcoded English labels
+  navigationItems: NavItem[] = [
+    { icon: 'house', label: 'dashboard', link: '/', class: 'text-warning', activeColor: '#ffc107' },
+    { icon: 'clipboard', label: 'tasks', link: '/tasks', class: 'text-primary', activeColor: '#0d6efd', requiredPermission: 'view_tasks' },
+    { icon: 'person-bounding-box', label: 'members', link: '/members', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_members' },
+    { icon: 'people', label: 'users', link: '/users', class: 'text-primary', activeColor: '#0d6efd', requiredPermission: 'view_users' },
+    { icon: 'layers', label: 'inventory', link: '/inventory', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_inventory' },
+    { icon: 'currency-dollar', label: 'expenses', link: '/expenses', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_expenses' },
+    { icon: 'credit-card', label: 'payroll', link: '/payroll', class: 'text-info', activeColor: '#0dcaf0', requiredPermission: 'view_payroll' },
+    { icon: 'bar-chart', label: 'reports', link: '/reports', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_reports' },
+    { icon: 'chat-dots-fill', label: 'chat', link: '/chat', class: 'text-info', activeColor: '#0dcaf0' },
+    { icon: 'grid', label: 'projects', link: '/projects', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_projects' },
+    { icon: 'gear', label: 'settings', link: '/settings', class: 'text-purple', activeColor: '#6f42c1', requiredRole: 'ADMIN' }
+  ];
+
+  bottomItems: BottomNavItem[] = [
+    { icon: 'chat-left-text', label: 'send_feedback', link: '/feedback', class: 'text-secondary' },
+    { icon: 'question-circle', label: 'knowledge_base', link: '/knowledge-base', class: 'text-secondary' },
+    {
+      icon: 'box-arrow-left',
+      label: 'logout',
+      action: () => this.logout(),
+      class: 'text-danger'
+    }
+  ];
+
   @HostListener('window:resize', ['$event'])
   onResize() {
     if (window.innerWidth <= 992) {
@@ -46,53 +72,36 @@ export class SideNavComponent {
     }
   }
 
-  toggleSidebar() {
-    this.sidebarService.toggleSidebar();
-  }
-
-  onNavClick() {
-    if (window.innerWidth <= 992) {
-      this.sidebarService.toggleSidebar();
-    }
-  }
-
-  navigationItems: NavItem[] = [
-    { icon: 'house', label: 'Dashboard', link: '/', class: 'text-warning', activeColor: '#ffc107' },
-    { icon: 'clipboard', label: 'Tasks', link: '/tasks', class: 'text-primary', activeColor: '#0d6efd', requiredPermission: 'view_tasks' },
-    { icon: 'person-bounding-box', label: 'Members', link: '/members', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_members' },
-    { icon: 'people', label: 'Users', link: '/users', class: 'text-primary', activeColor: '#0d6efd', requiredPermission: 'view_users' },
-    { icon: 'layers', label: 'Inventory', link: '/inventory', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_inventory' },
-    { icon: 'currency-dollar', label: 'Expenses', link: '/expenses', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_expenses' },
-    { icon: 'credit-card', label: 'Payroll', link: '/payroll', class: 'text-info', activeColor: '#0dcaf0', requiredPermission: 'view_payroll' },
-    { icon: 'bar-chart', label: 'Reports', link: '/reports', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_reports' },
-    { icon: 'chat-dots-fill', label: 'Chat', link: '/chat', class: 'text-info', activeColor: '#0dcaf0' },
-    { icon: 'grid', label: 'Projects', link: '/projects', class: 'text-success', activeColor: '#198754', requiredPermission: 'view_projects' },
-    { icon: 'gear', label: 'Settings', link: '/settings', class: 'text-purple', activeColor: '#6f42c1', requiredRole: 'ADMIN' }
-  ];
-
-  bottomItems: BottomNavItem[] = [
-    { icon: 'chat-left-text', label: 'Send Feedback', link: '/feedback', class: 'text-secondary' },
-    { icon: 'question-circle', label: 'Knowledge Base', link: '/knowledge-base', class: 'text-secondary' },
-    {
-      icon: 'box-arrow-left',
-      label: 'Logout',
-      action: () => this.logout(),
-      class: 'text-danger'
-    }
-  ];
-
   constructor(
-    private languageService: LanguageService,
+    public languageService: LanguageService,
+    private translateService: TranslateService,
     private sidebarService: SidebarService,
     private authService: AuthService,
     private permissionsService: PermissionsService
   ) {
+    // Setup sidebar collapse state subscription
     this.sidebarService.isCollapsed$.subscribe(
       state => this.isCollapsed = state
     );
 
     // Get user data from auth service
     this.loadUserData();
+
+    // Use Angular's effect to listen for language changes
+    // This is the proper way to work with signals
+    effect(() => {
+      // Access the signal value - this creates an automatic dependency
+      const currentLang = this.languageService.currentLang();
+
+      // Force refresh of component when language changes
+      // We don't need to do anything with currentLang value, just accessing it
+      // creates the effect dependency
+      setTimeout(() => {
+        // Force Angular change detection by creating new references
+        this.navigationItems = [...this.navigationItems];
+        this.bottomItems = [...this.bottomItems];
+      });
+    });
   }
 
   /**
@@ -150,6 +159,16 @@ export class SideNavComponent {
   logout(): void {
     this.authService.logout();
     // The AuthService will handle navigation to the login page
+  }
+
+  toggleSidebar() {
+    this.sidebarService.toggleSidebar();
+  }
+
+  onNavClick() {
+    if (window.innerWidth <= 992) {
+      this.sidebarService.toggleSidebar();
+    }
   }
 
   switchLang(lang: string) {

@@ -71,8 +71,6 @@
 }
 
 @media (max-width: 576px) {
-
-
   .stat-card {
     padding: 1.25rem;
     min-height: 90px;
@@ -97,7 +95,6 @@
       padding: 0.5rem;
     }
   }
-
 }
 
 // ==========================
@@ -276,14 +273,9 @@
   height: 100vh;
   background: #f8f9fa;
 
-
-
   .dashboard-main {
     flex-grow: 1;
     padding: 20px;
-
-
-
 
     .dashboard-charts {
       display: flex;
@@ -293,7 +285,43 @@
         flex: 1;
       }
     }
+  }
+}
 
+/* RTL Support */
+:host-context([dir="rtl"]) {
+  .stat-card {
+    border-left: none;
+    border-right: 1px solid #DADADA;
+  }
 
+  .total-inventory {
+    .inventory-count {
+      margin-left: 0;
+      margin-right: 0.5rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .stat-card {
+      border-right: 0;
+      border-bottom: 1px solid #DADADA;
+    }
+  }
+
+  /* Chart direction fixes */
+  :host ::ng-deep {
+    .apexcharts-canvas {
+      direction: ltr; /* Charts should remain LTR for proper display */
+    }
+
+    .apexcharts-yaxis-label {
+      text-anchor: start;
+    }
+
+    .apexcharts-legend-text {
+      margin-left: 0;
+      margin-right: 0.5rem;
+    }
   }
 }

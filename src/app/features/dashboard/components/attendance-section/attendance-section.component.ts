@@ -6,6 +6,7 @@ import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { AttendanceRecord } from '../../services/dashboard.service';
 import { ImageUrlPipe } from '../../../../shared/pipes/image-url.pipe';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 interface DisplayRecord {
   id: string;
@@ -20,7 +21,7 @@ interface DisplayRecord {
 @Component({
   selector: 'app-attendance-section',
   standalone: true,
-  imports: [CommonModule, TableModule, AvatarModule, TagModule, ButtonModule, ImageUrlPipe],
+  imports: [CommonModule, TableModule, AvatarModule, TagModule, ButtonModule, ImageUrlPipe, TranslateModule],
   templateUrl: './attendance-section.component.html',
   styleUrl: './attendance-section.component.scss'
 })
@@ -28,6 +29,8 @@ export class AttendanceSectionComponent implements OnChanges {
   @Input() attendanceData: AttendanceRecord[] = [];
 
   displayData: DisplayRecord[] = [];
+
+  constructor(private translateService: TranslateService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('AttendanceSection ngOnChanges, data:', this.attendanceData);
@@ -73,11 +76,11 @@ export class AttendanceSectionComponent implements OnChanges {
         type: 'Full Time',
         checkIn: record.checkIn ? this.formatTime(record.checkIn) : 'N/A',
         status: displayStatus,
-
         avatar: record.employeeImage || null
       };
     });
   }
+
   formatTime(time: string): string {
     if (!time) return 'N/A';
 

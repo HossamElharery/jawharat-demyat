@@ -1,7 +1,7 @@
 <div class="attendance-section">
   <div class="header">
-    <h2>Attendance Overview</h2>
-    <button pButton type="button" label="View All" class="p-button-text"></button>
+    <h2>{{ 'dashboard.attendance_overview' | translate }}</h2>
+    <button pButton type="button" label="{{ 'common.view_all' | translate }}" class="p-button-text"></button>
   </div>
 
   <p-table
@@ -13,11 +13,11 @@
 
     <ng-template pTemplate="header">
       <tr>
-        <th>Employee Name</th>
-        <th>Designation</th>
-        <th>Type</th>
-        <th>Check In Time</th>
-        <th>Status</th>
+        <th>{{ 'attendance.employee_name' | translate }}</th>
+        <th>{{ 'attendance.designation' | translate }}</th>
+        <th>{{ 'attendance.type' | translate }}</th>
+        <th>{{ 'attendance.check_in' | translate }}</th>
+        <th>{{ 'attendance.status' | translate }}</th>
       </tr>
     </ng-template>
 
@@ -34,12 +34,15 @@
             <span class="employee-name">{{record.name}}</span>
           </div>
         </td>
-        <td>{{record.designation}}</td>
-        <td>{{record.type}}</td>
+        <td>{{ record.designation === 'Staff' ? ('attendance.staff' | translate) : record.designation }}</td>
+        <td>{{ record.type === 'Full Time' ? ('attendance.full_time' | translate) : ('attendance.part_time' | translate) }}</td>
         <td>{{record.checkIn}}</td>
         <td>
           <p-tag
-            [value]="record.status"
+            [value]="record.status === 'Attended' ? ('dashboard.attended' | translate) :
+                    record.status === 'Absence' ? ('dashboard.absence' | translate) :
+                    record.status === 'Holiday' ? ('dashboard.holiday' | translate) :
+                    ('dashboard.leave' | translate)"
             [severity]="record.status === 'Attended' ? 'success' :
                        record.status === 'Absence' ? 'danger' :
                        record.status === 'Holiday' ? 'info' : 'warn'"
@@ -53,7 +56,7 @@
         <td colspan="5" class="text-center p-4">
           <div class="empty-message">
             <i class="bi bi-calendar-x" style="font-size: 2rem; color: #ccc;"></i>
-            <p>No attendance records found</p>
+            <p>{{ 'attendance.no_records' | translate }}</p>
           </div>
         </td>
       </tr>

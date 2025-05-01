@@ -97,5 +97,36 @@
       margin-right: 0;
     }
   }
+}
 
+/* RTL Support */
+:host-context([dir="rtl"]) {
+  .topbar-container {
+    .search-container {
+      margin: 0 2rem;
+
+      .search-icon {
+        left: auto;
+        right: 1rem;
+      }
+
+      .search-input {
+        padding-left: 1rem;
+        padding-right: 2.5rem;
+      }
+    }
+
+    .notification-btn {
+      margin-right: 0;
+      margin-left: 1rem;
+    }
+  }
+
+  @media (max-width:768px) {
+    .topbar-container {
+      .notification-btn {
+        margin-left: 0;
+      }
+    }
+  }
 }

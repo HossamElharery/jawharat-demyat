@@ -2,16 +2,16 @@
 <div class="loading-overlay" *ngIf="loading">
   <div class="spinner">
     <i class="bi bi-arrow-repeat spinner-icon"></i>
-    <span>Loading dashboard data...</span>
+    <span>{{ 'dashboard.loading_dashboard' | translate }}</span>
   </div>
 </div>
 
 <!-- Error message -->
 <div class="alert alert-danger" *ngIf="loadingError">
   <i class="bi bi-exclamation-triangle-fill"></i>
-  Failed to load dashboard data.
+  {{ 'errors.failed_to_load' | translate }}
   <button class="btn btn-sm btn-outline-danger ms-2" (click)="refreshData()">
-    <i class="bi bi-arrow-clockwise"></i> Try Again
+    <i class="bi bi-arrow-clockwise"></i> {{ 'dashboard.try_again' | translate }}
   </button>
 </div>
 
@@ -27,7 +27,7 @@
           {{stat.value}}
           <span class="stat-suffix" *ngIf="stat.suffix">{{stat.suffix}}</span>
         </h2>
-        <p class="stat-label">{{stat.label}}</p>
+        <p class="stat-label">{{ 'dashboard.' + stat.label.toLowerCase().replace(' ', '_') | translate }}</p>
       </div>
     </div>
   </div>
@@ -38,7 +38,7 @@
   <!-- Expenses Chart -->
   <div class="col-12 col-lg-7 expenses-wrapper">
     <div class="chart-card">
-      <h2 class="chart-title">Expenses Overview</h2>
+      <h2 class="chart-title">{{ 'dashboard.expenses_overview' | translate }}</h2>
       <div class="chart-wrapper">
         <apx-chart
           #expensesChart
@@ -60,12 +60,12 @@
     <div class="chart-card">
       <div class="chart-header">
         <div class="title-section">
-          <h2 class="chart-title">Top Inventory</h2>
+          <h2 class="chart-title">{{ 'dashboard.top_inventory' | translate }}</h2>
           <p class="total-inventory">
-            Total Inventory <span class="inventory-count">{{totalInventory}}</span>
+            {{ 'dashboard.total_inventory' | translate }} <span class="inventory-count">{{totalInventory}}</span>
           </p>
         </div>
-        <div class="period-selector">Monthly</div>
+        <div class="period-selector">{{ 'dashboard.monthly' | translate }}</div>
       </div>
       <div class="chart-wrapper">
         <apx-chart
@@ -82,12 +82,12 @@
       <div class="chart-legend">
         <div class="legend-item">
           <span class="legend-color machines"></span>
-          <span class="legend-label">Machines</span>
+          <span class="legend-label">{{ 'dashboard.machines' | translate }}</span>
           <span class="legend-value">{{machinesPercentage}}</span>
         </div>
         <div class="legend-item">
           <span class="legend-color products"></span>
-          <span class="legend-label">Products</span>
+          <span class="legend-label">{{ 'dashboard.products' | translate }}</span>
           <span class="legend-value">{{productsPercentage}}</span>
         </div>
       </div>
