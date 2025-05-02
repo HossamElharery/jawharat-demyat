@@ -33,28 +33,28 @@
         <button class="circle-btn" *ngIf="isViewMode" (click)="editTask()">
           <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect y="0.000610352" width="36.9977" height="36.9988" rx="18.4988" fill="#17A2B8"/>
-            <path d="M27.924 9.07461C27.2363 8.38693 26.3035 8.00061 25.3309 8.00061C24.3583 8.00061 23.4256 8.38693 22.7378 9.07461L9.76804 22.0466C9.38981 22.4246 9.12884 22.9038 9.01654 23.4266L8.01679 28.0916C7.99042 28.2141 7.99518 28.3413 8.03062 28.4615C8.06606 28.5817 8.13106 28.6911 8.21967 28.7797C8.30828 28.8683 8.41769 28.9333 8.5379 28.9688C8.6581 29.0042 8.78527 29.009 8.90779 28.9826L13.5728 27.9829C14.0956 27.8705 14.5748 27.6096 14.9528 27.2314L27.924 14.2601C28.6115 13.5724 28.9977 12.6398 28.9977 11.6674C28.9977 10.695 28.6115 9.76235 27.924 9.07461ZM23.799 10.1351C24.2091 9.74729 24.7543 9.53473 25.3187 9.54264C25.8831 9.55055 26.4221 9.7783 26.8212 10.1775C27.2202 10.5766 27.4479 11.1157 27.4556 11.6801C27.4634 12.2445 27.2507 12.7896 26.8628 13.1996L26.1878 13.8746L23.1233 10.8109L23.799 10.1351ZM22.062 11.8714L25.1265 14.9359L13.893 26.1716C13.7192 26.3454 13.4989 26.4652 13.2585 26.5166L9.72529 27.2741L10.4828 23.7416C10.5342 23.5013 10.654 23.2809 10.8278 23.1071L22.062 11.8714Z" fill="white"/>
+            <path d="M27.924 9.07461C27.2363 8.38693 26.3035 8.00061 25.3309 8.00061C24.3583 8.00061 23.4256 8.38693 22.7378 9.07461L9.76804 22.0466C9.38981 22.4246 9.12884 22.9038 9.01654 23.4266L8.01679 28.0916C7.99042 28.2141 7.99518 28.3413 8.03062 28.4615C8.06606 28.5817 8.13106 28.6911 8.21967 28.7797C8.30828 28.8683 8.41769 28.9342 8.5379 28.9696C8.6581 29.0042 8.78527 29.009 8.90779 28.9826L13.5728 27.9829C14.0956 27.8714 14.5748 27.6096 14.9528 27.2314L27.924 14.2601C28.6115 13.5724 28.9977 12.6398 28.9977 11.6674C28.9977 10.695 28.6115 9.76235 27.924 9.07461ZM23.799 10.1351C24.2091 9.74729 24.7543 9.53473 25.3187 9.54264C25.8831 9.55055 26.4221 9.7783 26.8212 10.1775C27.2202 10.5766 27.4479 11.1157 27.4556 11.6801C27.4634 12.2445 27.2507 12.7896 26.8628 13.1996L26.1878 13.8746L23.1233 10.8109L23.799 10.1351ZM22.062 11.8714L25.1265 14.9359L13.893 26.1716C13.7192 26.3454 13.4989 26.4652 13.2585 26.5166L9.72529 27.2741L10.4828 23.7416C10.5342 23.5013 10.654 23.2809 10.8278 23.1071L22.062 11.8714Z" fill="white"/>
           </svg>
         </button>
         <button class="circle-btn red" (click)="deleteTask()">
           <svg width="36" height="37" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="-0.00244141" width="35.5" height="37" rx="17.75" fill="#DC3545"/>
-            <path d="M15.8726 11.375V11.75H19.6226V11.375C19.6226 10.8777 19.425 10.4008 19.0734 10.0492C18.7218 9.69754 18.2448 9.5 17.7476 9.5C17.2503 9.5 16.7734 9.69754 16.4217 10.0492C16.0701 10.4008 15.8726 10.8777 15.8726 11.375ZM14.3726 11.75V11.375C14.3726 10.4799 14.7281 9.62145 15.3611 8.98851C15.994 8.35558 16.8525 8 17.7476 8C18.6427 8 19.5011 8.35558 20.134 8.98851C20.767 9.62145 21.1226 10.4799 21.1226 11.375V11.75H26.7476C26.9465 11.75 27.1372 11.829 27.2779 11.9697C27.4185 12.1103 27.4976 12.3011 27.4976 12.5C27.4976 12.6989 27.4185 12.8897 27.2779 13.0303C27.1372 13.171 26.9465 13.25 26.7476 13.25H25.6166L24.1976 25.676C24.0929 26.5911 23.6551 27.4358 22.9677 28.0488C22.2802 28.6618 21.3912 29.0004 20.4701 29H15.0251C14.104 29.0004 13.2149 28.6618 12.5274 28.0488C11.84 27.4358 11.4022 26.5911 11.2976 25.676L9.87856 13.25H8.74756C8.54865 13.25 8.35788 13.171 8.21723 13.0303C8.07658 12.8897 7.99756 12.6989 7.99756 12.5C7.99756 12.3011 8.07658 12.1103 8.21723 11.9697C8.35788 11.829 8.54865 11.75 8.74756 11.75H14.3726ZM12.7886 25.505C12.8512 26.0539 13.1136 26.5606 13.5258 26.9286C13.9379 27.2965 14.4711 27.4999 15.0236 27.5H20.4708C21.0233 27.4999 21.5564 27.2965 21.9686 26.9286C22.3808 26.5606 22.6432 26.0539 22.7058 25.505L24.1076 13.25H11.3883L12.7886 25.505ZM15.4976 15.875C15.6965 15.875 15.8872 15.954 16.0279 16.0947C16.1685 16.2353 16.2476 16.4261 16.2476 16.625V24.125C16.2476 24.3239 16.1685 24.5147 16.0279 24.6553C15.8872 24.796 15.6965 24.875 15.4976 24.875C15.2986 24.875 15.1079 24.796 14.9672 24.6553C14.8266 24.5147 14.7476 24.3239 14.7476 24.125V16.625C14.7476 16.4261 14.8266 16.2353 14.9672 16.0947C15.1079 15.954 15.2986 15.875 15.4976 15.875ZM20.7476 16.625C20.7476 16.4261 20.6685 16.2353 20.5279 16.0947C20.3872 15.954 20.1965 15.875 19.9976 15.875C19.7986 15.875 19.6079 15.954 19.4672 16.0947C19.3266 16.2353 19.2476 16.4261 19.2476 16.625V24.125C19.2476 24.3239 19.3266 24.5147 19.4672 24.6553C19.6079 24.796 19.7986 24.875 19.9976 24.875C20.1965 24.875 20.3872 24.796 20.5279 24.6553C20.6685 24.5147 20.7476 24.3239 20.7476 24.125V16.625Z" fill="white"/>
+            <path d="M15.8726 11.375V11.75H19.6226V11.375C19.6226 10.8777 19.425 10.4008 19.0734 10.0492C18.7218 9.69754 18.2448 9.5 17.7476 9.5C17.2503 9.5 16.7734 9.69754 16.4217 10.0492C16.0701 10.4008 15.8726 10.8777 15.8726 11.375ZM14.3726 11.75V11.375C14.3726 10.4799 14.7281 9.62145 15.3611 8.98851C15.994 8.35558 16.8525 8 17.7476 8C18.6427 8 19.5011 8.35558 20.134 8.98851C20.767 9.62145 21.1226 10.4799 21.1226 11.375V11.75H26.7476C26.9465 11.75 27.1372 11.829 27.2779 11.9697C27.4185 12.1103 27.4976 12.3011 27.4976 12.5C27.4976 12.6989 27.4185 12.8897 27.2779 13.0303C27.1372 13.171 26.9465 13.25 26.7476 13.25H25.6166L24.1976 25.676C24.0929 26.5911 23.6551 27.4358 22.9677 28.0488C22.2802 28.6618 21.3912 29.0004 20.4701 29H15.0251C14.104 29.0004 13.2149 28.6618 12.5274 28.0488C11.84 27.4358 11.4022 26.5911 11.2976 25.676L9.87856 13.25H8.74756C8.54865 13.25 8.35788 13.171 8.21723 13.0303C8.07658 12.8897 7.99756 12.6989 7.99756 12.5C7.99756 12.3011 8.07658 12.1103 8.21723 11.9697C8.35788 11.829 8.54865 11.75 8.74756 11.75H14.3726ZM12.7886 25.505C12.8512 26.0539 13.1136 26.5606 13.5258 26.9286C13.9379 27.2965 14.4711 27.4999 15.0236 27.5H20.4708C21.0233 27.4999 21.5564 27.2965 21.9686 26.9286C22.3808 26.5606 22.6432 26.0539 22.7058 25.505L24.1076 13.25H11.3883L12.7886 25.505ZM15.4976 15.875C15.6965 15.875 15.8872 15.954 16.0279 16.0947C16.1685 16.2353 16.2476 16.4261 16.2476 16.625V24.125C16.2476 24.3239 16.1685 24.5147 16.0279 24.6553C15.8872 24.796 15.6965 24.875 15.4976 24.875C15.2986 24.875 15.1079 24.796 14.9672 24.6553C14.8266 24.5147 14.7476 24.3239 14.7476 24.125V16.625C14.7476 16.4261 14.8266 16.2353 14.9672 16.0947C15.1079 15.954 15.2986 15.875 15.4976 15.875ZM19.9976 16.625C19.9976 16.4261 19.9185 16.2353 19.7779 16.0947C19.6372 15.954 19.4465 15.875 19.2476 15.875C19.0486 15.875 18.8579 15.954 18.7172 16.0947C18.5766 16.2353 18.4976 16.4261 18.4976 16.625V24.125C18.4976 24.3239 18.5766 24.5147 18.7172 24.6553C18.8579 24.796 19.0486 24.875 19.2476 24.875C19.4465 24.875 19.6372 24.796 19.7779 24.6553C19.9185 24.5147 19.9976 24.3239 19.9976 24.125V16.625Z" fill="white"/>
           </svg>
         </button>
       </div>
     </div>
     <div class="meta-info">
       <div>
-        <div class="meta-label">Project</div>
+        <div class="meta-label">{{ 'taskSidebar.project' | translate }}</div>
         <div class="meta-value">{{ projectName }}</div>
       </div>
       <div>
-        <div class="meta-label">CREATED</div>
+        <div class="meta-label">{{ 'taskSidebar.created' | translate }}</div>
         <div class="meta-value">{{ createdDate }}</div>
       </div>
       <div>
-        <div class="meta-label">Created By</div>
+        <div class="meta-label">{{ 'taskSidebar.createdBy' | translate }}</div>
         <div class="meta-value">{{ createdBy }}</div>
       </div>
     </div>
@@ -69,7 +69,7 @@
           <path d="M16.0001 16L21.8334 21.8333M16.0001 16L10.1667 10.1666M16.0001 16L10.1667 21.8333M16.0001 16L21.8334 10.1666" stroke="#AFADA7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <h2 class="form-title">{{ isEditMode ? 'Edit Task' : 'Create New Task' }}</h2>
+      <h2 class="form-title">{{ isEditMode ? ('taskSidebar.editTask' | translate) : ('taskSidebar.createNewTask' | translate) }}</h2>
     </div>
   </div>
 
@@ -85,10 +85,10 @@
         </svg>
       </div>
       <div class="info-content d-flex">
-        <label class="info-label">State</label>
+        <label class="info-label">{{ 'tasks.state' | translate }}</label>
         <div class="state-tag mx-2" [ngClass]="getStatusClass(currentTask?.status || '')">
           <span class="status-dot" [ngClass]="currentTask?.status"></span>
-          <span>{{ currentTask?.status === 'todo' ? 'To Do' : currentTask?.status === 'inprogress' ? 'In Progress' : 'Completed' }}</span>
+          <span>{{ getLocalizedStatus(currentTask?.status) }}</span>
         </div>
       </div>
     </div>
@@ -102,7 +102,7 @@
         </svg>
       </div>
       <div class="info-content d-flex">
-        <label class="info-label">Due Date</label>
+        <label class="info-label">{{ 'taskSidebar.dueDate' | translate }}</label>
         <div class="info-value mx-2">{{ currentTask?.dueDate | date:'mediumDate' }}</div>
       </div>
     </div>
@@ -115,7 +115,7 @@
         </svg>
       </div>
       <div class="info-content d-flex">
-        <label class="info-label">Assignee</label>
+        <label class="info-label">{{ 'taskSidebar.assignee' | translate }}</label>
         <div class="assignee-tags mx-2">
           <span class="assignee-tag" *ngFor="let assignee of currentTask?.assignedTo">
             {{ assignee?.name || 'User' }}
@@ -133,9 +133,9 @@
         </svg>
       </div>
       <div class="info-content d-flex">
-        <label class="info-label">Priority</label>
+        <label class="info-label">{{ 'tasks.priority' | translate }}</label>
         <span class="priority-tag mx-2" [ngClass]="getPriorityClass(currentTask?.priority || '')">
-          {{ currentTask?.priority }}
+          {{ ('taskSidebar.' + currentTask?.priority) | translate }}
         </span>
       </div>
     </div>
@@ -153,7 +153,7 @@
         </svg>
       </div>
       <div class="info-content">
-        <label class="info-label">Description</label>
+        <label class="info-label">{{ 'taskSidebar.description' | translate }}</label>
         <p class="description-text">
           {{ currentTask?.description }}
         </p>
@@ -169,12 +169,12 @@
       </div>
       <div class="info-content">
         <div class="attachments-header">
-          <label class="info-label">Attachments ({{ attachmentsList.length }})</label>
+          <label class="info-label">{{ 'taskSidebar.attachments' | translate }} ({{ attachmentsList.length }})</label>
           <button class="download-all-btn" (click)="downloadAllAttachments()">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M15 11V13C15 14.1046 14.1046 15 13 15H3C1.89543 15 1 14.1046 1 13V11M8 1V11M8 11L6 9M8 11L10 9" stroke="#C69A0A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            Download All
+            {{ 'taskSidebar.downloadAll' | translate }}
           </button>
         </div>
         <div class="attachments-list">
@@ -190,7 +190,7 @@
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M15 11V13C15 14.1046 14.1046 15 13 15H3C1.89543 15 1 14.1046 1 13V11M8 1V11M8 11L6 9M8 11L10 9" stroke="#C69A0A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              Download
+              {{ 'taskSidebar.download' | translate }}
             </button>
           </div>
         </div>
@@ -201,8 +201,8 @@
     <div class="tabs-section">
       <p-tabs [(value)]="activeTab">
         <p-tablist>
-          <p-tab value="subtasks">Subtasks ({{ currentTask?.subTasksDone || 0 }}/{{ currentTask?.totalSubTasks || currentTask?.subTasks?.length || 0 }})</p-tab>
-          <p-tab value="comments">Comments ({{ currentTask?.commentCount || 0 }})</p-tab>
+          <p-tab value="subtasks">{{ 'taskSidebar.subtasks' | translate }} ({{ currentTask?.subTasksDone || 0 }}/{{ currentTask?.totalSubTasks || currentTask?.subTasks?.length || 0 }})</p-tab>
+          <p-tab value="comments">{{ 'taskSidebar.comments' | translate }} ({{ currentTask?.commentCount || 0 }})</p-tab>
         </p-tablist>
 
         <p-tabpanels>
@@ -220,7 +220,7 @@
               </div>
             </div>
             <div *ngIf="!currentTask?.subTasks || currentTask?.subTasks?.length === 0" class="empty-tab-message">
-              <p>No subtasks found for this task.</p>
+              <p>{{ 'taskSidebar.noSubtasks' | translate }}</p>
             </div>
           </p-tabpanel>
 
@@ -246,22 +246,22 @@
                 <div class="comment-attachment" *ngIf="comment.filePath">
                   <a [href]="tasksService.getFileUrl(comment.filePath)" target="_blank" class="attachment-link">
                     <i class="pi pi-paperclip"></i>
-                    View Attachment
+                    {{ 'taskSidebar.viewAttachment' | translate }}
                   </a>
                 </div>
               </div>
             </div>
             <div *ngIf="!comments || comments.length === 0" class="empty-tab-message">
-              <p>No comments yet. Be the first to comment!</p>
+              <p>{{ 'taskSidebar.noComments' | translate }}</p>
             </div>
 
             <!-- Add Comment Form -->
             <div class="add-comment-form">
-              <h4>Add Comment</h4>
+              <h4>{{ 'taskSidebar.addComment' | translate }}</h4>
               <textarea
                 pInputTextarea
                 [(ngModel)]="commentContent"
-                placeholder="Write your comment here..."
+                placeholder="{{ 'taskSidebar.commentPlaceholder' | translate }}"
                 [rows]="3"
                 class="w-100 mb-2"
               ></textarea>
@@ -270,7 +270,7 @@
               <p-fileUpload
                 #commentFileUpload
                 mode="basic"
-                chooseLabel="Attach File"
+                chooseLabel="{{ 'taskSidebar.attachFile' | translate }}"
                 [url]="''"
                 accept="image/*,application/pdf"
                 [maxFileSize]="5000000"
@@ -282,7 +282,7 @@
               <button
                 pButton
                 type="button"
-                label="Add Comment"
+                label="{{ 'taskSidebar.addComment' | translate }}"
                 class="p-button-primary mt-2"
                 [loading]="submittingComment"
                 [disabled]="!commentContent.trim() || submittingComment"
@@ -300,7 +300,7 @@
     <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
       <!-- Title -->
       <div class="form-group mb-3">
-        <label for="title" class="form-label">Task Title *</label>
+        <label for="title" class="form-label">{{ 'taskSidebar.taskTitle' | translate }} *</label>
         <input
           id="title"
           type="text"
@@ -314,41 +314,41 @@
 
       <!-- Project -->
       <div class="form-group mb-3">
-        <label for="projectId" class="form-label">Project *</label>
+        <label for="projectId" class="form-label">{{ 'taskSidebar.project' | translate }} *</label>
         <p-dropdown
           id="projectId"
           [options]="projects"
           formControlName="projectId"
-          placeholder="Select a project"
+          placeholder="{{ 'taskSidebar.selectProject' | translate }}"
           [filter]="true"
           filterBy="label"
           [showClear]="false"
           [style]="{'width':'100%'}"
           [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('projectId')}"
         ></p-dropdown>
-        <small class="text-danger" *ngIf="isFieldInvalid('projectId')">Please select a project</small>
+        <small class="text-danger" *ngIf="isFieldInvalid('projectId')">{{ 'taskSidebar.selectProject' | translate }}</small>
       </div>
 
       <!-- Priority and Status -->
       <div class="row mb-3">
         <div class="col-md-6">
-          <label for="priority" class="form-label">Priority *</label>
+          <label for="priority" class="form-label">{{ 'tasks.priority' | translate }} *</label>
           <p-dropdown
             id="priority"
             [options]="priorities"
             formControlName="priority"
-            placeholder="Select priority"
+            placeholder="{{ 'taskSidebar.selectPriority' | translate }}"
             [showClear]="false"
             [style]="{'width':'100%'}"
           ></p-dropdown>
         </div>
         <div class="col-md-6">
-          <label for="status" class="form-label">Status *</label>
+          <label for="status" class="form-label">{{ 'tasks.state' | translate }} *</label>
           <p-dropdown
             id="status"
             [options]="states"
             formControlName="status"
-            placeholder="Select status"
+            placeholder="{{ 'taskSidebar.selectStatus' | translate }}"
             [showClear]="false"
             [style]="{'width':'100%'}"
           ></p-dropdown>
@@ -357,7 +357,7 @@
 
       <!-- Due Date -->
       <div class="form-group mb-3">
-        <label for="dueDate" class="form-label">Due Date *</label>
+        <label for="dueDate" class="form-label">{{ 'taskSidebar.dueDate' | translate }} *</label>
         <p-calendar
           id="dueDate"
           formControlName="dueDate"
@@ -367,16 +367,16 @@
           [style]="{'width':'100%'}"
           [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('dueDate')}"
         ></p-calendar>
-        <small class="text-danger" *ngIf="isFieldInvalid('dueDate')">Please select a due date</small>
+        <small class="text-danger" *ngIf="isFieldInvalid('dueDate')">{{ 'taskSidebar.selectDueDate' | translate }}</small>
       </div>
 
       <!-- Assignees - Using MultiSelect instead of Chips -->
       <div class="form-group mb-3">
-        <label class="form-label">Assignees</label>
+        <label class="form-label">{{ 'tasks.assignedTo' | translate }}</label>
         <p-multiSelect
           [options]="assigneeOptions"
           formControlName="assignedTo"
-          placeholder="Select assignees"
+          placeholder="{{ 'taskSidebar.selectAssignees' | translate }}"
           [filter]="true"
           [showToggleAll]="true"
           [style]="{'width':'100%'}"
@@ -385,7 +385,7 @@
 
       <!-- Description -->
       <div class="form-group mb-3">
-        <label for="description" class="form-label">Description *</label>
+        <label for="description" class="form-label">{{ 'taskSidebar.description' | translate }} *</label>
         <textarea
           id="description"
           pInputTextarea
@@ -399,7 +399,7 @@
 
       <!-- File Upload -->
       <div class="form-group mb-3">
-        <label class="form-label">Attachments</label>
+        <label class="form-label">{{ 'taskSidebar.attachments' | translate }}</label>
         <p-fileUpload
           #fileUpload
           mode="advanced"
@@ -431,7 +431,7 @@
 
       <!-- Current Attachments (Edit mode) -->
       <div class="form-group mb-3" *ngIf="isEditMode && attachmentsList.length > 0">
-        <label class="form-label">Current Attachments</label>
+        <label class="form-label">{{ 'taskSidebar.attachments' | translate }}</label>
         <div class="current-attachments">
           <div class="attachment-item" *ngFor="let file of attachmentsList">
             <div class="file-info">
@@ -440,7 +440,7 @@
             </div>
             <div class="file-actions">
               <button type="button" pButton icon="pi pi-download" class="p-button-rounded p-button-primary p-button-sm mr-2"
-                      (click)="downloadAttachment(file)" pTooltip="Download"></button>
+                      (click)="downloadAttachment(file)" pTooltip="{{ 'taskSidebar.download' | translate }}"></button>
               <button type="button" pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm"
                       (click)="removeExistingAttachment(file.id)" *ngIf="isEditMode" pTooltip="Remove"></button>
             </div>
@@ -450,28 +450,28 @@
 
       <!-- Subtasks -->
       <div class="form-group mb-3">
-        <label class="form-label">Subtasks</label>
+        <label class="form-label">{{ 'taskSidebar.subtasks' | translate }}</label>
         <button type="button" class="btn btn-sm btn-outline-dark mb-2 p-2" (click)="addSubTask()">
-          <i class="pi pi-plus"></i> Add Subtask
+          <i class="pi pi-plus"></i> {{ 'taskSidebar.subtasks' | translate }}
         </button>
 
         <div formArrayName="subTasks">
           <div *ngFor="let subtask of subTasks.controls; let i = index" [formGroupName]="i" class="subtask-item mb-2 p-2 border rounded">
             <div class="d-flex justify-content-between align-items-center mb-2">
-              <h6 class="mb-0">Subtask #{{ i + 1 }}</h6>
+              <h6 class="mb-0">{{ 'taskSidebar.subtasks' | translate }} #{{ i + 1 }}</h6>
               <button type="button" class="btn btn-sm btn-danger" (click)="removeSubTask(i)">
                 <i class="pi pi-trash"></i>
               </button>
             </div>
             <div class="mb-2">
-              <input type="text" pInputText formControlName="title" placeholder="Title" class="form-control">
+              <input type="text" pInputText formControlName="title" placeholder="{{ 'taskSidebar.taskTitle' | translate }}" class="form-control">
             </div>
             <div class="mb-2">
-              <textarea pInputTextarea formControlName="description" rows="2" placeholder="Description" class="form-control"></textarea>
+              <textarea pInputTextarea formControlName="description" rows="2" placeholder="{{ 'taskSidebar.description' | translate }}" class="form-control"></textarea>
             </div>
             <div class="form-check">
               <input class="form-check-input" type="checkbox" formControlName="completed" id="subtask-{{ i }}">
-              <label class="form-check-label" for="subtask-{{ i }}">Completed</label>
+              <label class="form-check-label" for="subtask-{{ i }}">{{ 'tasks.completed' | translate }}</label>
             </div>
           </div>
         </div>
@@ -479,9 +479,9 @@
 
       <!-- Submit Buttons -->
       <div class="d-flex justify-content-end mt-4">
-        <button type="button" pButton class="p-button-secondary mr-2" style="margin-right: 10px;" (click)="closeSidebar()">Cancel</button>
+        <button type="button" pButton class="p-button-secondary mr-2" style="margin-right: 10px;" (click)="closeSidebar()">{{ 'taskSidebar.cancel' | translate }}</button>
         <button type="submit" pButton [disabled]="taskForm.invalid || isLoading">
-          {{ isEditMode ? 'Update Task' : 'Create Task' }}
+          {{ isEditMode ? ('taskSidebar.update' | translate) : ('taskSidebar.create' | translate) }}
         </button>
       </div>
     </form>

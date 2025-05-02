@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -63,6 +63,7 @@ export class MembersComponent implements OnInit {
     private permissionsService: PermissionsService,
     private authService: AuthService,
     private messageService: MessageService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -120,10 +121,12 @@ export class MembersComponent implements OnInit {
    */
   loadMembers(): void {
     if (!this.canViewMembers) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to view members'
+      this.translateService.get('members.permission_denied_message').subscribe(message => {
+        this.messageService.add({
+          severity: 'error',
+          summary: this.translateService.instant('members.permission_denied_title'),
+          detail: message
+        });
       });
       return;
     }
@@ -151,10 +154,12 @@ export class MembersComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading members:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to load members. Please try again.'
+        this.translateService.get('members.load_error').subscribe(message => {
+          this.messageService.add({
+            severity: 'error',
+            summary: this.translateService.instant('common.error'),
+            detail: message
+          });
         });
       }
     });
@@ -190,10 +195,12 @@ export class MembersComponent implements OnInit {
    */
   onAddMember(): void {
     if (!this.canCreateMembers) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to create members'
+      this.translateService.get('members.create_permission_denied').subscribe(message => {
+        this.messageService.add({
+          severity: 'error',
+          summary: this.translateService.instant('members.permission_denied_title'),
+          detail: message
+        });
       });
       return;
     }
@@ -207,10 +214,12 @@ export class MembersComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loadMembers(); // Reload members list
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Member created successfully'
+        this.translateService.get('members.create_success').subscribe(message => {
+          this.messageService.add({
+            severity: 'success',
+            summary: this.translateService.instant('common.success'),
+            detail: message
+          });
         });
       }
     });
@@ -221,10 +230,12 @@ export class MembersComponent implements OnInit {
    */
   onEdit(member: Member): void {
     if (!this.canEditMembers) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to edit members'
+      this.translateService.get('members.edit_permission_denied').subscribe(message => {
+        this.messageService.add({
+          severity: 'error',
+          summary: this.translateService.instant('members.permission_denied_title'),
+          detail: message
+        });
       });
       return;
     }
@@ -243,20 +254,24 @@ export class MembersComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
             this.loadMembers(); // Reload members list
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: 'Member updated successfully'
+            this.translateService.get('members.update_success').subscribe(message => {
+              this.messageService.add({
+                severity: 'success',
+                summary: this.translateService.instant('common.success'),
+                detail: message
+              });
             });
           }
         });
       },
       error: (error) => {
         console.error('Error fetching member details:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to load member details'
+        this.translateService.get('members.load_details_error').subscribe(message => {
+          this.messageService.add({
+            severity: 'error',
+            summary: this.translateService.instant('common.error'),
+            detail: message
+          });
         });
       }
     });
@@ -267,10 +282,12 @@ export class MembersComponent implements OnInit {
    */
   onView(member: Member): void {
     if (!this.canViewMembers) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to view member details'
+      this.translateService.get('members.view_permission_denied').subscribe(message => {
+        this.messageService.add({
+          severity: 'error',
+          summary: this.translateService.instant('members.permission_denied_title'),
+          detail: message
+        });
       });
       return;
     }
@@ -289,10 +306,12 @@ export class MembersComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching member details:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to load member details'
+        this.translateService.get('members.load_details_error').subscribe(message => {
+          this.messageService.add({
+            severity: 'error',
+            summary: this.translateService.instant('common.error'),
+            detail: message
+          });
         });
       }
     });
@@ -303,34 +322,42 @@ export class MembersComponent implements OnInit {
    */
   onDelete(member: Member): void {
     if (!this.canDeleteMembers) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to delete members'
+      this.translateService.get('members.delete_permission_denied').subscribe(message => {
+        this.messageService.add({
+          severity: 'error',
+          summary: this.translateService.instant('members.permission_denied_title'),
+          detail: message
+        });
       });
       return;
     }
 
-    if (confirm(`Are you sure you want to delete ${member.name}?`)) {
-      this.membersService.deleteMember(member.id).subscribe({
-        next: (response) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: response.message || 'Member deleted successfully'
-          });
-          this.loadMembers(); // Reload the members after successful deletion
-        },
-        error: (error) => {
-          console.error('Error deleting member:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.error?.response?.message || 'Failed to delete member'
-          });
-        }
-      });
-    }
+    this.translateService.get('members.delete_confirmation', {name: member.name}).subscribe(confirmMessage => {
+      if (confirm(confirmMessage)) {
+        this.membersService.deleteMember(member.id).subscribe({
+          next: (response) => {
+            this.translateService.get('members.delete_success').subscribe(message => {
+              this.messageService.add({
+                severity: 'success',
+                summary: this.translateService.instant('common.success'),
+                detail: message
+              });
+            });
+            this.loadMembers(); // Reload the members after successful deletion
+          },
+          error: (error) => {
+            console.error('Error deleting member:', error);
+            this.translateService.get('members.delete_error').subscribe(message => {
+              this.messageService.add({
+                severity: 'error',
+                summary: this.translateService.instant('common.error'),
+                detail: message
+              });
+            });
+          }
+        });
+      }
+    });
   }
 
   /**
@@ -354,11 +381,6 @@ export class MembersComponent implements OnInit {
    * Get human-readable pay type label
    */
   getPayTypeLabel(payType: PayType): string {
-    switch(payType) {
-      case 'FULL_TIME': return 'Full Time';
-      case 'PART_TIME': return 'Part Time';
-      case 'HOURLY': return 'Hourly';
-      default: return payType;
-    }
+    return 'members.employment_types.' + payType.toLowerCase();
   }
 }

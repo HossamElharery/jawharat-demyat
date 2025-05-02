@@ -7,7 +7,7 @@
           <input
             type="text"
             class="form-control search-input"
-            placeholder="Search for anything"
+            placeholder="{{ 'members.search_placeholder' | translate }}"
             [formControl]="searchControl">
         </div>
         <div class="dropdown mt-2 mt-sm-0">
@@ -16,20 +16,22 @@
             type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false">
-            {{ selectedStatus || 'Active' }}
+            {{ selectedStatus === 'Active' ? ('members.status.active' | translate) :
+               selectedStatus === 'In Active' ? ('members.status.inactive' | translate) :
+               ('members.status.all' | translate) }}
           </button>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" (click)="filterByStatus('Active')">Active</a></li>
-            <li><a class="dropdown-item" (click)="filterByStatus('In Active')">In Active</a></li>
-            <li><a class="dropdown-item" (click)="filterByStatus('All')">All</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('Active')">{{ 'members.status.active' | translate }}</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('In Active')">{{ 'members.status.inactive' | translate }}</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('All')">{{ 'members.status.all' | translate }}</a></li>
           </ul>
         </div>
       </div>
 
       <!-- Only show Add Member button if user has permission -->
-      <button *ngIf="canCreateMembers" class="btn btn-warning add-member-btn mt-3 mt-md-0  w-md-auto" (click)="onAddMember()">
+      <button *ngIf="canCreateMembers" class="btn btn-warning add-member-btn mt-3 mt-md-0 w-md-auto" (click)="onAddMember()">
         <i class="bi bi-plus-lg me-2"></i>
-        Add New Member
+        {{ 'members.add_new_member' | translate }}
       </button>
     </div>
   </div>
@@ -37,19 +39,19 @@
   <!-- Permission denied message -->
   <div *ngIf="!canViewMembers" class="alert alert-warning">
     <i class="bi bi-exclamation-triangle-fill me-2"></i>
-    You do not have permission to view members.
+    {{ 'members.permission_denied' | translate }}
   </div>
 
   <!-- Loading indicator -->
   <div *ngIf="isLoading" class="text-center my-4">
     <div class="spinner-border text-warning" role="status">
-      <span class="visually-hidden">Loading...</span>
+      <span class="visually-hidden">{{ 'common.loading' | translate }}</span>
     </div>
   </div>
 
   <!-- Error message for no members found -->
   <div *ngIf="!isLoading && canViewMembers && filteredMembers.length === 0" class="alert alert-info">
-    No members found matching your criteria.
+    {{ 'members.no_members_found' | translate }}
   </div>
 
   <!-- Member table -->
@@ -57,41 +59,41 @@
     <table class="table align-middle">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>E-mail</th>
-          <th class="d-none d-md-table-cell">Phone Number</th>
-          <th class="d-none d-md-table-cell">Job Title</th>
-          <th class="d-none d-lg-table-cell">Employment Type</th>
-          <th>Status</th>
-          <th>Actions</th>
+          <th>{{ 'members.table.name' | translate }}</th>
+          <th>{{ 'members.table.email' | translate }}</th>
+          <th class="d-none d-md-table-cell">{{ 'members.table.phone' | translate }}</th>
+          <th class="d-none d-md-table-cell">{{ 'members.table.job_title' | translate }}</th>
+          <th class="d-none d-lg-table-cell">{{ 'members.table.employment_type' | translate }}</th>
+          <th>{{ 'members.table.status' | translate }}</th>
+          <th>{{ 'members.table.actions' | translate }}</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let member of filteredMembers">
           <td>
             <div class="d-flex align-items-center">
-              <img [src]="member.avatarUrl | imageUrl" class="member-avatar" alt="Member avatar">
+              <img [src]="member.avatarUrl | imageUrl" class="member-avatar" alt="{{ 'members.avatar_alt' | translate }}">
               <span class="ms-2">{{ member.name }}</span>
             </div>
           </td>
           <td>{{ member.email }}</td>
           <td class="d-none d-md-table-cell">{{ member.phoneNumber }}</td>
           <td class="d-none d-md-table-cell">{{ member.jobTitle }}</td>
-          <td class="d-none d-lg-table-cell">{{ getPayTypeLabel(member.payType) }}</td>
+          <td class="d-none d-lg-table-cell">{{ getPayTypeLabel(member.payType) | translate }}</td>
           <td>
             <span class="status-badge" [ngClass]="{'active': member.status === 'Active', 'inactive': member.status === 'In Active'}">
-              {{ member.status }}
+              {{ member.status === 'Active' ? ('members.status.active' | translate) : ('members.status.inactive' | translate) }}
             </span>
           </td>
           <td>
             <div class="action-buttons">
-              <button class="btn btn-link" (click)="onView(member)" title="View details">
+              <button class="btn btn-link" (click)="onView(member)" title="{{ 'members.actions.view' | translate }}">
                 <i class="bi bi-eye text-warning"></i>
               </button>
-              <button *ngIf="canEditMembers" class="btn btn-link" (click)="onEdit(member)" title="Edit member">
+              <button *ngIf="canEditMembers" class="btn btn-link" (click)="onEdit(member)" title="{{ 'members.actions.edit' | translate }}">
                 <i class="bi bi-pencil text-warning"></i>
               </button>
-              <button *ngIf="canDeleteMembers" class="btn btn-link" (click)="onDelete(member)" title="Delete member">
+              <button *ngIf="canDeleteMembers" class="btn btn-link" (click)="onDelete(member)" title="{{ 'members.actions.delete' | translate }}">
                 <i class="bi bi-trash text-warning"></i>
               </button>
             </div>

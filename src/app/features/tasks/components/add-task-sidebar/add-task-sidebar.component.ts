@@ -11,6 +11,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TabsModule } from 'primeng/tabs';
+import { TooltipModule } from 'primeng/tooltip'; // Add TooltipModule import
 import { Task, TasksService } from '../../services/tasks.service';
 import { finalize } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
@@ -18,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { ToastService } from '../../../../core/services/toast.service';
 import { UsersService } from '../../../../features/users/services/users.service';
 import { ProjectsService } from '../../../projects/services/projects.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 export type Mode = 'view' | 'edit' | 'add';
 
@@ -43,7 +45,9 @@ export interface SubTask {
     FileUploadModule,
     TextareaModule,
     ToastModule,
-    TabsModule
+    TabsModule,
+    TranslateModule,
+    TooltipModule // Add TooltipModule to the imports array
   ],
   encapsulation: ViewEncapsulation.None,
   templateUrl: './add-task-sidebar.component.html',
@@ -71,14 +75,14 @@ export class AddTaskSidebarComponent implements OnInit {
   // Dropdown options
   projects: any[] = [];
   priorities = [
-    { label: 'Low', value: 'low' },
-    { label: 'Medium', value: 'medium' },
-    { label: 'High', value: 'high' }
+    { label: '', value: 'low' },
+    { label: '', value: 'medium' },
+    { label: '', value: 'high' }
   ];
   states = [
-    { label: 'To Do', value: 'todo' },
-    { label: 'In Progress', value: 'inprogress' },
-    { label: 'Completed', value: 'completed' }
+    { label: '', value: 'todo' },
+    { label: '', value: 'inprogress' },
+    { label: '', value: 'completed' }
   ];
 
   // Tabs
@@ -103,9 +107,11 @@ export class AddTaskSidebarComponent implements OnInit {
     public tasksService: TasksService,
     private usersService: UsersService,
     private projectsService: ProjectsService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private translateService: TranslateService
   ) {
     this.initForm();
+    this.updateDropdownTranslations();
   }
 
   ngOnInit() {
@@ -113,6 +119,40 @@ export class AddTaskSidebarComponent implements OnInit {
     this.loadUsers();
     // Load projects
     this.loadProjects();
+
+    // Update dropdown labels when language changes
+    this.translateService.onLangChange.subscribe(() => {
+      this.updateDropdownTranslations();
+    });
+  }
+
+  /**
+   * Update dropdown option labels based on current language
+   */
+  updateDropdownTranslations() {
+    this.priorities = [
+      { label: this.translateService.instant('taskSidebar.low'), value: 'low' },
+      { label: this.translateService.instant('taskSidebar.medium'), value: 'medium' },
+      { label: this.translateService.instant('taskSidebar.high'), value: 'high' }
+    ];
+
+    this.states = [
+      { label: this.translateService.instant('tasks.toDo'), value: 'todo' },
+      { label: this.translateService.instant('tasks.inProgress'), value: 'inprogress' },
+      { label: this.translateService.instant('tasks.completed'), value: 'completed' }
+    ];
+  }
+
+  /**
+   * Get localized status for display
+   */
+  getLocalizedStatus(status: string): string {
+    switch (status) {
+      case 'todo': return this.translateService.instant('tasks.toDo');
+      case 'inprogress': return this.translateService.instant('tasks.inProgress');
+      case 'completed': return this.translateService.instant('tasks.completed');
+      default: return status;
+    }
   }
 
   loadUsers() {
@@ -423,7 +463,9 @@ export class AddTaskSidebarComponent implements OnInit {
   }
 
   deleteTask() {
-    if (this.taskId && confirm('Are you sure you want to delete this task?')) {
+    const confirmMessage = this.translateService.instant('confirmations.deleteTask');
+
+    if (this.taskId && confirm(confirmMessage)) {
       this.isLoading = true;
 
       this.tasksService.deleteTask(this.taskId)
@@ -461,7 +503,8 @@ export class AddTaskSidebarComponent implements OnInit {
 
   downloadAllAttachments() {
     if (!this.attachmentsList || this.attachmentsList.length === 0) {
-      // this.toastService.warning('No attachments to download');
+      const noAttachmentsMsg = this.translateService.instant('taskSidebar.noAttachments');
+      // this.toastService.warning(noAttachmentsMsg);
       return;
     }
 
@@ -573,11 +616,13 @@ export class AddTaskSidebarComponent implements OnInit {
     if (!control || !control.errors) return '';
 
     const errors = control.errors;
-    if (errors['required']) return 'This field is required';
+    if (errors['required']) return this.translateService.instant('taskSidebar.requiredField');
     if (errors['minlength']) {
-      return `Minimum length is ${errors['minlength'].requiredLength} characters`;
+      return this.translateService.instant('taskSidebar.minLength', {
+        0: errors['minlength'].requiredLength
+      });
     }
-    return 'Invalid input';
+    return this.translateService.instant('taskSidebar.invalidInput');
   }
 
   getPriorityClass(priority: string | undefined | null): string {

@@ -7,7 +7,7 @@
           <input
             type="text"
             class="form-control search-input"
-            placeholder="Search for anything"
+            placeholder="{{ 'users.search_placeholder' | translate }}"
             [formControl]="searchControl">
         </div>
         <div class="dropdown mt-2 mt-sm-0">
@@ -16,12 +16,14 @@
             type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false">
-            {{ selectedStatus || 'Active' }}
+            {{ selectedStatus === 'Active' ? ('users.status.active' | translate) :
+               selectedStatus === 'In Active' ? ('users.status.inactive' | translate) :
+               ('users.status.all' | translate) }}
           </button>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" (click)="filterByStatus('Active')">Active</a></li>
-            <li><a class="dropdown-item" (click)="filterByStatus('In Active')">In Active</a></li>
-            <li><a class="dropdown-item" (click)="filterByStatus('All')">All</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('Active')">{{ 'users.status.active' | translate }}</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('In Active')">{{ 'users.status.inactive' | translate }}</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('All')">{{ 'users.status.all' | translate }}</a></li>
           </ul>
         </div>
       </div>
@@ -29,7 +31,7 @@
       <!-- Only show Add User button if user has permission -->
       <button *ngIf="canCreateUsers" class="btn btn-warning add-user-btn mt-3 mt-md-0  w-md-auto" (click)="onAddUser()">
         <i class="bi bi-plus-lg me-2"></i>
-        Add New User
+        {{ 'users.add_new_user' | translate }}
       </button>
     </div>
   </div>
@@ -37,19 +39,19 @@
   <!-- Permission denied message -->
   <div *ngIf="!canViewUsers" class="alert alert-warning">
     <i class="bi bi-exclamation-triangle-fill me-2"></i>
-    You do not have permission to view users.
+    {{ 'users.permission_denied' | translate }}
   </div>
 
   <!-- Loading indicator -->
   <div *ngIf="isLoading" class="text-center my-4">
     <div class="spinner-border text-warning" role="status">
-      <span class="visually-hidden">Loading...</span>
+      <span class="visually-hidden">{{ 'common.loading' | translate }}</span>
     </div>
   </div>
 
   <!-- Error message for no users found -->
   <div *ngIf="!isLoading && canViewUsers && filteredUsers.length === 0" class="alert alert-info">
-    No users found matching your criteria.
+    {{ 'users.no_users_found' | translate }}
   </div>
 
   <!-- User table -->
@@ -57,19 +59,19 @@
     <table class="table align-middle">
       <thead>
         <tr>
-          <th>User Name</th>
-          <th>E-mail</th>
-          <th class="d-none d-md-table-cell">Phone Number</th>
-          <th class="d-none d-lg-table-cell">Role</th>
-          <th>Status</th>
-          <th>Actions</th>
+          <th>{{ 'users.table.username' | translate }}</th>
+          <th>{{ 'users.table.email' | translate }}</th>
+          <th class="d-none d-md-table-cell">{{ 'users.table.phone' | translate }}</th>
+          <th class="d-none d-lg-table-cell">{{ 'users.table.role' | translate }}</th>
+          <th>{{ 'users.table.status' | translate }}</th>
+          <th>{{ 'users.table.actions' | translate }}</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let user of filteredUsers">
           <td>
             <div class="d-flex align-items-center">
-              <img [src]="user.avatarUrl" class="user-avatar" alt="User avatar">
+              <img [src]="user.avatarUrl" class="user-avatar" alt="{{ 'users.avatar_alt' | translate }}">
               <span class="ms-2">{{ user.name }}</span>
             </div>
           </td>
@@ -78,18 +80,15 @@
           <td class="d-none d-lg-table-cell">{{ user.role }}</td>
           <td>
             <span class="status-badge" [ngClass]="{'active': user.status === 'Active', 'inactive': user.status === 'In Active'}">
-              {{ user.status }}
+              {{ user.status === 'Active' ? ('users.status.active' | translate) : ('users.status.inactive' | translate) }}
             </span>
           </td>
           <td>
             <div class="action-buttons">
-              <!-- <button class="btn btn-link" (click)="onView(user)" title="View details">
-                <i class="bi bi-eye text-warning"></i>
-              </button> -->
-              <button *ngIf="canEditUsers" class="btn btn-link" (click)="onEdit(user)" title="Edit user">
+              <button *ngIf="canEditUsers" class="btn btn-link" (click)="onEdit(user)" title="{{ 'users.actions.edit' | translate }}">
                 <i class="bi bi-pencil text-warning"></i>
               </button>
-              <button *ngIf="canDeleteUsers" class="btn btn-link" (click)="onDelete(user)" title="Delete user">
+              <button *ngIf="canDeleteUsers" class="btn btn-link" (click)="onDelete(user)" title="{{ 'users.actions.delete' | translate }}">
                 <i class="bi bi-trash text-warning"></i>
               </button>
             </div>

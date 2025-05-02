@@ -10,7 +10,7 @@ import { PermissionsService } from '../../../../core/services/permissions.servic
 import { AuthService } from '../../../../core/services/auth.service';
 import { MessageService } from 'primeng/api';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 interface User {
   id: string;
@@ -60,7 +60,8 @@ export class UsersComponent implements OnInit {
     private usersService: UsersService,
     private permissionsService: PermissionsService,
     private authService: AuthService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -109,10 +110,12 @@ export class UsersComponent implements OnInit {
    */
   loadUsers(): void {
     if (!this.canViewUsers) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to view users'
+      this.translateService.get('users.permission_denied_message').subscribe(message => {
+        this.messageService.add({
+          severity: 'error',
+          summary: this.translateService.instant('users.permission_denied_title'),
+          detail: message
+        });
       });
       return;
     }
@@ -141,10 +144,12 @@ export class UsersComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading users:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to load users. Please try again.'
+        this.translateService.get('users.load_error').subscribe(message => {
+          this.messageService.add({
+            severity: 'error',
+            summary: this.translateService.instant('common.error'),
+            detail: message
+          });
         });
       }
     });
@@ -181,10 +186,12 @@ export class UsersComponent implements OnInit {
    */
   onAddUser(): void {
     if (!this.canCreateUsers) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to create users'
+      this.translateService.get('users.create_permission_denied').subscribe(message => {
+        this.messageService.add({
+          severity: 'error',
+          summary: this.translateService.instant('users.permission_denied_title'),
+          detail: message
+        });
       });
       return;
     }
@@ -208,10 +215,12 @@ export class UsersComponent implements OnInit {
    */
   onEdit(user: User): void {
     if (!this.canEditUsers) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to edit users'
+      this.translateService.get('users.edit_permission_denied').subscribe(message => {
+        this.messageService.add({
+          severity: 'error',
+          summary: this.translateService.instant('users.permission_denied_title'),
+          detail: message
+        });
       });
       return;
     }
@@ -235,71 +244,42 @@ export class UsersComponent implements OnInit {
   }
 
   /**
-   * View user details
-   */
-  onView(user: User): void {
-    if (!this.canViewUsers) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to view user details'
-      });
-      return;
-    }
-
-    this.usersService.getUserById(user.id).subscribe({
-      next: (response) => {
-        // You could open a dialog to display user details
-        const userData = response.result;
-
-        // Show user details in a dialog or another component
-        console.log('User details:', userData);
-        // Example: this.openUserDetailsDialog(userData);
-      },
-      error: (error) => {
-        console.error('Error fetching user details:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to load user details'
-        });
-      }
-    });
-  }
-
-  /**
    * Delete a user
    */
   onDelete(user: User): void {
     if (!this.canDeleteUsers) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to delete users'
+      this.translateService.get('users.delete_permission_denied').subscribe(message => {
+        this.messageService.add({
+          severity: 'error',
+          summary: this.translateService.instant('users.permission_denied_title'),
+          detail: message
+        });
       });
       return;
     }
 
-    if (confirm(`Are you sure you want to delete ${user.name}?`)) {
-      this.usersService.deleteUser(user.id).subscribe({
-        next: (response) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: response.message || 'User deleted successfully'
-          });
-          this.loadUsers(); // Reload the users after successful deletion
-        },
-        error: (error) => {
-          console.error('Error deleting user:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.error?.response?.message || 'Failed to delete user'
-          });
-        }
-      });
-    }
+    this.translateService.get('users.delete_confirmation', {name: user.name}).subscribe(confirmMessage => {
+      if (confirm(confirmMessage)) {
+        this.usersService.deleteUser(user.id).subscribe({
+          next: (response) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: this.translateService.instant('common.success'),
+              detail: response.message || this.translateService.instant('users.delete_success')
+            });
+            this.loadUsers(); // Reload the users after successful deletion
+          },
+          error: (error) => {
+            console.error('Error deleting user:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: this.translateService.instant('common.error'),
+              detail: error.error?.response?.message || this.translateService.instant('users.delete_error')
+            });
+          }
+        });
+      }
+    });
   }
 
   /**

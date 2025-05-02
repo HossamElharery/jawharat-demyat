@@ -9,7 +9,7 @@
   <div class="white-card">
     <div class="project-name-section">
       <div class="left-section">
-        <h2>Task Management</h2>
+        <h2>{{ 'tasks.title' | translate }}</h2>
         <!-- <div class="icon-buttons">
           <button class="icon-btn">
             <i class="pi pi-link"></i>
@@ -21,7 +21,7 @@
       </div>
       <div class="right-section">
         <button pButton type="button"
-                label="Invite"
+                label="{{ 'tasks.invite' | translate }}"
                 icon="pi pi-plus"
                 class="invite-btn"></button>
         <div class="members-group">
@@ -45,7 +45,7 @@
       <p-dropdown [options]="filterOptions"
                   [(ngModel)]="selectedFilter"
                   [showClear]="false"
-                  placeholder="Filter"
+                  placeholder="{{ 'tasks.filter' | translate }}"
                   styleClass="custom-dropdown"
                   (onChange)="onFilterChange($event)">
         <ng-template pTemplate="selectedItem">
@@ -64,7 +64,7 @@
       <p-dropdown [options]="memberOptions"
                   [(ngModel)]="selectedMember"
                   [showClear]="false"
-                  placeholder="All Members"
+                  placeholder="{{ 'tasks.allMembers' | translate }}"
                   styleClass="custom-dropdown"
                   (onChange)="onMemberChange($event)">
         <ng-template pTemplate="selectedItem">
@@ -83,7 +83,7 @@
     <div class="right-buttons">
       <button pButton type="button" class="secondary-btn">
         <app-icon class="mx-1" name="group" color="#64748B"></app-icon>
-        Share
+        {{ 'tasks.share' | translate }}
       </button>
       <div class="view-buttons">
         <button pButton type="button"
@@ -105,7 +105,7 @@
         </button>
       </div>
       <button (click)="openAddTaskSidebar()" pButton type="button"
-              label="Add New Task"
+              label="{{ 'tasks.addNewTask' | translate }}"
               class="add-task-btn"></button>
     </div>
   </div>
@@ -114,9 +114,9 @@
   <div *ngIf="!isLoading && allTasks.length === 0" class="no-tasks-message">
     <div class="message-container">
       <i class="pi pi-inbox" style="font-size: 3rem; color: #ccc;"></i>
-      <h3>No tasks found</h3>
-      <p>Create a new task to get started</p>
-      <button pButton type="button" label="Add Task" (click)="openAddTaskSidebar()" class="p-button-primary"></button>
+      <h3>{{ 'tasks.noTasksFound' | translate }}</h3>
+      <p>{{ 'tasks.createNewTask' | translate }}</p>
+      <button pButton type="button" label="{{ 'tasks.addTask' | translate }}" (click)="openAddTaskSidebar()" class="p-button-primary"></button>
     </div>
   </div>
 
@@ -128,7 +128,7 @@
       <div class="column-header">
         <div class="status-group">
           <span class="status-dot" [class]="status.toLowerCase().replace(' ', '-')"></span>
-          <span class="status-title">{{status}}</span>
+          <span class="status-title">{{ getLocalizedStatus(status) }}</span>
           <span class="task-count">{{getTaskCount(status)}}</span>
         </div>
         <button pButton class="p-button-text" icon="pi pi-plus" (click)="openAddTaskSidebar()"></button>
@@ -144,7 +144,7 @@
              (onDragEnd)="onDragEnd()"
              (click)="viewTask(task)">
           <div class="card-header">
-            <span class="priority-tag" [ngClass]="task.priority">{{task.priority}}</span>
+            <span class="priority-tag" [ngClass]="task.priority">{{ ('taskSidebar.' + task.priority) | translate }}</span>
             <div class="menu-trigger">
               <i class="pi pi-ellipsis-h"></i>
             </div>
@@ -178,8 +178,8 @@
 
         <!-- Empty state for column -->
         <div *ngIf="getTasks(status).length === 0" class="empty-column">
-          <p>No tasks in {{status}}</p>
-          <p>Drag tasks here or add a new task</p>
+          <p>{{ 'tasks.noTasksIn' | translate }} {{ getLocalizedStatus(status) }}</p>
+          <p>{{ 'tasks.dragTasksHere' | translate }}</p>
         </div>
       </div>
     </div>
@@ -190,13 +190,13 @@
     <p-table [value]="allTasks" styleClass="task-table" [paginator]="true" [rows]="10">
       <ng-template pTemplate="header">
         <tr>
-          <th>Task Title</th>
-          <th>State</th>
-          <th>Priority</th>
-          <th>Assigned To</th>
-          <th>Files</th>
-          <th>Deadline</th>
-          <th>Actions</th>
+          <th>{{ 'tasks.taskTitle' | translate }}</th>
+          <th>{{ 'tasks.state' | translate }}</th>
+          <th>{{ 'tasks.priority' | translate }}</th>
+          <th>{{ 'tasks.assignedTo' | translate }}</th>
+          <th>{{ 'tasks.files' | translate }}</th>
+          <th>{{ 'tasks.deadline' | translate }}</th>
+          <th>{{ 'tasks.actions' | translate }}</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-task>
@@ -206,14 +206,14 @@
             <div class="state-indicator">
               <span class="status-dot" [class]="task.status.toLowerCase().replace(' ', '-')"></span>
               <span>
-                {{ task.status === 'todo' ? 'To Do' :
-                   task.status === 'inprogress' ? 'In Progress' : 'Completed' }}
+                {{ getLocalizedStatus(task.status === 'todo' ? 'To Do' :
+                   task.status === 'inprogress' ? 'In Progress' : 'Done') }}
               </span>
             </div>
           </td>
           <td>
             <span class="priority-tag" [ngClass]="task.priority">
-              {{task.priority}}
+              {{ ('taskSidebar.' + task.priority) | translate }}
             </span>
           </td>
           <td>
@@ -243,7 +243,7 @@
       <ng-template pTemplate="emptymessage">
         <tr>
           <td colspan="7" class="text-center p-4">
-            No tasks found. Try adjusting your filters or create a new task.
+            {{ 'tasks.noTasksMessage' | translate }}
           </td>
         </tr>
       </ng-template>

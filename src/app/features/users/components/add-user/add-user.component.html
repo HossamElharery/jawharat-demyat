@@ -1,7 +1,7 @@
 <div class="model-ng">
   <div class="modal-container">
     <div class="modal-header">
-      <h2>{{ isEditMode ? 'Edit User' : 'Add New User' }}</h2>
+      <h2>{{ isEditMode ? ('users.form.edit_user' | translate) : ('users.form.add_new_user' | translate) }}</h2>
       <button class="close-btn" (click)="onClose()">
         <i class="bi bi-x"></i>
       </button>
@@ -10,7 +10,7 @@
     <!-- Loading indicator -->
     <div *ngIf="isLoading" class="text-center my-4">
       <div class="spinner-border text-warning" role="status">
-        <span class="visually-hidden">Loading...</span>
+        <span class="visually-hidden">{{ 'common.loading' | translate }}</span>
       </div>
     </div>
 
@@ -29,38 +29,38 @@
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
       <div class="form-row">
         <div class="form-group">
-          <label for="userName">User Name</label>
+          <label for="userName">{{ 'users.form.username' | translate }}</label>
           <input
             type="text"
             id="userName"
             class="form-control"
             formControlName="name"
-            placeholder="Enter user name">
+            placeholder="{{ 'users.form.username_placeholder' | translate }}">
           <small *ngIf="userForm.get('name')?.errors?.['required'] && userForm.get('name')?.touched" class="text-danger">
-            User name is required
+            {{ 'users.validation.username_required' | translate }}
           </small>
           <small *ngIf="userForm.get('name')?.errors?.['minlength'] && userForm.get('name')?.touched" class="text-danger">
-            User name must be at least 2 characters
+            {{ 'users.validation.username_minlength' | translate }}
           </small>
         </div>
 
         <div class="form-group">
-          <label for="role">Role</label>
+          <label for="role">{{ 'users.form.role' | translate }}</label>
           <div class="custom-select">
             <select id="role" class="form-control" formControlName="role">
-              <option *ngFor="let role of availableRoles" [value]="role">{{ role }}</option>
+              <option *ngFor="let role of availableRoles" [value]="role">{{ 'users.roles.' + role.toLowerCase() | translate }}</option>
             </select>
             <i class="bi bi-chevron-down"></i>
           </div>
           <small *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched" class="text-danger">
-            Role is required
+            {{ 'users.validation.role_required' | translate }}
           </small>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group phone-group">
-          <label for="phone">Phone Number</label>
+          <label for="phone">{{ 'users.form.phone' | translate }}</label>
           <!-- International Phone Input with Egypt as default -->
           <ngx-intl-tel-input
             [cssClass]="'custom-phone-input'"
@@ -77,43 +77,43 @@
             formControlName="phoneNumber">
           </ngx-intl-tel-input>
           <small *ngIf="userForm.get('phoneNumber')?.invalid && userForm.get('phoneNumber')?.touched" class="text-danger">
-            Valid phone number is required
+            {{ 'users.validation.phone_required' | translate }}
           </small>
         </div>
 
         <div class="form-group">
-          <label for="email">E-Mail</label>
+          <label for="email">{{ 'users.form.email' | translate }}</label>
           <input
             type="email"
             id="email"
             class="form-control"
             formControlName="email"
-            placeholder="Enter email">
+            placeholder="{{ 'users.form.email_placeholder' | translate }}">
           <small *ngIf="userForm.get('email')?.errors?.['required'] && userForm.get('email')?.touched" class="text-danger">
-            Email is required
+            {{ 'users.validation.email_required' | translate }}
           </small>
           <small *ngIf="userForm.get('email')?.errors?.['email'] && userForm.get('email')?.touched" class="text-danger">
-            Please enter a valid email
+            {{ 'users.validation.email_invalid' | translate }}
           </small>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="password">Password{{ isEditMode ? ' (Leave blank to keep current)' : '' }}</label>
+        <label for="password">{{ 'users.form.password' | translate }}{{ isEditMode ? (' ' + ('users.form.password_edit_hint' | translate)) : '' }}</label>
         <input
           type="password"
           id="password"
           class="form-control"
           formControlName="password"
-          placeholder="Enter password">
+          placeholder="{{ 'users.form.password_placeholder' | translate }}">
         <small *ngIf="!isEditMode && userForm.get('password')?.invalid && userForm.get('password')?.touched" class="text-danger">
-          Password is required
+          {{ 'users.validation.password_required' | translate }}
         </small>
       </div>
 
       <!-- User Roles Section -->
       <div class="form-group" *ngIf="roles.length > 0">
-        <label>Assigned Roles</label>
+        <label>{{ 'users.form.assigned_roles' | translate }}</label>
         <div class="assigned-roles">
           <div class="form-check" *ngFor="let role of roles">
             <input
@@ -132,7 +132,7 @@
 
       <div class="active-user-section">
         <div class="active-user-header">
-          <h3>Active User <span>({{ userForm.get('isActive')?.value ? 'Active' : 'Inactive' }})</span></h3>
+          <h3>{{ 'users.form.active_user' | translate }} <span>({{ userForm.get('isActive')?.value ? ('users.status.active' | translate) : ('users.status.inactive' | translate) }})</span></h3>
           <div class="toggle-switch">
             <input
               type="checkbox"
@@ -142,17 +142,16 @@
             <label for="activeStatus" class="toggle-label"></label>
           </div>
         </div>
-        <p class="help-text">This user is currently {{ userForm.get('isActive')?.value ? 'active' : 'inactive' }}
-          and {{ userForm.get('isActive')?.value ? 'has' : 'does not have' }} full access to the system (Role Permissions)</p>
+        <p class="help-text">{{ 'users.form.active_status_help' | translate: { status: (userForm.get('isActive')?.value ? ('users.status.active' | translate) : ('users.status.inactive' | translate)), access: (userForm.get('isActive')?.value ? ('users.form.has_access' | translate) : ('users.form.no_access' | translate)) } }}</p>
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-cancel" (click)="onClose()">Cancel</button>
+        <button type="button" class="btn btn-cancel" (click)="onClose()">{{ 'common.cancel' | translate }}</button>
         <button type="submit" class="btn btn-submit" [disabled]="!userForm.valid || isSubmitting">
-          <span *ngIf="!isSubmitting">{{ isEditMode ? 'Save Changes' : 'Add User' }}</span>
+          <span *ngIf="!isSubmitting">{{ isEditMode ? ('users.form.save_changes' | translate) : ('users.form.add_user' | translate) }}</span>
           <span *ngIf="isSubmitting">
             <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            {{ isEditMode ? 'Saving...' : 'Adding...' }}
+            {{ isEditMode ? ('users.form.saving' | translate) : ('users.form.adding' | translate) }}
           </span>
         </button>
       </div>

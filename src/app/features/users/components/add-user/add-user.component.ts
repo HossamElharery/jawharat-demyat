@@ -7,6 +7,7 @@ import { UsersService, RoleResponse } from '../../services/users.service';
 import { MessageService } from 'primeng/api';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { CountryISO, SearchCountryField, PhoneNumberFormat } from 'ngx-intl-tel-input';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
 export interface UserDialogData {
@@ -28,7 +29,8 @@ export interface UserDialogData {
     CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
-    NgxIntlTelInputModule
+    NgxIntlTelInputModule,
+    TranslateModule
   ],
   templateUrl: './add-user.component.html',
   styleUrl: './add-user.component.scss'
@@ -55,6 +57,7 @@ export class AddUserComponent implements OnInit {
     private dialogRef: MatDialogRef<AddUserComponent>,
     private usersService: UsersService,
     private messageService: MessageService,
+    private translateService: TranslateService,
     @Inject(MAT_DIALOG_DATA) public data: UserDialogData | null
   ) {}
 
@@ -80,7 +83,9 @@ export class AddUserComponent implements OnInit {
       .pipe(
         catchError(error => {
           console.error('Error loading user data:', error);
-          this.errorMessage = 'Failed to load user data';
+          this.translateService.get('users.form.load_error').subscribe(message => {
+            this.errorMessage = message;
+          });
           return of(null);
         }),
         finalize(() => {
@@ -159,7 +164,9 @@ export class AddUserComponent implements OnInit {
       .pipe(
         catchError(error => {
           console.error('Error loading roles:', error);
-          this.errorMessage = 'Failed to load roles';
+          this.translateService.get('users.form.roles_load_error').subscribe(message => {
+            this.errorMessage = message;
+          });
           return of({ message: 'Failed to load roles', result: [] });
         }),
         finalize(() => {
@@ -264,6 +271,13 @@ export class AddUserComponent implements OnInit {
         )
         .subscribe({
           next: (response) => {
+            this.translateService.get('users.form.update_success').subscribe(message => {
+              this.messageService.add({
+                severity: 'success',
+                summary: this.translateService.instant('common.success'),
+                detail: message
+              });
+            });
             this.dialogRef.close(response.result);
           },
           error: (error) => {
@@ -280,6 +294,13 @@ export class AddUserComponent implements OnInit {
         )
         .subscribe({
           next: (response) => {
+            this.translateService.get('users.form.create_success').subscribe(message => {
+              this.messageService.add({
+                severity: 'success',
+                summary: this.translateService.instant('common.success'),
+                detail: message
+              });
+            });
             this.dialogRef.close(response.result);
           },
           error: (error) => {
@@ -306,7 +327,9 @@ export class AddUserComponent implements OnInit {
     } else if (error.error?.message) {
       this.errorMessage = error.error.message;
     } else {
-      this.errorMessage = 'An error occurred. Please try again.';
+      this.translateService.get('users.form.generic_error').subscribe(message => {
+        this.errorMessage = message;
+      });
     }
   }
 

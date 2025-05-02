@@ -1,14 +1,341 @@
-// .modal-container {
-//   min-width: 500px;
-//   max-width: 800px;
-//   background-color: white;
-// }
+@use "../../../../../assets/scss/variables.scss" as *;
 
-// mat-form-field {
-//   width: 100%;
-// }
-// ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
-//   background-color: #F9F9FB;
-// }
+.model-ng {
+  .modal-container {
+    padding: 24px;
+    background: white;
+    border-radius: $br-12px;
+    width: 100%;
+    max-width: 800px;
+    overflow: auto;
+    max-height: 90vh;
+  }
 
- @use "../../../../../assets/scss/variables.scss" as *;
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+      font-size: 24px;
+      margin: 0;
+      color: #333;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0;
+      color: #666;
+
+      &:hover {
+        color: #333;
+      }
+    }
+  }
+
+  .form-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 20px;
+
+    @media (max-width: 576px) {
+      flex-direction: column;
+      gap: 16px;
+    }
+  }
+
+  .form-group {
+    flex: 1;
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 500;
+    }
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #E2E8F0;
+    border-radius: $br-5px;
+    background: #F8FAFC;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+    }
+  }
+
+  .custom-select {
+    position: relative;
+
+    select {
+      appearance: none;
+      padding-right: 30px;
+    }
+
+    .bi-chevron-down {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+  }
+
+  .phone-group ::ng-deep {
+    // Ensure internationalization phone input styles are consistent
+    .iti {
+      width: 100%;
+    }
+
+    .iti__flag-container {
+      z-index: 10;
+    }
+
+    .iti__selected-flag {
+      padding: 0 8px 0 12px;
+      background-color: #F8FAFC;
+      border-radius: $br-5px 0 0 $br-5px;
+    }
+
+    input {
+      padding-left: 90px !important;
+      background-color: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: $br-5px;
+      color: #333;
+      height: 48px;
+      width: 100%;
+    }
+  }
+
+  .assigned-roles {
+    margin-top: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #E2E8F0;
+    border-radius: $br-5px;
+    padding: 10px;
+    background: #F8FAFC;
+
+    .form-check {
+      margin-bottom: 8px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .form-check-input {
+      margin-right: 8px;
+
+      &:checked {
+        background-color: $primary-color;
+        border-color: $primary-color;
+      }
+    }
+  }
+
+  .active-user-section {
+    margin-top: 24px;
+    margin-bottom: 32px;
+
+    .active-user-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+
+      h3 {
+        font-size: 18px;
+        margin: 0;
+
+        span {
+          color: #22c55e;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .help-text {
+      color: #666;
+      margin: 0;
+    }
+  }
+
+  .toggle-switch {
+    position: relative;
+
+    .toggle-input {
+      display: none;
+
+      &:checked + .toggle-label {
+        background: $primary-color;
+
+        &:after {
+          transform: translateX(20px);
+        }
+      }
+    }
+
+    .toggle-label {
+      display: block;
+      width: 48px;
+      height: 28px;
+      background: #E2E8F0;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: 0.3s;
+
+      &:after {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        transition: 0.3s;
+      }
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: $br-5px;
+      font-weight: 500;
+
+      &.btn-cancel {
+        background: none;
+        border: none;
+        color: #666;
+
+        &:hover {
+          color: #333;
+        }
+      }
+
+      &.btn-submit {
+        background: $primary-color;
+        border: none;
+        color: white;
+
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+
+        &:not(:disabled):hover {
+          background: darken($primary-color, 5%);
+        }
+      }
+    }
+  }
+
+  // RTL support
+  :host-context([dir="rtl"]) & {
+    .modal-header {
+      .close-btn {
+        margin-left: 0;
+        margin-right: auto;
+      }
+    }
+
+    .custom-select {
+      select {
+        padding-right: 12px;
+        padding-left: 30px;
+      }
+
+      .bi-chevron-down {
+        right: auto;
+        left: 12px;
+      }
+    }
+
+    .phone-group ::ng-deep {
+      .iti__selected-flag {
+        padding: 0 12px 0 8px;
+        border-radius: 0 $br-5px $br-5px 0;
+      }
+
+      input {
+        padding-left: 12px !important;
+        padding-right: 90px !important;
+        text-align: right;
+      }
+
+      .iti__flag-container {
+        right: 0;
+        left: auto;
+      }
+    }
+
+    .assigned-roles {
+      .form-check-input {
+        margin-right: 0;
+        margin-left: 8px;
+      }
+
+      .form-check-label {
+        margin-right: 25px; // Adjust based on checkbox size
+      }
+    }
+
+    .toggle-switch {
+      .toggle-label {
+        &:after {
+          left: auto;
+          right: 4px;
+        }
+      }
+
+      .toggle-input {
+        &:checked + .toggle-label {
+          &:after {
+            transform: translateX(-20px);
+          }
+        }
+      }
+    }
+
+    .modal-footer {
+      justify-content: flex-start;
+    }
+
+    .help-text {
+      text-align: right;
+    }
+
+    // Fix alignment for other form elements
+    .form-group label,
+    .form-control,
+    .active-user-header h3 {
+      text-align: right;
+    }
+
+    .bi {
+      margin-right: 0;
+      margin-left: 0.5rem;
+    }
+
+    // Spinners should maintain correct direction
+    .spinner-border {
+      margin-right: 0;
+      margin-left: 0.5rem;
+    }
+  }
+}

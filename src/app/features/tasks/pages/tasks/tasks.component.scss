@@ -798,3 +798,133 @@
     }
   }
 }
+
+/* RTL Support */
+:host-context([dir="rtl"]) {
+  .white-card {
+    .project-name-section {
+      .right-section {
+        .invite-btn {
+          .pi-plus {
+            margin-right: 0;
+            margin-left: 8px;
+          }
+        }
+
+        .members-group {
+          img, .avatar-placeholder {
+            margin-left: 0;
+            margin-right: -8px;
+
+            &:first-child {
+              margin-left: 0;
+              margin-right: 0;
+            }
+          }
+
+          .more-count {
+            margin-left: 0;
+            margin-right: -8px;
+          }
+        }
+      }
+    }
+  }
+
+  .actions-section {
+    .right-buttons {
+      .view-buttons {
+        padding-left: 0;
+        padding-right: 24px;
+        border-left: none;
+        border-right: 1px solid #E0E0E0;
+
+        @media (max-width: 767px) {
+          padding-right: 0;
+          border-right: none;
+        }
+      }
+    }
+  }
+
+  .secondary-btn {
+    i {
+      margin-right: 0;
+      margin-left: 8px;
+    }
+  }
+
+  .table-view {
+    ::ng-deep {
+      .p-datatable {
+        .p-datatable-thead > tr > th,
+        .p-datatable-tbody > tr > td {
+          &:first-child {
+            padding-left: 1rem;
+            padding-right: 0;
+          }
+        }
+
+        .assigned-members {
+          img, .avatar-placeholder {
+            margin-left: 0;
+            margin-right: -8px;
+
+            &:first-child {
+              margin-left: 0;
+              margin-right: 0;
+            }
+          }
+
+          .more-members {
+            margin-left: 0;
+            margin-right: -8px;
+          }
+        }
+      }
+    }
+  }
+
+  .kanban-view {
+    .kanban-column {
+      .task-card {
+        .card-footer {
+          .assigned-members {
+            img, .avatar-placeholder {
+              margin-left: 0;
+              margin-right: -0.5rem;
+
+              &:first-child {
+                margin-left: 0;
+                margin-right: 0;
+              }
+            }
+
+            .more-members {
+              margin-left: 0;
+              margin-right: -0.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  ::ng-deep {
+    .p-dropdown-panel {
+      .p-dropdown-header {
+        .p-dropdown-filter {
+          padding-right: 0.75rem;
+          padding-left: 1.75rem;
+          margin-right: 0;
+          margin-left: -1.75rem;
+        }
+
+        .p-dropdown-filter-icon {
+          right: auto;
+          left: 0.75rem;
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 <div class="modal-container">
   <div class="modal-header">
-    <h2>{{ isViewMode ? 'Member Details' : (isEditMode ? 'Edit Member' : 'Add New Member') }}</h2>
+    <h2>{{ isViewMode ? ('members.form.member_details' | translate) : (isEditMode ? ('members.form.edit_member' | translate) : ('members.form.add_new_member' | translate)) }}</h2>
     <button class="close-btn" (click)="onClose()">
       <i class="bi bi-x"></i>
     </button>
@@ -9,7 +9,7 @@
   <!-- Loading indicator -->
   <div *ngIf="isLoading" class="text-center my-4">
     <div class="spinner-border text-warning" role="status">
-      <span class="visually-hidden">Loading...</span>
+      <span class="visually-hidden">{{ 'common.loading' | translate }}</span>
     </div>
   </div>
 
@@ -28,43 +28,43 @@
   <form [formGroup]="memberForm" (ngSubmit)="onSubmit()">
     <!-- Basic Information Section -->
     <div class="section-header">
-      <h3>Basic Information</h3>
+      <h3>{{ 'members.form.sections.basic_info' | translate }}</h3>
     </div>
 
     <div class="form-row">
       <div class="form-group">
-        <label for="name">Full Name</label>
+        <label for="name">{{ 'members.form.full_name' | translate }}</label>
         <input
           type="text"
           id="name"
           class="form-control"
           formControlName="name"
-          placeholder="Enter full name">
+          placeholder="{{ 'members.form.full_name_placeholder' | translate }}">
         <small *ngIf="memberForm.get('name')?.errors?.['required'] && memberForm.get('name')?.touched" class="text-danger">
-          Full name is required
+          {{ 'members.validation.name_required' | translate }}
         </small>
         <small *ngIf="memberForm.get('name')?.errors?.['minlength'] && memberForm.get('name')?.touched" class="text-danger">
-          Full name must be at least 2 characters
+          {{ 'members.validation.name_minlength' | translate }}
         </small>
       </div>
 
       <div class="form-group">
-        <label for="jobTitle">Job Title</label>
+        <label for="jobTitle">{{ 'members.form.job_title' | translate }}</label>
         <input
           type="text"
           id="jobTitle"
           class="form-control"
           formControlName="jobTitle"
-          placeholder="Enter job title">
+          placeholder="{{ 'members.form.job_title_placeholder' | translate }}">
         <small *ngIf="memberForm.get('jobTitle')?.errors?.['required'] && memberForm.get('jobTitle')?.touched" class="text-danger">
-          Job title is required
+          {{ 'members.validation.job_title_required' | translate }}
         </small>
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group phone-group">
-        <label for="phone">Phone Number</label>
+        <label for="phone">{{ 'members.form.phone' | translate }}</label>
         <!-- International Phone Input with Egypt as default -->
         <ngx-intl-tel-input
           [cssClass]="'custom-phone-input'"
@@ -81,165 +81,165 @@
           formControlName="phoneNumber">
         </ngx-intl-tel-input>
         <small *ngIf="memberForm.get('phoneNumber')?.invalid && memberForm.get('phoneNumber')?.touched" class="text-danger">
-          Valid phone number is required
+          {{ 'members.validation.phone_required' | translate }}
         </small>
       </div>
 
       <div class="form-group">
-        <label for="email">E-Mail</label>
+        <label for="email">{{ 'members.form.email' | translate }}</label>
         <input
           type="email"
           id="email"
           class="form-control"
           formControlName="email"
-          placeholder="Enter email">
+          placeholder="{{ 'members.form.email_placeholder' | translate }}">
         <small *ngIf="memberForm.get('email')?.errors?.['required'] && memberForm.get('email')?.touched" class="text-danger">
-          Email is required
+          {{ 'members.validation.email_required' | translate }}
         </small>
         <small *ngIf="memberForm.get('email')?.errors?.['email'] && memberForm.get('email')?.touched" class="text-danger">
-          Please enter a valid email
+          {{ 'members.validation.email_invalid' | translate }}
         </small>
       </div>
     </div>
 
     <div class="form-group" *ngIf="!isViewMode">
-      <label for="password">Password{{ isEditMode ? ' (Leave blank to keep current)' : '' }}</label>
+      <label for="password">{{ 'members.form.password' | translate }}{{ isEditMode ? (' ' + ('members.form.password_edit_hint' | translate)) : '' }}</label>
       <input
         type="password"
         id="password"
         class="form-control"
         formControlName="password"
-        placeholder="Enter password">
+        placeholder="{{ 'members.form.password_placeholder' | translate }}">
       <small *ngIf="!isEditMode && memberForm.get('password')?.invalid && memberForm.get('password')?.touched" class="text-danger">
-        Password is required
+        {{ 'members.validation.password_required' | translate }}
       </small>
     </div>
 
     <!-- Location Information Section -->
     <div class="section-header mt-4">
-      <h3>Location Information</h3>
+      <h3>{{ 'members.form.sections.location_info' | translate }}</h3>
     </div>
 
     <div class="form-row">
       <div class="form-group">
-        <label for="country">Country</label>
+        <label for="country">{{ 'members.form.country' | translate }}</label>
         <input
           type="text"
           id="country"
           class="form-control"
           formControlName="country"
-          placeholder="Enter country">
+          placeholder="{{ 'members.form.country_placeholder' | translate }}">
         <small *ngIf="memberForm.get('country')?.errors?.['required'] && memberForm.get('country')?.touched" class="text-danger">
-          Country is required
+          {{ 'members.validation.country_required' | translate }}
         </small>
       </div>
 
       <div class="form-group">
-        <label for="location">Location/City</label>
+        <label for="location">{{ 'members.form.location' | translate }}</label>
         <input
           type="text"
           id="location"
           class="form-control"
           formControlName="location"
-          placeholder="Enter city or location">
+          placeholder="{{ 'members.form.location_placeholder' | translate }}">
         <small *ngIf="memberForm.get('location')?.errors?.['required'] && memberForm.get('location')?.touched" class="text-danger">
-          Location is required
+          {{ 'members.validation.location_required' | translate }}
         </small>
       </div>
     </div>
 
     <div class="form-group">
-      <label for="timeZone">Time Zone</label>
+      <label for="timeZone">{{ 'members.form.timezone' | translate }}</label>
       <select id="timeZone" class="form-select" formControlName="timeZone">
-        <option value="" disabled>Select time zone</option>
+        <option value="" disabled>{{ 'members.form.timezone_placeholder' | translate }}</option>
         <option *ngFor="let timeZone of timeZoneOptions" [value]="timeZone">{{ timeZone }}</option>
       </select>
       <small *ngIf="memberForm.get('timeZone')?.errors?.['required'] && memberForm.get('timeZone')?.touched" class="text-danger">
-        Time zone is required
+        {{ 'members.validation.timezone_required' | translate }}
       </small>
     </div>
 
     <!-- Employment Information Section -->
     <div class="section-header mt-4">
-      <h3>Employment Information</h3>
+      <h3>{{ 'members.form.sections.employment_info' | translate }}</h3>
     </div>
 
     <div class="form-row">
       <div class="form-group">
-        <label for="payType">Employment Type</label>
+        <label for="payType">{{ 'members.form.employment_type' | translate }}</label>
         <select id="payType" class="form-select" formControlName="payType">
           <option *ngFor="let type of payTypeOptions" [value]="type">
-            {{ type === 'FULL_TIME' ? 'Full Time' : (type === 'PART_TIME' ? 'Part Time' : 'Hourly') }}
+            {{ 'members.employment_types.' + type.toLowerCase() | translate }}
           </option>
         </select>
       </div>
 
       <div class="form-group" *ngIf="memberForm.get('payType')?.value !== 'HOURLY'">
-        <label for="salary">Monthly Salary</label>
+        <label for="salary">{{ 'members.form.monthly_salary' | translate }}</label>
         <input
           type="number"
           id="salary"
           class="form-control"
           formControlName="salary"
-          placeholder="Enter monthly salary">
+          placeholder="{{ 'members.form.salary_placeholder' | translate }}">
         <small *ngIf="memberForm.get('salary')?.errors?.['required'] && memberForm.get('salary')?.touched" class="text-danger">
-          Salary is required
+          {{ 'members.validation.salary_required' | translate }}
         </small>
       </div>
 
       <div class="form-group" *ngIf="memberForm.get('payType')?.value === 'HOURLY'">
-        <label for="hourlyRate">Hourly Rate</label>
+        <label for="hourlyRate">{{ 'members.form.hourly_rate' | translate }}</label>
         <input
           type="number"
           id="hourlyRate"
           class="form-control"
           formControlName="hourlyRate"
-          placeholder="Enter hourly rate">
+          placeholder="{{ 'members.form.hourly_rate_placeholder' | translate }}">
         <small *ngIf="memberForm.get('hourlyRate')?.errors?.['required'] && memberForm.get('hourlyRate')?.touched" class="text-danger">
-          Hourly rate is required
+          {{ 'members.validation.hourly_rate_required' | translate }}
         </small>
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group" *ngIf="memberForm.get('payType')?.value !== 'HOURLY'">
-        <label for="salaryDate">Salary Date</label>
+        <label for="salaryDate">{{ 'members.form.salary_date' | translate }}</label>
         <p-calendar
           id="salaryDate"
           formControlName="salaryDate"
           [showIcon]="true"
           [showButtonBar]="true"
-          placeholder="Select salary date"
+          placeholder="{{ 'members.form.salary_date_placeholder' | translate }}"
           dateFormat="dd/mm/yy">
         </p-calendar>
         <small *ngIf="memberForm.get('salaryDate')?.errors?.['required'] && memberForm.get('salaryDate')?.touched" class="text-danger">
-          Salary date is required
+          {{ 'members.validation.salary_date_required' | translate }}
         </small>
       </div>
 
       <div class="form-group">
-        <label for="contractStartDate">Contract Start Date</label>
+        <label for="contractStartDate">{{ 'members.form.contract_start_date' | translate }}</label>
         <p-calendar
           id="contractStartDate"
           formControlName="contractStartDate"
           [showIcon]="true"
           [showButtonBar]="true"
-          placeholder="Select start date"
+          placeholder="{{ 'members.form.contract_start_date_placeholder' | translate }}"
           dateFormat="dd/mm/yy">
         </p-calendar>
         <small *ngIf="memberForm.get('contractStartDate')?.errors?.['required'] && memberForm.get('contractStartDate')?.touched" class="text-danger">
-          Contract start date is required
+          {{ 'members.validation.contract_start_date_required' | translate }}
         </small>
       </div>
 
       <div class="form-group">
-        <label for="contractEndDate">Contract End Date (Optional)</label>
+        <label for="contractEndDate">{{ 'members.form.contract_end_date' | translate }}</label>
         <p-calendar
           id="contractEndDate"
           formControlName="contractEndDate"
           [showIcon]="true"
           [showButtonBar]="true"
-          placeholder="Select end date (optional)"
+          placeholder="{{ 'members.form.contract_end_date_placeholder' | translate }}"
           dateFormat="dd/mm/yy">
         </p-calendar>
       </div>
@@ -247,9 +247,9 @@
 
     <!-- Work Schedule Section -->
     <div class="section-header mt-4 d-flex justify-content-between align-items-center">
-      <h3>Work Schedule</h3>
+      <h3>{{ 'members.form.sections.work_schedule' | translate }}</h3>
       <button *ngIf="!isViewMode" type="button" class="btn btn-sm btn-outline-primary" (click)="addWorkDay()">
-        <i class="bi bi-plus-circle me-1"></i> Add Work Day
+        <i class="bi bi-plus-circle me-1"></i> {{ 'members.form.add_work_day' | translate }}
       </button>
     </div>
 
@@ -257,7 +257,7 @@
       <div *ngFor="let workDay of workDaysArray.controls; let i = index" [formGroupName]="i" class="work-day-item">
         <div class="form-row">
           <div class="form-group">
-            <label [for]="'dayOfWeek' + i">Day of Week</label>
+            <label [for]="'dayOfWeek' + i">{{ 'members.form.day_of_week' | translate }}</label>
             <select
               [id]="'dayOfWeek' + i"
               class="form-select"
@@ -265,13 +265,13 @@
               <option *ngFor="let day of dayOfWeekOptions"
                       [value]="day"
                       [disabled]="isDaySelected(day, i)">
-                {{ day }}
+                {{ 'members.days.' + day.toLowerCase() | translate }}
               </option>
             </select>
           </div>
 
           <div class="form-group">
-            <label [for]="'startTime' + i">Start Time</label>
+            <label [for]="'startTime' + i">{{ 'members.form.start_time' | translate }}</label>
             <input
               type="time"
               [id]="'startTime' + i"
@@ -280,7 +280,7 @@
           </div>
 
           <div class="form-group">
-            <label [for]="'endTime' + i">End Time</label>
+            <label [for]="'endTime' + i">{{ 'members.form.end_time' | translate }}</label>
             <input
               type="time"
               [id]="'endTime' + i"
@@ -300,7 +300,7 @@
     <!-- Active Status Toggle -->
     <div class="active-member-section">
       <div class="active-member-header">
-        <h3>Active Member <span>({{ memberForm.get('isActive')?.value ? 'Active' : 'Inactive' }})</span></h3>
+        <h3>{{ 'members.form.active_member' | translate }} <span>({{ memberForm.get('isActive')?.value ? ('members.status.active' | translate) : ('members.status.inactive' | translate) }})</span></h3>
         <div class="toggle-switch">
           <input
             type="checkbox"
@@ -310,19 +310,18 @@
           <label for="activeStatus" class="toggle-label"></label>
         </div>
       </div>
-      <p class="help-text">This member is currently {{ memberForm.get('isActive')?.value ? 'active' : 'inactive' }}
-        and {{ memberForm.get('isActive')?.value ? 'has' : 'does not have' }} full access to their assigned tasks and resources</p>
+      <p class="help-text">{{ 'members.form.active_status_help' | translate: { status: (memberForm.get('isActive')?.value ? ('members.status.active' | translate) : ('members.status.inactive' | translate)), access: (memberForm.get('isActive')?.value ? ('members.form.has_access' | translate) : ('members.form.no_access' | translate)) } }}</p>
     </div>
 
     <div class="modal-footer">
       <button type="button" class="btn btn-cancel" (click)="onClose()">
-        {{ isViewMode ? 'Close' : 'Cancel' }}
+        {{ isViewMode ? ('common.close' | translate) : ('common.cancel' | translate) }}
       </button>
       <button *ngIf="!isViewMode" type="submit" class="btn btn-submit" [disabled]="!memberForm.valid || isSubmitting">
-        <span *ngIf="!isSubmitting">{{ isEditMode ? 'Save Changes' : 'Add Member' }}</span>
+        <span *ngIf="!isSubmitting">{{ isEditMode ? ('members.form.save_changes' | translate) : ('members.form.add_member' | translate) }}</span>
         <span *ngIf="isSubmitting">
           <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-          {{ isEditMode ? 'Saving...' : 'Adding...' }}
+          {{ isEditMode ? ('members.form.saving' | translate) : ('members.form.adding' | translate) }}
         </span>
       </button>
     </div>

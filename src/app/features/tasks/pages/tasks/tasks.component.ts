@@ -17,6 +17,7 @@ import { finalize } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
 import { ProjectsService } from '../../../projects/services/projects.service';
 import { ChipModule } from 'primeng/chip';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 // Use the global toast service from the HttpResponseInterceptor
 
@@ -49,7 +50,8 @@ interface FilterOption {
     SelectButtonModule,
     FormsModule,
     AddTaskSidebarComponent,
-    ChipModule
+    ChipModule,
+    TranslateModule
   ],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss'
@@ -62,17 +64,8 @@ export class TasksComponent implements OnInit {
   projects: any[] = [];
   members: any[] = []; // Will be populated from the backend
 
-  filterOptions: FilterOption[] = [
-    { label: 'All Tasks', value: 'all' },
-    { label: 'To Do', value: 'todo' },
-    { label: 'In Progress', value: 'inprogress' },
-    { label: 'Completed', value: 'completed' }
-  ];
-
-  memberOptions: FilterOption[] = [
-    { label: 'All Members', value: 'all' }
-    // We'll add more from the API
-  ];
+  filterOptions: FilterOption[] = [];
+  memberOptions: FilterOption[] = [];
 
   selectedFilter: string = 'all';
   selectedMember: string = 'all';
@@ -82,11 +75,50 @@ export class TasksComponent implements OnInit {
   constructor(
     private tasksService: TasksService,
     private projectsService: ProjectsService,
+    private translateService: TranslateService
    ) {}
 
   ngOnInit() {
+    this.initializeFilterOptions();
     this.loadTasks();
     this.loadProjects(); // Load projects for the dropdown
+
+    // Subscribe to language changes to update dropdown options
+    this.translateService.onLangChange.subscribe(() => {
+      this.initializeFilterOptions();
+    });
+  }
+
+  /**
+   * Initialize filter options with translations
+   */
+  initializeFilterOptions() {
+    this.filterOptions = [
+      { label: this.translateService.instant('tasks.allTasks'), value: 'all' },
+      { label: this.translateService.instant('tasks.toDo'), value: 'todo' },
+      { label: this.translateService.instant('tasks.inProgress'), value: 'inprogress' },
+      { label: this.translateService.instant('tasks.completed'), value: 'completed' }
+    ];
+
+    this.memberOptions = [
+      { label: this.translateService.instant('tasks.allMembers'), value: 'all' }
+      // Additional members will be added from API
+    ];
+  }
+
+  /**
+   * Get localized status text
+   */
+  getLocalizedStatus(status: string): string {
+    switch (status) {
+      case 'To Do': return this.translateService.instant('tasks.toDo');
+      case 'In Progress': return this.translateService.instant('tasks.inProgress');
+      case 'Done': return this.translateService.instant('tasks.completed');
+      case 'todo': return this.translateService.instant('tasks.toDo');
+      case 'inprogress': return this.translateService.instant('tasks.inProgress');
+      case 'completed': return this.translateService.instant('tasks.completed');
+      default: return status;
+    }
   }
 
   loadProjects() {
@@ -193,18 +225,18 @@ export class TasksComponent implements OnInit {
 
   getFilterLabel(): string {
     if (this.selectedFilter === 'all') {
-      return 'Filter';
+      return this.translateService.instant('tasks.filter');
     }
     const option = this.filterOptions.find(o => o.value === this.selectedFilter);
-    return option ? option.label : 'Filter';
+    return option ? option.label : this.translateService.instant('tasks.filter');
   }
 
   getMemberLabel(): string {
     if (this.selectedMember === 'all') {
-      return 'All Members';
+      return this.translateService.instant('tasks.allMembers');
     }
     const option = this.memberOptions.find(o => o.value === this.selectedMember);
-    return option ? option.label : 'All Members';
+    return option ? option.label : this.translateService.instant('tasks.allMembers');
   }
 
   onFilterChange(event: any): void {
@@ -282,7 +314,9 @@ export class TasksComponent implements OnInit {
   }
 
   deleteTask(task: Task) {
-    if (confirm('Are you sure you want to delete this task?')) {
+    const confirmMessage = this.translateService.instant('confirmations.deleteTask');
+
+    if (confirm(confirmMessage)) {
       this.isLoading = true;
 
       this.tasksService.deleteTask(task.id)

@@ -9,6 +9,7 @@ import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { CountryISO, SearchCountryField, PhoneNumberFormat } from 'ngx-intl-tel-input';
 import { of } from 'rxjs';
 import { CalendarModule } from 'primeng/calendar';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 export interface MemberDialogData extends MemberDetailResponseDto {
   isEditing: boolean;
@@ -23,7 +24,8 @@ export interface MemberDialogData extends MemberDetailResponseDto {
     ReactiveFormsModule,
     MatDialogModule,
     NgxIntlTelInputModule,
-    CalendarModule
+    CalendarModule,
+    TranslateModule
   ],
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.scss'
@@ -53,6 +55,7 @@ export class AddMemberComponent implements OnInit {
     private dialogRef: MatDialogRef<AddMemberComponent>,
     private membersService: MembersService,
     private messageService: MessageService,
+    private translateService: TranslateService,
     @Inject(MAT_DIALOG_DATA) public data: MemberDialogData | null
   ) {
     this.payTypeOptions = this.membersService.getPayTypeOptions();
@@ -234,10 +237,12 @@ export class AddMemberComponent implements OnInit {
     if (this.workDaysArray.length > 1) {
       this.workDaysArray.removeAt(index);
     } else {
-      this.messageService.add({
-        severity: 'info',
-        summary: 'Info',
-        detail: 'At least one work day is required'
+      this.translateService.get('members.form.min_one_work_day').subscribe(message => {
+        this.messageService.add({
+          severity: 'info',
+          summary: this.translateService.instant('common.info'),
+          detail: message
+        });
       });
     }
   }
@@ -337,6 +342,13 @@ export class AddMemberComponent implements OnInit {
         )
         .subscribe({
           next: (response) => {
+            this.translateService.get('members.update_success').subscribe(message => {
+              this.messageService.add({
+                severity: 'success',
+                summary: this.translateService.instant('common.success'),
+                detail: message
+              });
+            });
             this.dialogRef.close(response.result);
           },
           error: (error) => {
@@ -382,6 +394,13 @@ export class AddMemberComponent implements OnInit {
         )
         .subscribe({
           next: (response) => {
+            this.translateService.get('members.create_success').subscribe(message => {
+              this.messageService.add({
+                severity: 'success',
+                summary: this.translateService.instant('common.success'),
+                detail: message
+              });
+            });
             this.dialogRef.close(response.result);
           },
           error: (error) => {
@@ -389,8 +408,6 @@ export class AddMemberComponent implements OnInit {
           }
         });
     }
-
-    // This code is now handled in the blocks above
   }
 
   /**
@@ -410,7 +427,9 @@ export class AddMemberComponent implements OnInit {
     } else if (error.error?.message) {
       this.errorMessage = error.error.message;
     } else {
-      this.errorMessage = 'An error occurred. Please try again.';
+      this.translateService.get('members.form.generic_error').subscribe(message => {
+        this.errorMessage = message;
+      });
     }
   }
 
@@ -419,4 +438,5 @@ export class AddMemberComponent implements OnInit {
    */
   onClose() {
     this.dialogRef.close();
-  }}
+  }
+}
