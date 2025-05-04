@@ -399,5 +399,96 @@
       "salary_date_required": "تاريخ الراتب مطلوب",
       "contract_start_date_required": "تاريخ بدء العقد مطلوب"
     }
+  },
+  "inventory": {
+    "product_image": "صورة المنتج"
+    ,
+
+    "title": "إدارة المخزون",
+    "search_placeholder": "ابحث عن أي شيء",
+    "status": {
+      "in_stock": "متوفر",
+      "out_stock": "غير متوفر",
+      "all": "الكل"
+    },
+    "add_inventory": "إضافة للمخزون",
+    "add_first_inventory": "أضف أول منتج للمخزون",
+    "view_details": "عرض التفاصيل",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "loading": "جاري تحميل منتجات المخزون...",
+    "permission_denied": "ليس لديك صلاحية لعرض منتجات المخزون.",
+    "create_permission_denied": "ليس لديك صلاحية لإضافة منتجات للمخزون",
+    "edit_permission_denied": "ليس لديك صلاحية لتعديل منتجات المخزون",
+    "delete_permission_denied": "ليس لديك صلاحية لحذف منتجات المخزون",
+    "no_products_found": "لم يتم العثور على منتجات في المخزون",
+    "create_to_start": "قم بإنشاء منتج جديد للمخزون للبدء",
+    "confirm_delete": "هل أنت متأكد أنك تريد حذف منتج المخزون \"{0}\"؟",
+    "confirm_delete_header": "تأكيد الحذف",
+    "delete_success": "تم حذف منتج المخزون بنجاح",
+    "delete_error": "فشل في حذف منتج المخزون",
+    "load_error": "فشل في تحميل منتجات المخزون. يرجى المحاولة مرة أخرى.",
+    "details_load_error": "فشل في تحميل تفاصيل منتج المخزون. يرجى المحاولة مرة أخرى.",
+    "table": {
+      "image": "الصورة",
+      "id": "المعرف",
+      "name": "الاسم",
+      "type": "النوع",
+      "stock": "المخزون",
+      "value": "القيمة",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "types": {
+      "machine": "آلة",
+      "product": "منتج"
+    }
+  },
+  "add_inventory": {
+    "title": "إضافة منتج جديد للمخزون",
+    "edit_title": "تعديل منتج المخزون",
+    "view_title": "عرض تفاصيل المخزون",
+    "loading": "جاري تحميل تفاصيل المخزون...",
+    "select_type": "اختر نوع المخزون:",
+    "machine": {
+      "title": "آلة",
+      "description": "تتبع المعدات بسهولة"
+    },
+    "product": {
+      "title": "منتج",
+      "description": "إدارة البضائع بسهولة"
+    },
+    "name": "اسم المنتج",
+    "name_placeholder": "أدخل اسم المنتج",
+    "stock": "متوفر",
+    "stock_placeholder": "أدخل الكمية",
+    "value": "قيمة المنتج (درهم)",
+    "value_placeholder": "أدخل القيمة",
+    "status": "الحالة",
+    "description": "الوصف",
+    "description_placeholder": "أدخل الوصف",
+    "images": "صور المنتج",
+    "upload": {
+      "click": "انقر للتحميل",
+      "drag": "أو اسحب وأفلت",
+      "formats": "png, jpg or pdf"
+    },
+    "no_images": "لا توجد صور متاحة",
+    "actions": {
+      "replace": "استبدال",
+      "remove": "إزالة",
+      "undo": "تراجع",
+      "close": "إغلاق",
+      "cancel": "إلغاء",
+      "add": "إضافة منتج",
+      "update": "تحديث المنتج",
+      "adding": "جاري الإضافة...",
+      "updating": "جاري التحديث..."
+    },
+    "validation": {
+      "name_required": "الاسم مطلوب",
+      "stock_required": "كمية صالحة مطلوبة",
+      "value_required": "قيمة صالحة مطلوبة"
+    }
   }
 }

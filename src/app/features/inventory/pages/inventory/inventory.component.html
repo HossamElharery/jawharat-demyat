@@ -7,7 +7,7 @@
           <input
             type="text"
             class="form-control search-input"
-            placeholder="Search for anything"
+            placeholder="{{ 'inventory.search_placeholder' | translate }}"
             [formControl]="searchControl">
         </div>
         <div class="dropdown">
@@ -16,12 +16,14 @@
             type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false">
-            {{ selectedStatus === 'instock' ? 'In Stock' : (selectedStatus === 'outofstock' ? 'Out Stock' : 'All') }}
+            {{ selectedStatus === 'instock' ? ('inventory.status.in_stock' | translate) :
+               (selectedStatus === 'outofstock' ? ('inventory.status.out_stock' | translate) :
+               ('inventory.status.all' | translate)) }}
           </button>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" (click)="filterByStatus('In Stock')">In Stock</a></li>
-            <li><a class="dropdown-item" (click)="filterByStatus('Out Stock')">Out Stock</a></li>
-            <li><a class="dropdown-item" (click)="filterByStatus('All')">All</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('In Stock')">{{ 'inventory.status.in_stock' | translate }}</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('Out Stock')">{{ 'inventory.status.out_stock' | translate }}</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('All')">{{ 'inventory.status.all' | translate }}</a></li>
           </ul>
         </div>
       </div>
@@ -38,7 +40,7 @@
 
         <button class="btn btn-warning add-inventory-btn" (click)="onAddInventory()" *ngIf="canCreateInventory">
           <i class="bi bi-plus-lg me-2"></i>
-          Add Inventory
+          {{ 'inventory.add_inventory' | translate }}
         </button>
       </div>
     </div>
@@ -47,15 +49,15 @@
   <!-- Loading indicator -->
   <div *ngIf="isLoading" class="loading-container">
     <div class="spinner-border text-warning" role="status">
-      <span class="visually-hidden">Loading...</span>
+      <span class="visually-hidden">{{ 'inventory.loading' | translate }}</span>
     </div>
-    <p class="mt-2">Loading inventory products...</p>
+    <p class="mt-2">{{ 'inventory.loading' | translate }}</p>
   </div>
 
   <!-- Permission denied message -->
   <div *ngIf="!canViewInventory" class="alert alert-warning">
     <i class="bi bi-exclamation-triangle-fill me-2"></i>
-    You do not have permission to view inventory products.
+    {{ 'inventory.permission_denied' | translate }}
   </div>
 
   <!-- List View -->
@@ -63,26 +65,28 @@
     <table class="table align-middle" *ngIf="currentView === 'list' && filteredProducts.length > 0">
       <thead>
         <tr>
-          <th>Image</th>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Stock</th>
-          <th>Value</th>
-          <th>Status</th>
-          <th>Actions</th>
+          <th>{{ 'inventory.table.image' | translate }}</th>
+          <th>{{ 'inventory.table.id' | translate }}</th>
+          <th>{{ 'inventory.table.name' | translate }}</th>
+          <th>{{ 'inventory.table.type' | translate }}</th>
+          <th>{{ 'inventory.table.stock' | translate }}</th>
+          <th>{{ 'inventory.table.value' | translate }}</th>
+          <th>{{ 'inventory.table.status' | translate }}</th>
+          <th>{{ 'inventory.table.actions' | translate }}</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let product of filteredProducts">
           <td>
             <div class="d-flex align-items-center">
-              <img [src]="getProductImageUrl(product) | imageUrl" class="product-avatar" alt="Product image">
+              <img [src]="product.productImages && product.productImages.length > 0 ? product.productImages[0].path : null | imageUrl"
+                   class="product-avatar"
+                   [alt]="'inventory.product_image' | translate">
             </div>
           </td>
           <td>{{ product.id.substring(0, 8) }}...</td>
           <td>{{ product.name }}</td>
-          <td>{{ product.type === 'machine' ? 'Machine' : 'Product' }}</td>
+          <td>{{ product.type === 'machine' ? ('inventory.types.machine' | translate) : ('inventory.types.product' | translate) }}</td>
           <td>{{ product.stock }}</td>
           <td>{{ formatValue(product.value) }}</td>
           <td>
@@ -92,13 +96,13 @@
           </td>
           <td>
             <div class="action-buttons">
-              <button class="btn btn-link" (click)="onView(product)" title="View details">
+              <button class="btn btn-link" (click)="onView(product)" title="{{ 'inventory.view_details' | translate }}">
                 <i class="bi bi-eye text-warning"></i>
               </button>
-              <button class="btn btn-link" (click)="onEdit(product)" *ngIf="canEditInventory" title="Edit product">
+              <button class="btn btn-link" (click)="onEdit(product)" *ngIf="canEditInventory" title="{{ 'inventory.edit' | translate }}">
                 <i class="bi bi-pencil text-warning"></i>
               </button>
-              <button class="btn btn-link" (click)="onDelete(product)" *ngIf="canDeleteInventory" title="Delete product">
+              <button class="btn btn-link" (click)="onDelete(product)" *ngIf="canDeleteInventory" title="{{ 'inventory.delete' | translate }}">
                 <i class="bi bi-trash text-warning"></i>
               </button>
             </div>
@@ -114,7 +118,8 @@
           <div class="inventory-card">
             <!-- Main Image Section -->
             <div class="card-image-container">
-              <img [src]="getProductImageUrl(product) | imageUrl" alt="Product image">
+              <img [src]="product.productImages && product.productImages.length > 0 ? product.productImages[0].path : null | imageUrl"
+                   [alt]="'inventory.product_image' | translate">
               <span class="status-tag" [ngClass]="{'in-stock': product.status === 'instock', 'out-stock': product.status === 'outofstock'}">
                 {{ formatStatus(product.status) }}
               </span>
@@ -124,7 +129,7 @@
             <div class="product-info">
               <div class="d-flex align-items-center gap-2 mb-2">
                 <i class="bi bi-grid-3x3-gap-fill text-warning"></i>
-                <span class="product-type">{{ product.type === 'machine' ? 'Machine' : 'Product' }}</span>
+                <span class="product-type">{{ product.type === 'machine' ? ('inventory.types.machine' | translate) : ('inventory.types.product' | translate) }}</span>
                 <span class="product-value ms-auto">{{ formatValue(product.value) }}</span>
               </div>
               <div class="product-name">{{ product.name }}
@@ -136,16 +141,16 @@
             <div class="card-actions">
               <button class="btn btn-warning w-100 view-btn" (click)="onView(product)">
                 <i class="bi bi-eye-fill me-2"></i>
-                View Details
+                {{ 'inventory.view_details' | translate }}
               </button>
               <div class="d-flex gap-2 mt-2">
                 <button class="btn btn-outline-primary flex-grow-1 edit-btn" (click)="onEdit(product)" *ngIf="canEditInventory">
                   <i class="bi bi-pencil-fill me-2"></i>
-                  Edit
+                  {{ 'inventory.edit' | translate }}
                 </button>
                 <button class="btn btn-outline-danger flex-grow-1 delete-btn" (click)="onDelete(product)" *ngIf="canDeleteInventory">
                   <i class="bi bi-trash3-fill me-2"></i>
-                  Delete
+                  {{ 'inventory.delete' | translate }}
                 </button>
               </div>
             </div>
@@ -157,11 +162,11 @@
       <div class="empty-icon">
         <i class="bi bi-box-seam"></i>
       </div>
-      <h3>No Inventory Products Found</h3>
-      <p>Create a new inventory product to get started</p>
+      <h3>{{ 'inventory.no_products_found' | translate }}</h3>
+      <p>{{ 'inventory.create_to_start' | translate }}</p>
       <button class="btn btn-warning add-inventory-btn" (click)="onAddInventory()" *ngIf="canCreateInventory">
         <i class="bi bi-plus-lg me-2"></i>
-        Add Your First Inventory Product
+        {{ 'inventory.add_first_inventory' | translate }}
       </button>
     </div>
   </div>

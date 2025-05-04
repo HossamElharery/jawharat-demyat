@@ -19,7 +19,9 @@
     color: #6B7280;
     margin: 0;
   }
-}.image-preview {
+}
+
+.image-preview {
   position: relative;
   border-radius: 12px;
   overflow: hidden;
@@ -125,7 +127,7 @@
 }
 
 // RTL support
-:host-context(.rtl) {
+:host-context([dir="rtl"]) {
   .card-content {
     flex-direction: row-reverse;
   }
@@ -133,7 +135,21 @@
   .modal-footer {
     flex-direction: row-reverse;
   }
-}// add-inventory.component.scss
+
+  .action-btn {
+    i {
+      margin-left: 4px;
+      margin-right: 0;
+    }
+  }
+
+  .me-2 {
+    margin-right: 0 !important;
+    margin-left: 0.5rem !important;
+  }
+}
+
+// add-inventory.component.scss
 .modal-container {
   background: white;
   border-radius: 16px;

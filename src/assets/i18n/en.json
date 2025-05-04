@@ -400,5 +400,96 @@
       "salary_date_required": "Salary date is required",
       "contract_start_date_required": "Contract start date is required"
     }
+  },
+  "inventory": {
+    "title": "Inventory Management",
+    "product_image": "Product image",
+
+    "search_placeholder": "Search for anything",
+    "status": {
+      "in_stock": "In Stock",
+      "out_stock": "Out of Stock",
+      "all": "All"
+    },
+    "add_inventory": "Add Inventory",
+    "add_first_inventory": "Add Your First Inventory Product",
+    "view_details": "View Details",
+    "edit": "Edit",
+    "delete": "Delete",
+    "loading": "Loading inventory products...",
+    "permission_denied": "You do not have permission to view inventory products.",
+    "create_permission_denied": "You do not have permission to create inventory products",
+    "edit_permission_denied": "You do not have permission to edit inventory products",
+    "delete_permission_denied": "You do not have permission to delete inventory products",
+    "no_products_found": "No Inventory Products Found",
+    "create_to_start": "Create a new inventory product to get started",
+    "confirm_delete": "Are you sure you want to delete the inventory product \"{0}\"?",
+    "confirm_delete_header": "Confirm Delete",
+    "delete_success": "Inventory product deleted successfully",
+    "delete_error": "Failed to delete inventory product",
+    "load_error": "Failed to load inventory products. Please try again.",
+    "details_load_error": "Failed to load inventory product details. Please try again.",
+    "table": {
+      "image": "Image",
+      "id": "ID",
+      "name": "Name",
+      "type": "Type",
+      "stock": "Stock",
+      "value": "Value",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "types": {
+      "machine": "Machine",
+      "product": "Product"
+    }
+  },
+  "add_inventory": {
+    "title": "Add New Inventory",
+    "edit_title": "Edit Inventory Product",
+    "view_title": "View Inventory Details",
+    "loading": "Loading inventory details...",
+    "select_type": "Select Inventory Type:",
+    "machine": {
+      "title": "Machine",
+      "description": "Equipment Tracking Simplified"
+    },
+    "product": {
+      "title": "Product",
+      "description": "Effortless Goods Management"
+    },
+    "name": "Inventory Name",
+    "name_placeholder": "Enter inventory name",
+    "stock": "In Stock",
+    "stock_placeholder": "Enter quantity",
+    "value": "Inventory Value (AED)",
+    "value_placeholder": "Enter value",
+    "status": "Status",
+    "description": "Description",
+    "description_placeholder": "Enter description",
+    "images": "Inventory Images",
+    "upload": {
+      "click": "Click to upload",
+      "drag": "or Drag and Drop",
+      "formats": "png, jpg or pdf"
+    },
+    "no_images": "No images available",
+    "actions": {
+      "replace": "Replace",
+      "remove": "Remove",
+      "undo": "Undo",
+      "close": "Close",
+      "cancel": "Cancel",
+      "add": "Add Inventory",
+      "update": "Update Inventory",
+      "adding": "Adding...",
+      "updating": "Updating..."
+    },
+    "validation": {
+      "name_required": "Name is required",
+      "stock_required": "Valid stock quantity is required",
+      "value_required": "Valid value is required"
+    }
   }
+
 }

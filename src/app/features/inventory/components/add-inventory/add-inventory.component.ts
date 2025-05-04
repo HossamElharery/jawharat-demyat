@@ -5,6 +5,8 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 import { InventoryService, InventoryProduct, ProductImage } from '../../services/inventory.service';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs/operators';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ImageUrlPipe } from '../../../../shared/pipes/image-url.pipe';
 
 interface InventoryDialogData {
   id?: string;
@@ -27,7 +29,8 @@ interface UploadedImage {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatDialogModule
+    MatDialogModule,
+    TranslateModule,ImageUrlPipe
   ],
   templateUrl: './add-inventory.component.html',
   styleUrls: ['./add-inventory.component.scss']
@@ -45,6 +48,7 @@ export class AddInventoryComponent implements OnInit {
     private dialogRef: MatDialogRef<AddInventoryComponent>,
     private inventoryService: InventoryService,
     private messageService: MessageService,
+    private translateService: TranslateService,
     @Inject(MAT_DIALOG_DATA) public data: InventoryDialogData | null
   ) {}
 
@@ -149,7 +153,7 @@ export class AddInventoryComponent implements OnInit {
 
     if (image.isExisting && image.id) {
       // Mark existing image for deletion
-      image.toDelete = true;
+      image.toDelete = !image.toDelete; // Toggle toDelete for undo functionality
     } else {
       // Remove newly added image
       this.uploadedImages.splice(index, 1);
@@ -236,13 +240,13 @@ export class AddInventoryComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
-            detail: response.message || 'Inventory product created successfully'
+            detail: response.message || this.translateService.instant('inventory.create_success')
           });
           this.dialogRef.close(response.result);
         },
         error: (error) => {
           console.error('Error creating inventory:', error);
-          this.errorMessage = error.error?.message || 'Failed to create inventory product';
+          this.errorMessage = error.error?.message || this.translateService.instant('inventory.create_error');
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -268,7 +272,7 @@ export class AddInventoryComponent implements OnInit {
         error: (error) => {
           console.error('Error updating inventory:', error);
           this.submitting = false;
-          this.errorMessage = error.error?.message || 'Failed to update inventory product';
+          this.errorMessage = error.error?.message || this.translateService.instant('inventory.update_error');
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -292,7 +296,7 @@ export class AddInventoryComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
-            detail: 'Inventory product updated successfully'
+            detail: this.translateService.instant('inventory.update_success')
           });
           // Close the dialog with the updated product
           this.dialogRef.close({...updatedProduct, productImages: this.getUpdatedProductImages()});
@@ -380,7 +384,7 @@ export class AddInventoryComponent implements OnInit {
       this.messageService.add({
         severity: 'success',
         summary: 'Success',
-        detail: 'Inventory product updated successfully'
+        detail: this.translateService.instant('inventory.update_success')
       });
       this.dialogRef.close(updatedProduct);
     }

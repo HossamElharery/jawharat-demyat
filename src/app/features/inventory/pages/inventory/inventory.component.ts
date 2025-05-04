@@ -11,6 +11,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ButtonModule } from 'primeng/button';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { ImageUrlPipe } from '../../../../shared/pipes/image-url.pipe';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-inventory',
@@ -22,18 +23,20 @@ import { ImageUrlPipe } from '../../../../shared/pipes/image-url.pipe';
     MatDialogModule,
     ConfirmDialogModule,
     ButtonModule,
-    PaginationComponent,ImageUrlPipe
+    PaginationComponent,
+    ImageUrlPipe,
+    TranslateModule
   ],
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.scss',
-  providers: [ConfirmationService]
+  providers: [ConfirmationService, ImageUrlPipe]
 })
 export class InventoryComponent implements OnInit {
   searchControl = new FormControl('');
   selectedStatus: string = 'instock';
   inventoryProducts: InventoryProduct[] = [];
   filteredProducts: InventoryProduct[] = [];
-  currentView: 'list' | 'grid' = 'list';
+  currentView: 'list' | 'grid' = 'grid';
   isLoading = false;
   currentPage = 1;
   perPage = 10;
@@ -50,7 +53,9 @@ export class InventoryComponent implements OnInit {
     private dialog: MatDialog,
     private inventoryService: InventoryService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService,
+    private imageUrlPipe: ImageUrlPipe
   ) {}
 
   ngOnInit(): void {
@@ -113,7 +118,7 @@ export class InventoryComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Failed to load inventory products. Please try again.'
+          detail: this.translateService.instant('inventory.load_error')
         });
       }
     });
@@ -137,20 +142,12 @@ export class InventoryComponent implements OnInit {
   }
 
   /**
-   * Get image URL for a product
-   */
-  getProductImageUrl(product: InventoryProduct): string {
-    if (product.productImages && product.productImages.length > 0) {
-      return this.inventoryService.getImageUrl(product.productImages[0].path);
-    }
-    return '../../../../../assets/images/inventory-placeholder.jpg';
-  }
-
-  /**
    * Format status for display
    */
   formatStatus(status: string): string {
-    return status === 'instock' ? 'In Stock' : 'Out of Stock';
+    return status === 'instock' ?
+      this.translateService.instant('inventory.status.in_stock') :
+      this.translateService.instant('inventory.status.out_stock');
   }
 
   /**
@@ -167,8 +164,8 @@ export class InventoryComponent implements OnInit {
     if (!this.canCreateInventory) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to create inventory products'
+        summary: 'Error',
+        detail: this.translateService.instant('inventory.create_permission_denied')
       });
       return;
     }
@@ -186,7 +183,7 @@ export class InventoryComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
-          detail: 'Inventory product created successfully'
+          detail: this.translateService.instant('inventory.create_success')
         });
       }
     });
@@ -199,8 +196,8 @@ export class InventoryComponent implements OnInit {
     if (!this.canEditInventory) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to edit inventory products'
+        summary: 'Error',
+        detail: this.translateService.instant('inventory.edit_permission_denied')
       });
       return;
     }
@@ -232,7 +229,7 @@ export class InventoryComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'Failed to load inventory product details. Please try again.'
+            detail: this.translateService.instant('inventory.details_load_error')
           });
         }
       });
@@ -263,7 +260,7 @@ export class InventoryComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'Failed to load inventory product details. Please try again.'
+            detail: this.translateService.instant('inventory.details_load_error')
           });
         }
       });
@@ -276,15 +273,15 @@ export class InventoryComponent implements OnInit {
     if (!this.canDeleteInventory) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to delete inventory products'
+        summary: 'Error',
+        detail: this.translateService.instant('inventory.delete_permission_denied')
       });
       return;
     }
 
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete the inventory product "${product.name}"?`,
-      header: 'Confirm Delete',
+      message: this.translateService.instant('inventory.confirm_delete', { 0: product.name }),
+      header: this.translateService.instant('inventory.confirm_delete_header'),
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.inventoryService.deleteInventoryProduct(product.id).subscribe({
@@ -292,7 +289,7 @@ export class InventoryComponent implements OnInit {
             this.messageService.add({
               severity: 'success',
               summary: 'Success',
-              detail: response.message || 'Inventory product deleted successfully'
+              detail: response.message || this.translateService.instant('inventory.delete_success')
             });
             this.loadInventoryProducts();
           },
@@ -301,7 +298,7 @@ export class InventoryComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
-              detail: error.error?.message || 'Failed to delete inventory product'
+              detail: error.error?.message || this.translateService.instant('inventory.delete_error')
             });
           }
         });

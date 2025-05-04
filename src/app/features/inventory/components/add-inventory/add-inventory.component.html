@@ -1,7 +1,6 @@
-<!-- add-inventory.component.html -->
 <div class="modal-container">
   <div class="modal-header">
-    <h1>{{ isEditMode ? 'Edit Inventory Product' : (inventoryForm.disabled ? 'View Inventory Details' : 'Add New Inventory') }}</h1>
+    <h1>{{ isEditMode ? ('add_inventory.edit_title' | translate) : (inventoryForm.disabled ? ('add_inventory.view_title' | translate) : ('add_inventory.title' | translate)) }}</h1>
     <button type="button" class="close-btn" (click)="onClose()" [disabled]="submitting">
       <i class="bi bi-x"></i>
     </button>
@@ -15,22 +14,22 @@
   <!-- Loading indicator -->
   <div *ngIf="isLoading" class="text-center my-4">
     <div class="spinner-border text-warning" role="status">
-      <span class="visually-hidden">Loading...</span>
+      <span class="visually-hidden">{{ 'add_inventory.loading' | translate }}</span>
     </div>
-    <p>Loading inventory details...</p>
+    <p>{{ 'add_inventory.loading' | translate }}</p>
   </div>
 
   <div class="modal-body" *ngIf="!isLoading">
     <form [formGroup]="inventoryForm">
       <!-- Inventory Type Selection -->
       <div class="form-section">
-        <label>Select Inventory Type:</label>
+        <label>{{ 'add_inventory.select_type' | translate }}</label>
         <div class="inventory-type-grid">
           <div class="inventory-card" [class.selected]="inventoryForm.get('type')?.value === 'machine'" (click)="selectInventoryType('machine')">
             <div class="card-content">
               <div class="text-content">
-                <h3>Machine</h3>
-                <p>Equipment Tracking Simplified</p>
+                <h3>{{ 'add_inventory.machine.title' | translate }}</h3>
+                <p>{{ 'add_inventory.machine.description' | translate }}</p>
               </div>
               <div class="radio-select">
                 <div class="radio-circle" [class.selected]="inventoryForm.get('type')?.value === 'machine'"></div>
@@ -41,8 +40,8 @@
           <div class="inventory-card" [class.selected]="inventoryForm.get('type')?.value === 'product'" (click)="selectInventoryType('product')">
             <div class="card-content">
               <div class="text-content">
-                <h3>Product</h3>
-                <p>Effortless Goods Management</p>
+                <h3>{{ 'add_inventory.product.title' | translate }}</h3>
+                <p>{{ 'add_inventory.product.description' | translate }}</p>
               </div>
               <div class="radio-select">
                 <div class="radio-circle" [class.selected]="inventoryForm.get('type')?.value === 'product'"></div>
@@ -54,57 +53,57 @@
 
       <!-- Inventory Name -->
       <div class="form-section">
-        <label>Inventory Name</label>
-        <input type="text" formControlName="name" class="form-input" placeholder="Enter inventory name">
+        <label>{{ 'add_inventory.name' | translate }}</label>
+        <input type="text" formControlName="name" class="form-input" placeholder="{{ 'add_inventory.name_placeholder' | translate }}">
         <div *ngIf="inventoryForm.get('name')?.invalid && inventoryForm.get('name')?.touched" class="error-message">
-          Name is required
+          {{ 'add_inventory.validation.name_required' | translate }}
         </div>
       </div>
 
       <!-- Stock and Value -->
       <div class="form-row">
         <div class="form-section">
-          <label>In Stock</label>
-          <input type="number" formControlName="stock" class="form-input" placeholder="Enter quantity">
+          <label>{{ 'add_inventory.stock' | translate }}</label>
+          <input type="number" formControlName="stock" class="form-input" placeholder="{{ 'add_inventory.stock_placeholder' | translate }}">
           <div *ngIf="inventoryForm.get('stock')?.invalid && inventoryForm.get('stock')?.touched" class="error-message">
-            Valid stock quantity is required
+            {{ 'add_inventory.validation.stock_required' | translate }}
           </div>
         </div>
         <div class="form-section">
-          <label>Inventory Value (AED)</label>
-          <input type="number" formControlName="value" class="form-input" placeholder="Enter value">
+          <label>{{ 'add_inventory.value' | translate }}</label>
+          <input type="number" formControlName="value" class="form-input" placeholder="{{ 'add_inventory.value_placeholder' | translate }}">
           <div *ngIf="inventoryForm.get('value')?.invalid && inventoryForm.get('value')?.touched" class="error-message">
-            Valid value is required
+            {{ 'add_inventory.validation.value_required' | translate }}
           </div>
         </div>
       </div>
 
       <!-- Status Selection -->
       <div class="form-section">
-        <label>Status</label>
+        <label>{{ 'add_inventory.status' | translate }}</label>
         <select formControlName="status" class="form-input">
-          <option value="instock">In Stock</option>
-          <option value="outofstock">Out of Stock</option>
+          <option value="instock">{{ 'inventory.status.in_stock' | translate }}</option>
+          <option value="outofstock">{{ 'inventory.status.out_stock' | translate }}</option>
         </select>
       </div>
 
       <!-- Description -->
       <div class="form-section">
-        <label>Description</label>
-        <textarea formControlName="description" class="form-input" rows="6" placeholder="Enter description"></textarea>
+        <label>{{ 'add_inventory.description' | translate }}</label>
+        <textarea formControlName="description" class="form-input" rows="6" placeholder="{{ 'add_inventory.description_placeholder' | translate }}"></textarea>
       </div>
 
       <!-- Image Upload -->
       <div class="form-section">
-        <label>Inventory Images</label>
+        <label>{{ 'add_inventory.images' | translate }}</label>
         <div class="image-grid">
           <!-- Upload Box -->
           <div class="upload-box" (dragover)="onDragOver($event)" (drop)="onDrop($event)" *ngIf="!inventoryForm.disabled">
             <div class="upload-content">
               <i class="bi bi-image-fill"></i>
-              <span class="upload-text">Click to upload</span>
-              <span>or Drag and Drop</span>
-              <span class="file-types">png, jpg or pdf</span>
+              <span class="upload-text">{{ 'add_inventory.upload.click' | translate }}</span>
+              <span>{{ 'add_inventory.upload.drag' | translate }}</span>
+              <span class="file-types">{{ 'add_inventory.upload.formats' | translate }}</span>
             </div>
             <input type="file" class="file-input" (change)="onFileSelect($event)" multiple accept="image/*,.pdf">
           </div>
@@ -115,11 +114,11 @@
             <div class="image-actions" *ngIf="!inventoryForm.disabled">
               <button class="action-btn replace" (click)="replaceImage(i, $event)" *ngIf="!image.toDelete">
                 <i class="bi bi-arrow-up-square"></i>
-                Replace
+                {{ 'add_inventory.actions.replace' | translate }}
               </button>
               <button class="action-btn remove" (click)="removeImage(i)">
                 <i class="bi bi-trash"></i>
-                {{ image.toDelete ? 'Undo' : 'Remove' }}
+                {{ image.toDelete ? ('add_inventory.actions.undo' | translate) : ('add_inventory.actions.remove' | translate) }}
               </button>
             </div>
           </div>
@@ -127,7 +126,7 @@
           <!-- No images message -->
           <div class="no-images-message" *ngIf="uploadedImages.length === 0">
             <i class="bi bi-image"></i>
-            <p>No images available</p>
+            <p>{{ 'add_inventory.no_images' | translate }}</p>
           </div>
         </div>
       </div>
@@ -136,13 +135,13 @@
 
   <div class="modal-footer">
     <button type="button" class="btn-cancel" (click)="onClose()" [disabled]="submitting">
-      {{ inventoryForm.disabled ? 'Close' : 'Cancel' }}
+      {{ inventoryForm.disabled ? ('add_inventory.actions.close' | translate) : ('add_inventory.actions.cancel' | translate) }}
     </button>
     <button *ngIf="!inventoryForm.disabled" type="button" class="btn-submit" (click)="onSubmit()" [disabled]="inventoryForm.invalid || submitting">
-      <span *ngIf="!submitting">{{ isEditMode ? 'Update Inventory' : 'Add Inventory' }}</span>
+      <span *ngIf="!submitting">{{ isEditMode ? ('add_inventory.actions.update' | translate) : ('add_inventory.actions.add' | translate) }}</span>
       <span *ngIf="submitting">
         <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-        {{ isEditMode ? 'Updating...' : 'Adding...' }}
+        {{ isEditMode ? ('add_inventory.actions.updating' | translate) : ('add_inventory.actions.adding' | translate) }}
       </span>
     </button>
   </div>
