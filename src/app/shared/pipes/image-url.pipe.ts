@@ -13,14 +13,14 @@ export class ImageUrlPipe implements PipeTransform {
     }
 
     // Check if the path already includes the base URL
-    // if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-    //   return imagePath;
-    // }
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
 
-    // Check if the path starts with a slash
-    const path = ``;
+    // Ensure path starts with a slash if it doesn't already
+    const normalizedPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
 
     // Combine the base URL and the image path
-    return `${environment.apiBaseUrl}${path}`;
+    return `${environment.apiBaseUrl}${normalizedPath}`;
   }
 }

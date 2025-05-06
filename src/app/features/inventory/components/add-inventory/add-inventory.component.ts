@@ -30,10 +30,11 @@ interface UploadedImage {
     FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
-    TranslateModule,ImageUrlPipe
+    TranslateModule,
   ],
   templateUrl: './add-inventory.component.html',
-  styleUrls: ['./add-inventory.component.scss']
+  styleUrls: ['./add-inventory.component.scss'],
+  providers: [ImageUrlPipe]
 })
 export class AddInventoryComponent implements OnInit {
   inventoryForm!: FormGroup;
@@ -49,6 +50,7 @@ export class AddInventoryComponent implements OnInit {
     private inventoryService: InventoryService,
     private messageService: MessageService,
     private translateService: TranslateService,
+    private imageUrlPipe: ImageUrlPipe,
     @Inject(MAT_DIALOG_DATA) public data: InventoryDialogData | null
   ) {}
 
@@ -97,7 +99,7 @@ export class AddInventoryComponent implements OnInit {
     // Load product images
     if (product.productImages && product.productImages.length > 0) {
       this.uploadedImages = product.productImages.map(img => ({
-        url: this.inventoryService.getImageUrl(img.path),
+        url: this.imageUrlPipe.transform(img.path), // Use the pipe instead of service method
         id: img.id,
         isExisting: true
       }));

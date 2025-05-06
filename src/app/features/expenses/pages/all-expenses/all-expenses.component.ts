@@ -15,6 +15,8 @@ import { ExpensesService, Expense } from '../../services/expenses.service';
 import { AddExpensesComponent } from '../../components/add-expenses/add-expenses.component';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { debounceTime, distinctUntilChanged, finalize, Subject } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ImageUrlPipe } from '../../../../shared/pipes/image-url.pipe';
 
 interface ExpenseStatus {
   label: string;
@@ -45,11 +47,12 @@ interface ExpenseSummary {
     ConfirmDialogModule,
     TooltipModule,
     IconComponent,
-    PaginationComponent
+    PaginationComponent,
+    TranslateModule
   ],
+  providers: [ConfirmationService, ImageUrlPipe],
   templateUrl: './all-expenses.component.html',
-  styleUrl: './all-expenses.component.scss',
-  providers: [ConfirmationService]
+  styleUrl: './all-expenses.component.scss'
 })
 export class AllExpensesComponent implements OnInit {
   expenses: Expense[] = [];
@@ -77,24 +80,46 @@ export class AllExpensesComponent implements OnInit {
     private dialog: MatDialog,
     private expensesService: ExpensesService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService,
+    private imageUrlPipe: ImageUrlPipe
   ) {}
 
   ngOnInit() {
     // Define status options
     this.statusOptions = [
-      { label: 'All', value: 'all', color: '#333333', background: '#FFFFFF' },
-      { label: 'Accepted', value: 'accepted', color: '#4CAF50', background: '#E8F5E9' },
-      { label: 'Pending', value: 'pending', color: '#FFA000', background: '#FFF8E1' },
-      { label: 'Rejected', value: 'rejected', color: '#F44336', background: '#FFEBEE' }
+      {
+        label: this.translateService.instant('expenses.status.all'),
+        value: 'all',
+        color: '#333333',
+        background: '#FFFFFF'
+      },
+      {
+        label: this.translateService.instant('expenses.status.accepted'),
+        value: 'accepted',
+        color: '#4CAF50',
+        background: '#E8F5E9'
+      },
+      {
+        label: this.translateService.instant('expenses.status.pending'),
+        value: 'pending',
+        color: '#FFA000',
+        background: '#FFF8E1'
+      },
+      {
+        label: this.translateService.instant('expenses.status.rejected'),
+        value: 'rejected',
+        color: '#F44336',
+        background: '#FFEBEE'
+      }
     ];
 
     // Initialize summaries with zero counts
     this.summaries = [
-      { icon: 'ex-1', iconColor: '#3A7971', count: 0, label: 'Total Expenses' },
-      { icon: 'ex-2', iconColor: '#4CAF50', count: 0, label: 'Accepted' },
-      { icon: 'ex-3', iconColor: '#FFA000', count: 0, label: 'Pending' },
-      { icon: 'ex-4', iconColor: '#F44336', count: 0, label: 'Rejected' }
+      { icon: 'ex-1', iconColor: '#3A7971', count: 0, label: 'total' },
+      { icon: 'ex-2', iconColor: '#4CAF50', count: 0, label: 'accepted' },
+      { icon: 'ex-3', iconColor: '#FFA000', count: 0, label: 'pending' },
+      { icon: 'ex-4', iconColor: '#F44336', count: 0, label: 'rejected' }
     ];
 
     // Set up search with debounce
@@ -110,13 +135,50 @@ export class AllExpensesComponent implements OnInit {
     // Load expenses and summary data
     this.loadExpenses();
     this.loadExpenseSummary();
+
+    // Subscribe to language changes to update dropdown options
+    this.translateService.onLangChange.subscribe(() => {
+      this.updateStatusOptions();
+    });
+  }
+
+  /**
+   * Update status options when language changes
+   */
+  updateStatusOptions() {
+    this.statusOptions = [
+      {
+        label: this.translateService.instant('expenses.status.all'),
+        value: 'all',
+        color: '#333333',
+        background: '#FFFFFF'
+      },
+      {
+        label: this.translateService.instant('expenses.status.accepted'),
+        value: 'accepted',
+        color: '#4CAF50',
+        background: '#E8F5E9'
+      },
+      {
+        label: this.translateService.instant('expenses.status.pending'),
+        value: 'pending',
+        color: '#FFA000',
+        background: '#FFF8E1'
+      },
+      {
+        label: this.translateService.instant('expenses.status.rejected'),
+        value: 'rejected',
+        color: '#F44336',
+        background: '#FFEBEE'
+      }
+    ];
   }
 
   /**
    * Load expenses from API
    */
   loadExpenses() {
-    // this.isLoading = true;
+    this.isLoading = true;
 
     this.expensesService.getExpenses(
       this.currentPage,
@@ -132,36 +194,53 @@ export class AllExpensesComponent implements OnInit {
         this.totalExpenses = response.result.totalExpenses;
         this.totalPages = response.result.totalPages;
         this.currentPage = response.result.currentPage;
+
+        // Update counts for summary cards
+        this.updateSummaryCounts();
       },
       error: (error) => {
         console.error('Error loading expenses:', error);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Failed to load expenses. Please try again.'
+          detail: this.translateService.instant('expenses.error.load')
         });
       }
     });
   }
 
   /**
-   * Load expense summary data
+   * Load expense summary data and update summary counts
    */
   loadExpenseSummary() {
-    // Note: This is a placeholder. The actual API endpoint for summary would need to be implemented
-    // For now, we'll just count based on the loaded expenses after they're loaded
+    // This method is a placeholder for a real API call
     // In a real implementation, there would be a dedicated endpoint for summary data
+    // this.expensesService.getExpenseSummary().subscribe({
+    //   next: (response) => {
+    //     const summary = response.result;
+    //     this.summaries[0].count = summary.total;
+    //     this.summaries[1].count = summary.accepted;
+    //     this.summaries[2].count = summary.pending;
+    //     this.summaries[3].count = summary.rejected;
+    //   },
+    //   error: () => {
+    //     // If the API call fails, we'll compute counts from available data
+    //     this.updateSummaryCounts();
+    //   }
+    // });
+  }
 
-    // This method would use the endpoint like this:
-    // this.expensesService.getExpenseSummary().subscribe({ ... });
-
-    // For now, we'll update counts when expenses are loaded, in a production app,
-    // you'd want to get this from the API directly
+  /**
+   * Update summary counts from loaded expenses
+   */
+  private updateSummaryCounts() {
+    // Fallback method to count statuses from loaded data
+    // In a real implementation, this would come from the API
     setTimeout(() => {
       const accepted = this.expenses.filter(e => e.status === 'accepted').length;
       const pending = this.expenses.filter(e => e.status === 'pending').length;
       const rejected = this.expenses.filter(e => e.status === 'rejected').length;
-      const total = this.expenses.length;
+      const total = this.totalExpenses || this.expenses.length;
 
       this.summaries[0].count = total;
       this.summaries[1].count = accepted;
@@ -193,8 +272,8 @@ export class AllExpensesComponent implements OnInit {
     if (!this.canCreateExpenses) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to create expenses'
+        summary: this.translateService.instant('expenses.permission_denied'),
+        detail: this.translateService.instant('expenses.create_permission_denied')
       });
       return;
     }
@@ -212,7 +291,7 @@ export class AllExpensesComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
-          detail: 'Expense created successfully'
+          detail: this.translateService.instant('expenses.success.created')
         });
       }
     });
@@ -243,7 +322,7 @@ export class AllExpensesComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'Failed to load expense details'
+            detail: this.translateService.instant('expenses.error.load_details')
           });
         }
       });
@@ -256,18 +335,18 @@ export class AllExpensesComponent implements OnInit {
     if (!this.canUpdateExpenses) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to update expenses'
+        summary: this.translateService.instant('expenses.permission_denied'),
+        detail: this.translateService.instant('expenses.update_permission_denied')
       });
       return;
     }
 
-    const statusText = status === 'accepted' ? 'approve' : 'reject';
-    const statusPastText = status === 'accepted' ? 'approved' : 'rejected';
+    const confirmKey = status === 'accepted' ? 'approve' : 'reject';
+    const headerKey = status === 'accepted' ? 'approve_header' : 'reject_header';
 
     this.confirmationService.confirm({
-      message: `Are you sure you want to ${statusText} this expense?`,
-      header: `Confirm ${statusText.charAt(0).toUpperCase() + statusText.slice(1)}`,
+      message: this.translateService.instant(`expenses.confirm.${confirmKey}`),
+      header: this.translateService.instant(`expenses.confirm.${headerKey}`),
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.isLoading = true;
@@ -280,15 +359,15 @@ export class AllExpensesComponent implements OnInit {
               this.messageService.add({
                 severity: 'success',
                 summary: 'Success',
-                detail: `Expense ${statusPastText} successfully`
+                detail: this.translateService.instant(`expenses.success.${status}`)
               });
             },
             error: (error) => {
-              console.error(`Error ${statusText}ing expense:`, error);
+              console.error(`Error ${status}ing expense:`, error);
               this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
-                detail: `Failed to ${statusText} expense. Please try again.`
+                detail: this.translateService.instant(`expenses.error.${status === 'accepted' ? 'approve' : 'reject'}`)
               });
             }
           });
@@ -303,15 +382,15 @@ export class AllExpensesComponent implements OnInit {
     if (!this.canDeleteExpenses) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Permission Denied',
-        detail: 'You do not have permission to delete expenses'
+        summary: this.translateService.instant('expenses.permission_denied'),
+        detail: this.translateService.instant('expenses.delete_permission_denied')
       });
       return;
     }
 
     this.confirmationService.confirm({
-      message: 'Are you sure you want to delete this expense?',
-      header: 'Confirm Delete',
+      message: this.translateService.instant('expenses.confirm.delete'),
+      header: this.translateService.instant('expenses.confirm.delete_header'),
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.isLoading = true;
@@ -324,7 +403,7 @@ export class AllExpensesComponent implements OnInit {
               this.messageService.add({
                 severity: 'success',
                 summary: 'Success',
-                detail: 'Expense deleted successfully'
+                detail: this.translateService.instant('expenses.success.deleted')
               });
             },
             error: (error) => {
@@ -332,7 +411,7 @@ export class AllExpensesComponent implements OnInit {
               this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
-                detail: 'Failed to delete expense. Please try again.'
+                detail: this.translateService.instant('expenses.error.delete')
               });
             }
           });
@@ -379,11 +458,11 @@ export class AllExpensesComponent implements OnInit {
   }
 
   /**
-   * Get employee avatar URL
+   * Get employee avatar URL using ImageUrlPipe
    */
   getEmployeeAvatar(expense: Expense): string {
     if (expense.employee?.imageUrl) {
-      return this.expensesService.getFileUrl(expense.employee.imageUrl);
+      return this.imageUrlPipe.transform(expense.employee.imageUrl) || '';
     }
     return 'assets/images/avatars/avatar-1.png';
   }
@@ -392,6 +471,6 @@ export class AllExpensesComponent implements OnInit {
    * Get employee name
    */
   getEmployeeName(expense: Expense): string {
-    return expense.employee?.name || 'Unknown Employee';
+    return expense.employee?.name || this.translateService.instant('common.unknown_employee');
   }
 }

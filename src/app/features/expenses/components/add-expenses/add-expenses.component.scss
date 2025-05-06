@@ -35,7 +35,7 @@
     color: white;
 
     &:hover:not(:disabled) {
-      background:  $primary-color
+      background: $primary-color
     }
   }
 }
@@ -62,16 +62,7 @@
   margin-right: 8px;
 }
 
-// RTL support
-:host-context(.rtl) {
-  .modal-footer {
-    flex-direction: row-reverse;
-  }
-
-  .file-preview {
-    flex-direction: row-reverse;
-  }
-}.file-upload-container {
+.file-upload-container {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -211,9 +202,6 @@
   }
 }
 
-
-
-
 .modal-container {
   background: white;
   border-radius: 16px;
@@ -337,6 +325,65 @@
 
     .status-label {
       font-weight: 500;
+    }
+  }
+}
+
+// RTL support
+:host-context([dir="rtl"]) {
+  .modal-footer {
+    flex-direction: row-reverse;
+  }
+
+  .modal-header {
+    flex-direction: row-reverse;
+  }
+
+  .file-preview {
+    flex-direction: row-reverse;
+
+    .file-details {
+      text-align: right;
+    }
+  }
+
+  .download-link i {
+    margin-right: 0;
+    margin-left: 4px;
+  }
+
+  .mr-2 {
+    margin-right: 0;
+    margin-left: 8px;
+  }
+
+  .file-item {
+    flex-direction: row-reverse;
+  }
+
+  .status-info {
+    flex-direction: row-reverse;
+  }
+
+  .form-group {
+    text-align: right;
+
+    label {
+      text-align: right;
+    }
+
+    .error-message {
+      text-align: right;
+    }
+  }
+
+  .section-title {
+    text-align: right;
+  }
+
+  .upload-content {
+    i {
+      transform: scaleX(-1);
     }
   }
 }

@@ -2,9 +2,9 @@
   <!-- Loading indicator -->
   <div *ngIf="isLoading" class="loading-container">
     <div class="spinner-border text-warning" role="status">
-      <span class="visually-hidden">Loading...</span>
+      <span class="visually-hidden">{{ 'expenses.loading' | translate }}</span>
     </div>
-    <p class="mt-2">Loading expense data...</p>
+    <p class="mt-2">{{ 'expenses.loading_data' | translate }}</p>
   </div>
 
   <div *ngIf="!isLoading">
@@ -16,7 +16,7 @@
         </div>
         <div class="card-content">
           <div class="card-count">{{summary.count}}</div>
-          <div class="card-label">{{summary.label}}</div>
+          <div class="card-label">{{ 'expenses.summary.' + summary.label | translate }}</div>
         </div>
       </div>
     </div>
@@ -25,7 +25,8 @@
     <div class="filter-controls">
       <div class="search-container">
         <i class="pi pi-search search-icon"></i>
-        <input type="text" pInputText placeholder="Search For anything" class="search-input" (input)="searchExpenses($event)">
+        <input type="text" pInputText placeholder="{{ 'expenses.search_placeholder' | translate }}"
+               class="search-input" (input)="searchExpenses($event)">
       </div>
 
       <div class="filter-actions">
@@ -38,69 +39,74 @@
           styleClass="status-dropdown">
           <ng-template pTemplate="selectedItem">
             <div class="status-option">
-              <span>{{selectedStatus === 'all' ? 'All' : (selectedStatus | titlecase)}}</span>
+              <span>{{ selectedStatus === 'all' ? ('expenses.status.all' | translate) :
+                        ('expenses.status.' + selectedStatus | translate) }}</span>
               <i class="pi pi-chevron-down"></i>
             </div>
           </ng-template>
           <ng-template let-option pTemplate="item">
             <div class="status-option">
-              <span>{{option.label}}</span>
+              <span>{{ option.label }}</span>
             </div>
           </ng-template>
         </p-dropdown>
 
-        <button pButton type="button" label="Add Expense" icon="pi pi-plus" class="add-expense-btn"
-          (click)="addExpense()" *ngIf="canCreateExpenses"></button>
+        <button pButton type="button" label="{{ 'expenses.add_expense' | translate }}"
+                icon="pi pi-plus" class="add-expense-btn"
+                (click)="addExpense()" *ngIf="canCreateExpenses"></button>
       </div>
     </div>
 
     <!-- Expenses Table -->
     <div class="expenses-table" *ngIf="filteredExpenses.length > 0">
       <div class="table-header">
-        <div class="header-cell employee">Employee</div>
-        <div class="header-cell title">Title</div>
-        <div class="header-cell due-date">Date</div>
-        <div class="header-cell value">Value</div>
-        <div class="header-cell status">Status</div>
-        <div class="header-cell actions">Actions</div>
+        <!-- <div class="header-cell employee">{{ 'expenses.employee' | translate }}</div> -->
+        <div class="header-cell title">{{ 'expenses.expense_title' | translate }}</div>
+        <div class="header-cell due-date">{{ 'expenses.date' | translate }}</div>
+        <div class="header-cell value">{{ 'expenses.value' | translate }}</div>
+        <div class="header-cell status">{{ 'expenses.status_label' | translate }}</div>
+        <div class="header-cell actions">{{ 'expenses.actions' | translate }}</div>
       </div>
 
       <div class="table-body">
         <div class="table-row" *ngFor="let expense of filteredExpenses">
-          <div class="body-cell employee">
+          <!-- <div class="body-cell employee">
             <div class="employee-info">
               <img [src]="getEmployeeAvatar(expense)" alt="Employee Avatar" class="employee-avatar">
               <span class="employee-name">{{getEmployeeName(expense)}}</span>
             </div>
-          </div>
+          </div> -->
           <div class="body-cell title">{{expense.title}}</div>
           <div class="body-cell due-date">{{formatDate(expense.date)}}</div>
           <div class="body-cell value">{{formatValue(expense.value)}}</div>
           <div class="body-cell status">
             <span class="status-badge" [ngClass]="getStatusClass(expense.status)">
-              {{expense.status | titlecase}}
+              {{ 'expenses.status.' + expense.status | translate }}
             </span>
           </div>
           <div class="body-cell actions">
             <button pButton pRipple class="p-button-text view-btn" (click)="viewExpense(expense)"
-              pTooltip="View Details" tooltipPosition="top">
+              pTooltip="{{ 'common.view' | translate }}" tooltipPosition="top">
               <i class="pi pi-eye"></i>
             </button>
 
             <ng-container *ngIf="expense.status === 'pending' && canUpdateExpenses">
-              <button pButton pRipple class="p-button-text accept-btn" (click)="updateExpenseStatus(expense, 'accepted')"
-                pTooltip="Approve" tooltipPosition="top">
+              <button pButton pRipple class="p-button-text accept-btn"
+                     (click)="updateExpenseStatus(expense, 'accepted')"
+                     pTooltip="{{ 'common.approve' | translate }}" tooltipPosition="top">
                 <i class="pi pi-check"></i>
               </button>
 
-              <button pButton pRipple class="p-button-text reject-btn" (click)="updateExpenseStatus(expense, 'rejected')"
-                pTooltip="Reject" tooltipPosition="top">
+              <button pButton pRipple class="p-button-text reject-btn"
+                     (click)="updateExpenseStatus(expense, 'rejected')"
+                     pTooltip="{{ 'common.reject' | translate }}" tooltipPosition="top">
                 <i class="pi pi-times"></i>
               </button>
             </ng-container>
 
             <button pButton pRipple class="p-button-text delete-btn" *ngIf="canDeleteExpenses"
-              (click)="deleteExpense(expense)" pTooltip="Delete" tooltipPosition="top">
+              (click)="deleteExpense(expense)" pTooltip="{{ 'common.delete' | translate }}"
+              tooltipPosition="top">
               <i class="pi pi-trash"></i>
             </button>
           </div>
@@ -113,10 +119,11 @@
       <div class="empty-icon">
         <i class="pi pi-file"></i>
       </div>
-      <h3>No Expenses Found</h3>
-      <p>Create a new expense request or try a different filter</p>
-      <button pButton type="button" label="Add Your First Expense" icon="pi pi-plus" class="add-expense-btn"
-        (click)="addExpense()" *ngIf="canCreateExpenses"></button>
+      <h3>{{ 'expenses.no_expenses_found' | translate }}</h3>
+      <p>{{ 'expenses.create_new_expense' | translate }}</p>
+      <button pButton type="button" label="{{ 'expenses.add_first_expense' | translate }}"
+              icon="pi pi-plus" class="add-expense-btn"
+              (click)="addExpense()" *ngIf="canCreateExpenses"></button>
     </div>
 
     <!-- Pagination -->

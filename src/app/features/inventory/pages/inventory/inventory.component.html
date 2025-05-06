@@ -79,7 +79,7 @@
         <tr *ngFor="let product of filteredProducts">
           <td>
             <div class="d-flex align-items-center">
-              <img [src]="product.productImages && product.productImages.length > 0 ? product.productImages[0].path : null | imageUrl"
+              <img [src]="product.productImages && product.productImages.length > 0 ? (product.productImages[0].path | imageUrl) : '../../../assets/images/Avatar.png'"
                    class="product-avatar"
                    [alt]="'inventory.product_image' | translate">
             </div>
@@ -118,7 +118,7 @@
           <div class="inventory-card">
             <!-- Main Image Section -->
             <div class="card-image-container">
-              <img [src]="product.productImages && product.productImages.length > 0 ? product.productImages[0].path : null | imageUrl"
+              <img [src]="product.productImages && product.productImages.length > 0 ? (product.productImages[0].path | imageUrl) : '../../../assets/images/Avatar.png'"
                    [alt]="'inventory.product_image' | translate">
               <span class="status-tag" [ngClass]="{'in-stock': product.status === 'instock', 'out-stock': product.status === 'outofstock'}">
                 {{ formatStatus(product.status) }}

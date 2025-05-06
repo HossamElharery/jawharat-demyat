@@ -9,6 +9,7 @@
     "close": "إغلاق",
     "edit": "تعديل",
     "delete": "حذف",
+    "download":"تنزيل",
     "submit": "إرسال",
     "back": "رجوع",
     "next": "التالي",
@@ -17,7 +18,9 @@
     "optional": "اختياري",
     "yes": "نعم",
     "no": "لا",
-    "info": "معلومات"
+    "info": "معلومات",
+    "view":"عرض التفاصيل",
+    "unknown_employee": "الموظف غير معرف"
   },
   "navigation": {
     "dashboard": "لوحة التحكم",
@@ -490,5 +493,92 @@
       "stock_required": "كمية صالحة مطلوبة",
       "value_required": "قيمة صالحة مطلوبة"
     }
+  },
+  "expenses": {
+  "title": "إدارة المصروفات",
+  "loading": "جاري التحميل...",
+  "loading_data": "جاري تحميل بيانات المصروفات...",
+  "loading_details": "جاري تحميل تفاصيل المصروفات...",
+  "search_placeholder": "ابحث عن أي شيء",
+  "add_expense": "إضافة مصروف",
+  "add_first_expense": "إضافة أول مصروف",
+  "no_expenses_found": "لا توجد مصروفات",
+  "create_new_expense": "قم بإنشاء طلب مصروف جديد أو جرب فلترًا مختلفًا",
+  "expense_details": "تفاصيل المصروف",
+  "edit_expense": "تعديل المصروف",
+  "add_new_expense": "إضافة مصروف جديد",
+  "information": "معلومات المصروف",
+  "expense_title": "عنوان المصروف",
+  "title_placeholder": "أدخل عنوان المصروف",
+  "validation": {
+    "title_required": "العنوان مطلوب",
+    "title_min_length": "يجب أن يكون العنوان على الأقل 3 أحرف",
+    "value_required": "القيمة مطلوبة",
+    "value_min": "يجب أن تكون القيمة أكبر من أو تساوي 0",
+    "description_required": "الوصف مطلوب"
+  },
+  "expense_value": "قيمة المصروف (درهم)",
+  "value_placeholder": "أدخل قيمة المصروف",
+  "description": "الوصف",
+  "description_placeholder": "أدخل وصف المصروف",
+  "submitted_on": "تم التقديم في",
+  "supporting_documents": "الملفات الداعمة",
+  "upload": {
+    "click": "انقر للتحميل",
+    "drag_drop": "أو اسحب وأفلت",
+    "formats": "png، jpg، pdf"
+  },
+  "no_files": "لا توجد ملفات مرفقة",
+  "close": "إغلاق",
+  "cancel": "إلغاء",
+  "update": "تحديث المصروف",
+  "submit": "إرسال المصروف",
+  "updating": "جاري التحديث...",
+  "submitting": "جاري الإرسال...",
+  "summary": {
+    "total": "إجمالي المصروفات",
+    "accepted": "مقبول",
+    "pending": "قيد الانتظار",
+    "rejected": "مرفوض"
+  },
+  "status": {
+    "all": "الكل",
+    "accepted": "مقبول",
+    "pending": "قيد الانتظار",
+    "rejected": "مرفوض"
+  },
+  "employee": "الموظف",
+  "date": "التاريخ",
+  "value": "القيمة",
+  "status_label": "الحالة",
+  "actions": "الإجراءات",
+  "permission_denied": "الصلاحية مرفوضة",
+  "create_permission_denied": "ليس لديك صلاحية إنشاء مصروفات",
+  "update_permission_denied": "ليس لديك صلاحية تحديث المصروفات",
+  "delete_permission_denied": "ليس لديك صلاحية حذف المصروفات",
+  "confirm": {
+    "approve": "هل أنت متأكد أنك تريد الموافقة على هذا المصروف؟",
+    "reject": "هل أنت متأكد أنك تريد رفض هذا المصروف؟",
+    "delete": "هل أنت متأكد أنك تريد حذف هذا المصروف؟",
+    "approve_header": "تأكيد الموافقة",
+    "reject_header": "تأكيد الرفض",
+    "delete_header": "تأكيد الحذف"
+  },
+  "success": {
+    "created": "تم إنشاء المصروف بنجاح",
+    "updated": "تم تحديث المصروف بنجاح",
+    "approved": "تمت الموافقة على المصروف بنجاح",
+    "rejected": "تم رفض المصروف بنجاح",
+    "deleted": "تم حذف المصروف بنجاح"
+  },
+  "error": {
+    "load": "فشل تحميل المصروفات. يرجى المحاولة مرة أخرى",
+    "load_details": "فشل تحميل تفاصيل المصروف",
+    "create": "فشل إنشاء المصروف",
+    "update": "فشل تحديث المصروف. يرجى المحاولة مرة أخرى",
+    "approve": "فشل الموافقة على المصروف. يرجى المحاولة مرة أخرى",
+    "reject": "فشل رفض المصروف. يرجى المحاولة مرة أخرى",
+    "delete": "فشل حذف المصروف. يرجى المحاولة مرة أخرى"
   }
+}
 }

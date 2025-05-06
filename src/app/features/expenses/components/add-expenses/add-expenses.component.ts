@@ -3,11 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { ExpensesService, Expense, ExpenseFile } from '../../services/expenses.service';
- import { InputText } from 'primeng/inputtext';
-import { InputNumber } from 'primeng/inputnumber';
- import { Tooltip } from 'primeng/tooltip';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextarea } from 'primeng/inputtextarea';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs/operators';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ImageUrlPipe } from '../../../../shared/pipes/image-url.pipe';
 
 interface ExpenseDialogData {
   isEditing?: boolean;
@@ -20,7 +24,7 @@ interface UploadedFile {
   file?: File;
   id?: string;
   name?: string;
-  isExisting?: any;
+  isExisting?: boolean;
   toDelete?: boolean;
 }
 
@@ -31,10 +35,14 @@ interface UploadedFile {
     CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
-    InputText,
-    InputNumber,
-    Tooltip
+    InputTextModule,
+    InputNumberModule,
+    InputTextarea,
+    ButtonModule,
+    TooltipModule,
+    TranslateModule
   ],
+  providers: [ImageUrlPipe],
   templateUrl: './add-expenses.component.html',
   styleUrls: ['./add-expenses.component.scss']
 })
@@ -52,6 +60,8 @@ export class AddExpensesComponent implements OnInit {
     private dialogRef: MatDialogRef<AddExpensesComponent>,
     public expensesService: ExpensesService,
     private messageService: MessageService,
+    private translateService: TranslateService,
+    private imageUrlPipe: ImageUrlPipe,
     @Inject(MAT_DIALOG_DATA) public data: ExpenseDialogData | null
   ) {}
 
@@ -91,7 +101,7 @@ export class AddExpensesComponent implements OnInit {
     // Load expense files
     if (expense.files && expense.files.length > 0) {
       this.uploadedFiles = expense.files.map(file => ({
-        url: this.expensesService.getFileUrl(file.path),
+        url: this.imageUrlPipe.transform(file.path) || '',
         id: file.id,
         name: file.name,
         isExisting: true
@@ -143,7 +153,7 @@ export class AddExpensesComponent implements OnInit {
 
     if (file.isExisting && file.id) {
       // Mark existing file for deletion
-      file.toDelete = true;
+      file.toDelete = !file.toDelete;
     } else {
       // Remove newly added file
       this.uploadedFiles.splice(index, 1);
@@ -188,13 +198,13 @@ export class AddExpensesComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
-            detail: response.message || 'Expense created successfully'
+            detail: response.message || this.translateService.instant('expenses.success.created')
           });
           this.dialogRef.close(response.result);
         },
         error: (error) => {
           console.error('Error creating expense:', error);
-          this.errorMessage = error.error?.message || 'Failed to create expense';
+          this.errorMessage = error.error?.message || this.translateService.instant('expenses.error.create');
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -205,7 +215,8 @@ export class AddExpensesComponent implements OnInit {
   }
 
   canDownloadFile(file: UploadedFile): boolean {
-    return file.isExisting && !file.toDelete && !!file.url;
+    // Use nullish coalescing operator to provide defaults when properties are undefined
+    return (file.isExisting ?? false) && !(file.toDelete ?? false) && !!file.url;
   }
 
   getFileTypeIcon(fileName: string): string {
@@ -233,6 +244,10 @@ export class AddExpensesComponent implements OnInit {
       default:
         return 'pi-file';
     }
+  }
+
+  formatDate(dateString: string): string {
+    return this.expensesService.formatDate(dateString);
   }
 
   onClose() {
