@@ -2,32 +2,32 @@
   <div class="projects-header">
     <div class="search-container">
       <i class="pi pi-search search-icon"></i>
-      <input type="text" pInputText placeholder="Search For anything" class="search-input" [formControl]="searchControl">
+      <input type="text" pInputText placeholder="{{ 'projects.search_placeholder' | translate }}" class="search-input" [formControl]="searchControl">
     </div>
-    <button pButton type="button" label="Add Project" icon="pi pi-plus" class="add-project-btn"
+    <button pButton type="button" label="{{ 'projects.add_project' | translate }}" icon="pi pi-plus" class="add-project-btn"
       (click)="addProject()" *ngIf="canCreateProjects"></button>
   </div>
 
   <!-- Loading indicator -->
   <div *ngIf="isLoading" class="loading-container">
     <i class="pi pi-spin pi-spinner loading-icon"></i>
-    <p>Loading projects...</p>
+    <p>{{ 'projects.loading' | translate }}</p>
   </div>
 
   <!-- Permission denied message -->
   <div *ngIf="!canViewProjects" class="permission-denied">
     <i class="pi pi-exclamation-triangle warning-icon"></i>
-    <p>You do not have permission to view projects.</p>
+    <p>{{ 'projects.permission_denied' | translate }}</p>
   </div>
 
   <!-- Projects table -->
   <div class="projects-table" *ngIf="!isLoading && canViewProjects && projects.length > 0">
     <div class="table-header">
-      <div class="header-cell project-title">Project Title</div>
-      <div class="header-cell creator">Creator</div>
-      <div class="header-cell creation-date">Creation Date</div>
-      <div class="header-cell members">Members</div>
-      <div class="header-cell actions">Actions</div>
+      <div class="header-cell project-title">{{ 'projects.table.project_title' | translate }}</div>
+      <div class="header-cell creator">{{ 'projects.table.creator' | translate }}</div>
+      <div class="header-cell creation-date">{{ 'projects.table.creation_date' | translate }}</div>
+      <div class="header-cell members">{{ 'projects.table.members' | translate }}</div>
+      <div class="header-cell actions">{{ 'projects.table.actions' | translate }}</div>
     </div>
 
     <div class="table-body">
@@ -35,7 +35,7 @@
         <div class="body-cell project-title">{{project.title}}</div>
         <div class="body-cell creator">
           <div class="creator-info">
-            <img [src]="project.creator.avatar | imageUrl" alt="Creator Avatar" class="creator-avatar">
+            <img [src]="project.creator.avatar | imageUrl" alt="{{ 'projects.table.creator' | translate }}" class="creator-avatar">
             <span class="creator-name">{{project.creator.name}}</span>
           </div>
         </div>
@@ -56,7 +56,7 @@
             </div>
           </div>
           <div class="no-members" *ngIf="project.members.length === 0">
-            No members
+            {{ 'projects.table.no_members' | translate }}
           </div>
         </div>
         <div class="body-cell actions">
@@ -76,9 +76,9 @@
     <div class="empty-icon">
       <i class="pi pi-folder-open"></i>
     </div>
-    <h3>No Projects Found</h3>
-    <p>Create a new project to get started</p>
-    <button pButton type="button" label="Add Your First Project" icon="pi pi-plus"
+    <h3>{{ 'projects.empty_state.title' | translate }}</h3>
+    <p>{{ 'projects.empty_state.description' | translate }}</p>
+    <button pButton type="button" label="{{ 'projects.empty_state.add_first' | translate }}" icon="pi pi-plus"
       class="add-project-btn" (click)="addProject()" *ngIf="canCreateProjects"></button>
   </div>
 
@@ -99,15 +99,15 @@
     [style]="{width: '450px'}" [closeOnEscape]="true" [closable]="!submitting">
     <div class="dialog-content">
       <div class="p-field">
-        <label for="projectName">Project Name</label>
+        <label for="projectName">{{ 'projects.dialog.project_name' | translate }}</label>
         <input type="text" pInputText id="projectName" [(ngModel)]="projectName"
-          placeholder="Enter project name" [disabled]="submitting" class="w-100">
+          placeholder="{{ 'projects.dialog.project_name_placeholder' | translate }}" [disabled]="submitting" class="w-100">
       </div>
     </div>
     <ng-template pTemplate="footer">
-      <button pButton label="Cancel" icon="pi pi-times" class="p-button-text"
+      <button pButton label="{{ 'projects.dialog.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
         (click)="showProjectDialog = false" [disabled]="submitting"></button>
-      <button pButton label="Save" icon="pi pi-check"
+      <button pButton label="{{ 'projects.dialog.save' | translate }}" icon="pi pi-check"
         (click)="onDialogSubmit()" [loading]="submitting"></button>
     </ng-template>
   </p-dialog>

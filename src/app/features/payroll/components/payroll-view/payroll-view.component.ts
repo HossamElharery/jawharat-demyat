@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { PayrollService } from '../../services/payroll.service';
 import { ToastService } from '../../../../core/services/toast.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-payroll-view',
   standalone: true,
-  imports: [CommonModule, MatDialogModule],
+  imports: [CommonModule, MatDialogModule, TranslateModule],
   templateUrl: './payroll-view.component.html',
   styleUrl: './payroll-view.component.scss'
 })
@@ -19,7 +20,8 @@ export class PayrollViewComponent implements OnInit {
     private dialogRef: MatDialogRef<PayrollViewComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private payrollService: PayrollService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private translateService: TranslateService
   ) {
     this.payroll = data;
   }
@@ -40,23 +42,23 @@ export class PayrollViewComponent implements OnInit {
    */
   onPay(): void {
     if (!this.payroll.canPay) {
-      this.toastService.error('You do not have permission to process this payment');
+      this.toastService.error(this.translateService.instant('payroll.errors.permission_denied'));
       return;
     }
 
-    if (confirm(`Are you sure you want to mark this payroll as paid for ${this.payroll.employeeName}?`)) {
+    if (confirm(this.translateService.instant('payroll.confirm.pay_message', { 0: this.payroll.employeeName }))) {
       this.isProcessing = true;
 
       this.payrollService.payPayroll(this.payroll.id).subscribe({
         next: (response) => {
-          this.toastService.success('Payroll marked as paid successfully');
+          this.toastService.success(this.translateService.instant('payroll.success.payment_processed'));
           this.isProcessing = false;
           this.payroll.status = 'paid';
           this.dialogRef.close({ paid: true });
         },
         error: (error) => {
           console.error('Error paying payroll:', error);
-          this.toastService.error('Failed to process payment. Please try again.');
+          this.toastService.error(this.translateService.instant('payroll.errors.payment_failed'));
           this.isProcessing = false;
         }
       });

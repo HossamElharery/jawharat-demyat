@@ -1,6 +1,6 @@
 <div class="payroll-modal">
   <div class="modal-header">
-    <h1 class="modal-title">Payroll Details</h1>
+    <h1 class="modal-title">{{ 'payroll.details.title' | translate }}</h1>
     <button class="close-button" (click)="onClose()">
       <i class="bi bi-x"></i>
     </button>
@@ -14,7 +14,7 @@
         </div>
         <div class="col-auto">
           <div class="total-section">
-            <span class="total-label">Total</span>
+            <span class="total-label">{{ 'payroll.details.total' | translate }}</span>
             <span class="total-amount">{{ formatCurrency(payroll.netSalary) }}</span>
           </div>
         </div>
@@ -34,7 +34,7 @@
         </div>
         <div class="col-auto">
           <span class="status-badge" [ngClass]="getStatusClass()">
-            {{ payroll.status === 'paid' ? 'Paid' : 'Pending' }}
+            {{ payroll.status === 'paid' ? ('payroll.details.paid' | translate) : ('payroll.details.pending' | translate) }}
           </span>
         </div>
       </div>
@@ -46,7 +46,7 @@
           <div class="detail-item">
             <i class="bi bi-wallet2"></i>
             <div class="detail-content">
-              <span class="detail-label">Salary</span>
+              <span class="detail-label">{{ 'payroll.details.salary' | translate }}</span>
               <span class="detail-value">{{ formatCurrency(payroll.salary) }}</span>
             </div>
           </div>
@@ -55,7 +55,7 @@
           <div class="detail-item">
             <i class="bi bi-clock"></i>
             <div class="detail-content">
-              <span class="detail-label">Over Time</span>
+              <span class="detail-label">{{ 'payroll.details.overtime' | translate }}</span>
               <span class="detail-value">{{ formatCurrency(payroll.overtime) }}</span>
             </div>
           </div>
@@ -64,7 +64,7 @@
           <div class="detail-item">
             <i class="bi bi-receipt"></i>
             <div class="detail-content">
-              <span class="detail-label">Expenses</span>
+              <span class="detail-label">{{ 'payroll.details.expenses' | translate }}</span>
               <span class="detail-value">{{ formatCurrency(payroll.expenses) }}</span>
             </div>
           </div>
@@ -74,14 +74,14 @@
   </div>
 
   <div class="modal-footer">
-    <button class="btn btn-cancel" (click)="onClose()">Close</button>
+    <button class="btn btn-cancel" (click)="onClose()">{{ 'payroll.details.close' | translate }}</button>
     <button
       *ngIf="payroll.canPay && payroll.status !== 'paid'"
       class="btn btn-pay"
       [disabled]="isProcessing"
       (click)="onPay()">
       <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2" role="status"></span>
-      Pay
+      {{ 'payroll.details.pay' | translate }}
     </button>
   </div>
 </div>

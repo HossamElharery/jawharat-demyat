@@ -1,11 +1,11 @@
- import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
 import { ReportsService, ReportType, ImageItem } from '../../services/reports.service';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { PermissionsService } from '../../../../core/services/permissions.service';
 import { environment } from '../../../../../environments/environment';
@@ -25,7 +25,7 @@ import { environment } from '../../../../../environments/environment';
 export class DetailedReportComponent implements OnInit {
   reportType: ReportType = 'employees'; // default
   reportData: any[] = [];
-  columns: { field: string; header: string; type?: string; }[] = [];
+  columns: { field: string; header: string; translationKey: string; type?: string; }[] = [];
   isLoading = false;
   currentPage = 1;
   perPage = 10;
@@ -36,13 +36,15 @@ export class DetailedReportComponent implements OnInit {
   canViewReport = false;
   errorMessage: string | null = null;
 
-  imageUrl=environment.apiBaseUrl
+  imageUrl = environment.apiBaseUrl;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private reportsService: ReportsService,
     private permissionsService: PermissionsService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -79,7 +81,7 @@ export class DetailedReportComponent implements OnInit {
   checkPermissions(): void {
     // You can customize this based on your permission structure
     this.canViewReport = this.permissionsService.hasPermission(`view_reports`) ||
-                         this.permissionsService.hasPermission(`view_${this.reportType}`);
+                        this.permissionsService.hasPermission(`view_${this.reportType}`);
   }
 
   /**
@@ -89,57 +91,57 @@ export class DetailedReportComponent implements OnInit {
     switch (reportType) {
       case 'employees':
         this.columns = [
-          { field: 'id', header: 'ID' },
-          { field: 'name', header: 'Employee Name' },
-          { field: 'email', header: 'Email' },
-          { field: 'role', header: 'Role' },
-          { field: 'payType', header: 'Payment Type' },
-          { field: 'salaryDate', header: 'Salary Date', type: 'date' },
-         ];
+          { field: 'id', header: 'ID', translationKey: 'reports.column.id' },
+          { field: 'name', header: 'Employee Name', translationKey: 'reports.column.employee_name' },
+          { field: 'email', header: 'Email', translationKey: 'reports.column.email' },
+          { field: 'role', header: 'Role', translationKey: 'reports.column.role' },
+          { field: 'payType', header: 'Payment Type', translationKey: 'reports.column.payment_type' },
+          { field: 'salaryDate', header: 'Salary Date', translationKey: 'reports.column.salary_date', type: 'date' },
+        ];
         break;
       case 'absence':
         this.columns = [
-          { field: 'id', header: 'ID' },
-          { field: 'name', header: 'Employee Name' },
-          { field: 'email', header: 'Email' },
-          { field: 'attendance.attended', header: 'Days Attended' },
-          { field: 'attendance.absent', header: 'Days Absent' },
-          { field: 'attendance.holiday', header: 'Holidays' },
-          { field: 'attendance.leave', header: 'Leave Days' },
-          { field: 'totalTasks', header: 'Total Tasks' },
-          { field: 'totalExpenses', header: 'Total Expenses' }
+          { field: 'id', header: 'ID', translationKey: 'reports.column.id' },
+          { field: 'name', header: 'Employee Name', translationKey: 'reports.column.employee_name' },
+          { field: 'email', header: 'Email', translationKey: 'reports.column.email' },
+          { field: 'attendance.attended', header: 'Days Attended', translationKey: 'reports.column.days_attended' },
+          { field: 'attendance.absent', header: 'Days Absent', translationKey: 'reports.column.days_absent' },
+          { field: 'attendance.holiday', header: 'Holidays', translationKey: 'reports.column.holidays' },
+          { field: 'attendance.leave', header: 'Leave Days', translationKey: 'reports.column.leave_days' },
+          { field: 'totalTasks', header: 'Total Tasks', translationKey: 'reports.column.total_tasks' },
+          { field: 'totalExpenses', header: 'Total Expenses', translationKey: 'reports.column.total_expenses' }
         ];
         break;
       case 'payroll':
         this.columns = [
-          { field: 'employee.id', header: 'Employee ID' },
-          { field: 'employee.name', header: 'Employee Name' },
-          { field: 'employee.email', header: 'Email' },
-          { field: 'date', header: 'Date', type: 'date' },
-          { field: 'salary', header: 'Salary', type: 'currency' },
-          { field: 'overtimeHours', header: 'Overtime Hours' },
-          { field: 'overtimeValue', header: 'Overtime Value', type: 'currency' },
-          { field: 'expensesValue', header: 'Expenses', type: 'currency' }
+          { field: 'employee.id', header: 'Employee ID', translationKey: 'reports.column.employee_id' },
+          { field: 'employee.name', header: 'Employee Name', translationKey: 'reports.column.employee_name' },
+          { field: 'employee.email', header: 'Email', translationKey: 'reports.column.email' },
+          { field: 'date', header: 'Date', translationKey: 'reports.column.date', type: 'date' },
+          { field: 'salary', header: 'Salary', translationKey: 'reports.column.salary', type: 'currency' },
+          { field: 'overtimeHours', header: 'Overtime Hours', translationKey: 'reports.column.overtime_hours' },
+          { field: 'overtimeValue', header: 'Overtime Value', translationKey: 'reports.column.overtime_value', type: 'currency' },
+          { field: 'expensesValue', header: 'Expenses', translationKey: 'reports.column.expenses', type: 'currency' }
         ];
         break;
       case 'inventory':
         this.columns = [
-          { field: 'id', header: 'ID' },
-          { field: 'name', header: 'Item Name' },
-          { field: 'type', header: 'Type' },
-          { field: 'value', header: 'Value', type: 'currency' },
-          { field: 'status', header: 'Status' },
-          { field: 'stock', header: 'Stock' },
-         ];
+          { field: 'id', header: 'ID', translationKey: 'reports.column.id' },
+          { field: 'name', header: 'Item Name', translationKey: 'reports.column.item_name' },
+          { field: 'type', header: 'Type', translationKey: 'reports.column.type' },
+          { field: 'value', header: 'Value', translationKey: 'reports.column.value', type: 'currency' },
+          { field: 'status', header: 'Status', translationKey: 'reports.column.status' },
+          { field: 'stock', header: 'Stock', translationKey: 'reports.column.stock' },
+        ];
         break;
       case 'tasks':
         this.columns = [
-          { field: 'id', header: 'ID' },
-          { field: 'title', header: 'Task Title' },
-          { field: 'status', header: 'Status' },
-          { field: 'priority', header: 'Priority' },
-          { field: 'project.name', header: 'Project Name' },
-          { field: 'project.id', header: 'Project ID' }
+          { field: 'id', header: 'ID', translationKey: 'reports.column.id' },
+          { field: 'title', header: 'Task Title', translationKey: 'reports.column.task_title' },
+          { field: 'status', header: 'Status', translationKey: 'reports.column.status' },
+          { field: 'priority', header: 'Priority', translationKey: 'reports.column.priority' },
+          { field: 'project.name', header: 'Project Name', translationKey: 'reports.column.project_name' },
+          { field: 'project.id', header: 'Project ID', translationKey: 'reports.column.project_id' }
         ];
         break;
     }
@@ -149,9 +151,7 @@ export class DetailedReportComponent implements OnInit {
    * Set the report title based on the report type
    */
   setReportTitle(reportType: ReportType): void {
-    const metadata = this.reportsService.getReportMetadata();
-    const report = metadata.find(r => r.id === reportType);
-    this.reportTitle = report ? report.title : 'Report';
+    this.reportTitle = this.translateService.instant(`reports.types.${reportType}`);
   }
 
   /**
@@ -162,7 +162,7 @@ export class DetailedReportComponent implements OnInit {
       this.messageService.add({
         severity: 'error',
         summary: 'Permission Denied',
-        detail: 'You do not have permission to view this report'
+        detail: this.translateService.instant('reports.view_permission_denied')
       });
       return;
     }
@@ -219,7 +219,7 @@ export class DetailedReportComponent implements OnInit {
         },
         error: (error) => {
           console.error(`Error loading ${this.reportType} report:`, error);
-          this.errorMessage = `Failed to load ${this.reportType} report. Please try again.`;
+          this.errorMessage = this.translateService.instant('reports.errors.load_failed', { 0: this.reportType });
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -295,8 +295,6 @@ export class DetailedReportComponent implements OnInit {
     this.loadReportData();
   }
 
-
-
   /**
    * Get status CSS class for status values (for styling)
    */
@@ -332,7 +330,7 @@ export class DetailedReportComponent implements OnInit {
     this.messageService.add({
       severity: 'info',
       summary: 'Export',
-      detail: 'Exporting report...'
+      detail: this.translateService.instant('reports.exporting')
     });
 
     // Placeholder for actual export functionality

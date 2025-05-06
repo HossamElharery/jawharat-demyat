@@ -185,36 +185,36 @@ export class ReportsService {
     return [
       {
         id: 'employees',
-        title: 'Employee Reports',
-        description: 'View comprehensive data about all employees including their roles, payment types, and salary dates.',
+        title: 'Employee Reports', // Will be replaced by translation
+        description: 'View comprehensive data about all employees...', // Will be replaced by translation
         apiEndpoint: 'employees',
         img: '../../../../../assets/images/reports.png'
       },
       {
         id: 'absence',
-        title: 'Absence Report',
-        description: 'Track employee attendance, absences, holidays, and leave data to monitor workforce availability.',
+        title: 'Absence Report', // Will be replaced by translation
+        description: 'Track employee attendance...', // Will be replaced by translation
         apiEndpoint: 'absence',
         img: '../../../../../assets/images/reports.png'
       },
       {
         id: 'payroll',
-        title: 'Payroll Report',
-        description: 'Access detailed payroll information including salaries, overtime, and expenses for financial tracking.',
+        title: 'Payroll Report', // Will be replaced by translation
+        description: 'Access detailed payroll information...', // Will be replaced by translation
         apiEndpoint: 'payroll',
         img: '../../../../../assets/images/reports.png'
       },
       {
         id: 'inventory',
-        title: 'Inventory Report',
-        description: 'Monitor your inventory levels, values, and other critical inventory management data.',
+        title: 'Inventory Report', // Will be replaced by translation
+        description: 'Monitor your inventory levels...', // Will be replaced by translation
         apiEndpoint: 'inventory',
         img: '../../../../../assets/images/reports.png'
       },
       {
         id: 'tasks',
-        title: 'Tasks Report',
-        description: 'Review task assignments, priorities, statuses, and project associations across the organization.',
+        title: 'Tasks Report', // Will be replaced by translation
+        description: 'Review task assignments...', // Will be replaced by translation
         apiEndpoint: 'tasks',
         img: '../../../../../assets/images/reports.png'
       }

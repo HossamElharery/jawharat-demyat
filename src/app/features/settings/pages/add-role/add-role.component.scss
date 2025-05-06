@@ -147,3 +147,53 @@
     padding-left: 1rem;
   }
 }
+/* Add or enhance RTL support in add-role.component.scss */
+:host-context([dir="rtl"]) {
+  .permission-name {
+    padding-right: 0;
+    padding-left: 1rem;
+    text-align: right;
+  }
+
+  .permission-action {
+    text-align: center;
+  }
+
+  .action-buttons {
+    .cancel-btn {
+      margin-right: 0;
+      margin-left: 0.5rem;
+    }
+  }
+
+  /* PrimeNG components RTL fixes */
+  :host ::ng-deep {
+    .p-inputswitch {
+      .p-inputswitch-slider {
+        &:before {
+          right: 0.125rem;
+          left: auto;
+        }
+      }
+
+      &.p-inputswitch-checked {
+        .p-inputswitch-slider:before {
+          transform: translateX(-1.5rem);
+        }
+      }
+    }
+  }
+
+  /* Module header */
+  .module-header {
+    .module-title {
+      text-align: right;
+    }
+  }
+
+  /* Icon positioning */
+  .pi {
+    margin-right: 0;
+    margin-left: 0.5rem;
+  }
+}

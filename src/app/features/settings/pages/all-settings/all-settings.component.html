@@ -3,17 +3,17 @@
     <ul class="nav nav-tabs" id="settingsTabs" role="tablist">
       <li class="nav-item" role="presentation">
         <button class="nav-link active" id="main-info-tab" data-bs-toggle="tab" data-bs-target="#main-info-tab-pane" type="button" role="tab" aria-controls="main-info-tab-pane" aria-selected="true">
-          <i class="pi pi-info-circle text-warning me-2"></i>{{ 'Main Information' | translate }}
+          <i class="pi pi-info-circle text-warning me-2"></i>{{ 'settings.main_info' | translate }}
         </button>
       </li>
       <li class="nav-item" role="presentation">
         <button class="nav-link" id="notifications-tab" data-bs-toggle="tab" data-bs-target="#notifications-tab-pane" type="button" role="tab" aria-controls="notifications-tab-pane" aria-selected="false">
-          <i class="pi pi-bell me-2"></i>{{ 'Notifications' | translate }}
+          <i class="pi pi-bell me-2"></i>{{ 'settings.notifications' | translate }}
         </button>
       </li>
       <li class="nav-item" role="presentation" *ngIf="checkRolePermissions()">
         <button class="nav-link" id="roles-tab" data-bs-toggle="tab" data-bs-target="#roles-tab-pane" type="button" role="tab" aria-controls="roles-tab-pane" aria-selected="false">
-          <i class="pi pi-users me-2"></i>{{ 'Roles' | translate }}
+          <i class="pi pi-users me-2"></i>{{ 'settings.roles' | translate }}
         </button>
       </li>
     </ul>
@@ -25,10 +25,10 @@
           <div class="" style="padding: 30px;">
             <div class="d-flex align-items-center">
               <i class="pi pi-user text-warning me-2"></i>
-              <h3 class="mb-0">{{ 'Main Info' | translate }}</h3>
+              <h3 class="mb-0">{{ 'settings.main_info' | translate }}</h3>
             </div>
 
-            <p class="text-muted my-3">{{ 'Customize your profile settings to ensure all information is accurate and tailored to your preferences.' | translate }}</p>
+            <p class="text-muted my-3">{{ 'settings.main_info_desc' | translate }}</p>
 
             <form [formGroup]="profileForm">
               <div class="profile-pic-container mb-4">
@@ -49,36 +49,36 @@
 
               <div class="row mb-4">
                 <div class="col-md-6 mb-3 mb-md-0">
-                  <label for="fullName" class="form-label">{{ 'Full Name' | translate }}</label>
+                  <label for="fullName" class="form-label">{{ 'settings.full_name' | translate }}</label>
                   <input type="text" id="fullName" class="form-control" formControlName="name">
                   <div class="invalid-feedback" *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched">
-                    {{ 'Full name is required' | translate }}
+                    {{ 'validation.name_required' | translate }}
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <label for="email" class="form-label">{{ 'E-Mail' | translate }}</label>
+                  <label for="email" class="form-label">{{ 'settings.email' | translate }}</label>
                   <input type="email" id="email" class="form-control" formControlName="email">
                   <div class="invalid-feedback" *ngIf="profileForm.get('email')?.errors?.['required'] && profileForm.get('email')?.touched">
-                    {{ 'Email is required' | translate }}
+                    {{ 'validation.email_required' | translate }}
                   </div>
                   <div class="invalid-feedback" *ngIf="profileForm.get('email')?.errors?.['email'] && profileForm.get('email')?.touched">
-                    {{ 'Please enter a valid email address' | translate }}
+                    {{ 'validation.email_invalid' | translate }}
                   </div>
                 </div>
               </div>
 
               <div class="row mb-4">
                 <div class="col-md-3 mb-3 mb-md-0">
-                  <label for="companyName" class="form-label">{{ 'Company Name' | translate }}</label>
+                  <label for="companyName" class="form-label">{{ 'settings.company_name' | translate }}</label>
                   <input type="text" id="companyName" class="form-control" formControlName="companyName">
                 </div>
                 <div class="col-md-3">
-                  <label for="companySize" class="form-label">{{ 'Company Size' | translate }}</label>
-                  <p-dropdown id="companySize" [options]="companySizes" optionLabel="name" [placeholder]="'Select'" styleClass="w-100" formControlName="companySize"></p-dropdown>
+                  <label for="companySize" class="form-label">{{ 'settings.company_size' | translate }}</label>
+                  <p-dropdown id="companySize" [options]="companySizes" optionLabel="name" [placeholder]="'settings.select' | translate" styleClass="w-100" formControlName="companySize"></p-dropdown>
                 </div>
 
                 <div class="col-6">
-                  <label for="phoneNumber" class="form-label d-block">{{ 'Phone Number' | translate }}</label>
+                  <label for="phoneNumber" class="form-label d-block">{{ 'settings.phone_number' | translate }}</label>
                   <ngx-intl-tel-input
                     [cssClass]="'custom-phone-input'"
                     [preferredCountries]="preferredCountries"
@@ -100,7 +100,7 @@
               <div class="d-flex justify-content-end mt-4">
                 <button type="button" class="btn btn-warning save-btn" (click)="updateProfile()" [disabled]="isUpdatingProfile">
                   <i class="pi pi-spin pi-spinner me-2" *ngIf="isUpdatingProfile"></i>
-                  {{ (isUpdatingProfile ? 'Updating...' : 'Update Profile') | translate }}
+                  {{ (isUpdatingProfile ? 'settings.updating' : 'settings.update_profile') | translate }}
                 </button>
               </div>
             </form>
@@ -109,15 +109,15 @@
           <div class="password-section mt-4">
             <div class="d-flex align-items-center">
               <i class="pi pi-lock text-warning me-2"></i>
-              <h3 class="mb-0">{{ 'Password' | translate }}</h3>
+              <h3 class="mb-0">{{ 'settings.password' | translate }}</h3>
             </div>
 
-            <p class="text-muted my-3">{{ 'Update your password to enhance account security.' | translate }}</p>
+            <p class="text-muted my-3">{{ 'settings.password_desc' | translate }}</p>
 
             <form [formGroup]="profileForm">
               <div class="row mb-3">
                 <div class="col-6">
-                  <label for="currentPassword" class="form-label">{{ 'Current Password' | translate }}</label>
+                  <label for="currentPassword" class="form-label">{{ 'settings.current_password' | translate }}</label>
                   <div class="input-group">
                     <input [type]="showCurrentPassword ? 'text' : 'password'" id="currentPassword" class="form-control" formControlName="currentPassword">
                     <button type="button" class="btn btn-outline-secondary" (click)="toggleCurrentPassword()">
@@ -129,7 +129,7 @@
 
               <div class="row mb-3">
                 <div class="col-6">
-                  <label for="newPassword" class="form-label">{{ 'New Password' | translate }}</label>
+                  <label for="newPassword" class="form-label">{{ 'settings.new_password' | translate }}</label>
                   <div class="input-group">
                     <input [type]="showNewPassword ? 'text' : 'password'" id="newPassword" class="form-control" formControlName="newPassword">
                     <button type="button" class="btn btn-outline-secondary" (click)="toggleNewPassword()">
@@ -141,7 +141,7 @@
 
               <div class="row mb-3">
                 <div class="col-6">
-                  <label for="confirmPassword" class="form-label">{{ 'Confirm New Password' | translate }}</label>
+                  <label for="confirmPassword" class="form-label">{{ 'settings.confirm_password' | translate }}</label>
                   <div class="input-group">
                     <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" class="form-control" formControlName="confirmPassword">
                     <button type="button" class="btn btn-outline-secondary" (click)="toggleConfirmPassword()">
@@ -154,7 +154,7 @@
               <div class="d-flex justify-content-end mt-4">
                 <button type="button" class="btn btn-warning save-btn" (click)="updatePassword()" [disabled]="isUpdatingPassword">
                   <i class="pi pi-spin pi-spinner me-2" *ngIf="isUpdatingPassword"></i>
-                  {{ (isUpdatingPassword ? 'Updating...' : 'Update Password') | translate }}
+                  {{ (isUpdatingPassword ? 'settings.updating' : 'settings.update_password') | translate }}
                 </button>
               </div>
             </form>
@@ -168,27 +168,27 @@
           <!-- Header -->
           <div class="d-flex align-items-center">
             <i class="pi pi-bell text-warning me-2"></i>
-            <h3 class="mb-0">{{ 'Notifications' | translate }}</h3>
+            <h3 class="mb-0">{{ 'settings.notifications' | translate }}</h3>
           </div>
 
-          <p class="text-muted my-3">{{ 'Configure which notifications you want to receive.' | translate }}</p>
+          <p class="text-muted my-3">{{ 'settings.notifications_desc' | translate }}</p>
 
           <!-- Task Reminders Section -->
           <div class="notification-section mb-4">
             <div class="d-flex justify-content-between align-items-center">
               <div class="d-flex align-items-center">
                 <i class="pi pi-calendar text-warning me-2"></i>
-                <h4 class="mb-0">{{ 'Task Reminders' | translate }}</h4>
+                <h4 class="mb-0">{{ 'settings.task_reminders' | translate }}</h4>
               </div>
             </div>
 
             <div class="notification-item d-flex justify-content-between align-items-center my-3">
-              <p class="mb-0">{{ 'Notifications for assigned tasks, task updates, and task deadlines.' | translate }}</p>
+              <p class="mb-0">{{ 'settings.task_notifications' | translate }}</p>
               <p-inputSwitch [(ngModel)]="taskNotifications"></p-inputSwitch>
             </div>
 
             <div class="notification-item d-flex justify-content-between align-items-center my-3">
-              <p class="mb-0">{{ 'Daily or weekly summaries of pending or overdue tasks.' | translate }}</p>
+              <p class="mb-0">{{ 'settings.task_summaries' | translate }}</p>
               <p-inputSwitch [(ngModel)]="taskSummaries"></p-inputSwitch>
             </div>
           </div>
@@ -198,17 +198,17 @@
             <div class="d-flex justify-content-between align-items-center">
               <div class="d-flex align-items-center">
                 <i class="pi pi-wallet text-warning me-2"></i>
-                <h4 class="mb-0">{{ 'Expenses' | translate }}</h4>
+                <h4 class="mb-0">{{ 'settings.expenses' | translate }}</h4>
               </div>
             </div>
 
             <div class="notification-item d-flex justify-content-between align-items-center my-3">
-              <p class="mb-0">{{ 'Notifications for new expense submissions and approvals.' | translate }}</p>
+              <p class="mb-0">{{ 'settings.expense_notifications' | translate }}</p>
               <p-inputSwitch [(ngModel)]="expenseNotifications1"></p-inputSwitch>
             </div>
 
             <div class="notification-item d-flex justify-content-between align-items-center my-3">
-              <p class="mb-0">{{ 'Expense reports and summaries.' | translate }}</p>
+              <p class="mb-0">{{ 'settings.expense_reports' | translate }}</p>
               <p-inputSwitch [(ngModel)]="expenseNotifications2"></p-inputSwitch>
             </div>
           </div>
@@ -218,24 +218,24 @@
             <div class="d-flex justify-content-between align-items-center">
               <div class="d-flex align-items-center">
                 <i class="pi pi-users text-warning me-2"></i>
-                <h4 class="mb-0">{{ 'Team Collaboration Notifications' | translate }}</h4>
+                <h4 class="mb-0">{{ 'settings.team_collaboration' | translate }}</h4>
               </div>
             </div>
 
             <div class="notification-item d-flex justify-content-between align-items-center my-3">
-              <p class="mb-0">{{ 'Updates when a team member comments on or updates a shared case or task.' | translate }}</p>
+              <p class="mb-0">{{ 'settings.team_updates' | translate }}</p>
               <p-inputSwitch [(ngModel)]="teamUpdates"></p-inputSwitch>
             </div>
 
             <div class="notification-item d-flex justify-content-between align-items-center my-3">
-              <p class="mb-0">{{ 'Notifications for new file shares or collaborative edits.' | translate }}</p>
+              <p class="mb-0">{{ 'settings.file_shares' | translate }}</p>
               <p-inputSwitch [(ngModel)]="fileShares"></p-inputSwitch>
             </div>
           </div>
 
           <div class="d-flex justify-content-end mt-4">
             <button type="button" class="btn btn-warning save-btn">
-              {{ 'Save Notification Settings' | translate }}
+              {{ 'settings.save_notifications' | translate }}
             </button>
           </div>
         </div>
@@ -249,26 +249,26 @@
             <div>
               <div class="d-flex align-items-center">
                 <i class="pi pi-users text-warning me-2"></i>
-                <h3 class="mb-0">{{ 'Roles' | translate }}</h3>
+                <h3 class="mb-0">{{ 'settings.roles' | translate }}</h3>
               </div>
-              <p class="text-muted my-3">{{ 'Manage roles and permissions for users in the system.' | translate }}</p>
+              <p class="text-muted my-3">{{ 'settings.roles_desc' | translate }}</p>
             </div>
             <button class="btn btn-warning add-role-btn" (click)="addNewRole()" *ngIf="permissionsService.hasPermission('create_roles')">
               <i class="pi pi-plus me-2"></i>
-              {{ 'Add New Role' | translate }}
+              {{ 'settings.add_role' | translate }}
             </button>
           </div>
 
           <!-- Loading Indicator -->
           <div class="text-center my-5" *ngIf="isLoadingRoles">
             <i class="pi pi-spin pi-spinner text-warning" style="font-size: 2rem;"></i>
-            <p class="mt-2">{{ 'Loading roles...' | translate }}</p>
+            <p class="mt-2">{{ 'settings.loading_roles' | translate }}</p>
           </div>
 
           <!-- No Roles Message -->
           <div class="text-center my-5" *ngIf="!isLoadingRoles && roles.length === 0">
             <i class="pi pi-info-circle text-warning" style="font-size: 2rem;"></i>
-            <p class="mt-2">{{ 'No roles found. Create a new role to get started.' | translate }}</p>
+            <p class="mt-2">{{ 'settings.no_roles' | translate }}</p>
           </div>
 
           <!-- Roles List -->

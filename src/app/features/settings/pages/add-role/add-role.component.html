@@ -2,15 +2,15 @@
   <!-- Header -->
   <div class="d-flex align-items-center">
     <i class="pi pi-users text-warning me-2"></i>
-    <h3 class="mb-0">{{ isEditMode ? ('Edit Role' | translate) : ('Add New Role' | translate) }}</h3>
+    <h3 class="mb-0">{{ isEditMode ? ('settings.edit_role' | translate) : ('settings.add_role' | translate) }}</h3>
   </div>
 
-  <p class="text-muted my-3">{{ 'Define role permissions to control access to different parts of the system.' | translate }}</p>
+  <p class="text-muted my-3">{{ 'settings.role_permissions_desc' | translate }}</p>
 
   <!-- Role Name Input -->
   <form [formGroup]="roleForm">
     <div class="mb-4">
-      <label for="roleName" class="form-label">{{ 'Role Name' | translate }}</label>
+      <label for="roleName" class="form-label">{{ 'settings.role_name' | translate }}</label>
       <input
         type="text"
         id="roleName"
@@ -19,10 +19,10 @@
         [class.is-invalid]="roleForm.get('name')?.invalid && roleForm.get('name')?.touched"
       >
       <div class="invalid-feedback" *ngIf="roleForm.get('name')?.hasError('required')">
-        {{ 'Role name is required' | translate }}
+        {{ 'settings.role_name_required' | translate }}
       </div>
       <div class="invalid-feedback" *ngIf="roleForm.get('name')?.hasError('minlength')">
-        {{ 'Role name must be at least 3 characters' | translate }}
+        {{ 'settings.role_name_length' | translate }}
       </div>
     </div>
   </form>
@@ -30,7 +30,7 @@
   <!-- Loading Indicator -->
   <div class="text-center my-5" *ngIf="loading">
     <i class="pi pi-spin pi-spinner text-warning" style="font-size: 2rem;"></i>
-    <p class="mt-2">{{ 'Loading permissions...' | translate }}</p>
+    <p class="mt-2">{{ 'settings.loading_permissions' | translate }}</p>
   </div>
 
   <!-- Module Permissions -->
@@ -47,11 +47,11 @@
 
       <div class="permissions-table" *ngIf="module.enabled">
         <div class="permissions-header d-flex">
-          <div class="permission-name flex-grow-1">{{ 'Permission Name' | translate }}</div>
-          <div class="permission-action" *ngIf="module.permissions[0].viewId">{{ 'View' | translate }}</div>
-          <div class="permission-action" *ngIf="module.permissions[0].addId">{{ 'Add' | translate }}</div>
-          <div class="permission-action" *ngIf="module.permissions[0].editId">{{ 'Edit' | translate }}</div>
-          <div class="permission-action" *ngIf="module.permissions[0].deleteId">{{ 'Delete' | translate }}</div>
+          <div class="permission-name flex-grow-1">{{ 'settings.permission_name' | translate }}</div>
+          <div class="permission-action" *ngIf="module.permissions[0].viewId">{{ 'settings.view' | translate }}</div>
+          <div class="permission-action" *ngIf="module.permissions[0].addId">{{ 'settings.add' | translate }}</div>
+          <div class="permission-action" *ngIf="module.permissions[0].editId">{{ 'settings.edit' | translate }}</div>
+          <div class="permission-action" *ngIf="module.permissions[0].deleteId">{{ 'settings.delete' | translate }}</div>
         </div>
 
         <div class="permission-row d-flex" *ngFor="let permission of module.permissions">
@@ -88,7 +88,7 @@
       class="btn btn-outline-secondary me-2 cancel-btn"
       (click)="cancel()"
       [disabled]="saving">
-      {{ 'Cancel' | translate }}
+      {{ 'settings.cancel' | translate }}
     </button>
     <button
       type="button"
@@ -96,7 +96,7 @@
       (click)="saveRole()"
       [disabled]="saving">
       <i class="pi pi-spin pi-spinner me-2" *ngIf="saving"></i>
-      {{ (saving ? 'Saving...' : 'Save') | translate }}
+      {{ (saving ? 'settings.saving' : 'settings.save') | translate }}
     </button>
   </div>
 </div>

@@ -8,7 +8,7 @@
           <input
             type="text"
             class="form-control search-input"
-            placeholder="Search in report"
+            placeholder="{{ 'reports.search_placeholder' | translate }}"
             [formControl]="searchControl">
         </div>
       </div>
@@ -16,11 +16,11 @@
       <div class="d-flex gap-2">
         <button class="btn btn-outline-secondary" (click)="goBack()">
           <i class="bi bi-arrow-left me-2"></i>
-          Back to Reports
+          {{ 'reports.back_to_reports' | translate }}
         </button>
         <button class="btn btn-warning export-btn" (click)="exportReport()">
           <i class="bi bi-download me-2"></i>
-          Export
+          {{ 'reports.export' | translate }}
         </button>
       </div>
     </div>
@@ -29,7 +29,7 @@
   <!-- Permission denied message -->
   <div *ngIf="!canViewReport" class="alert alert-warning">
     <i class="bi bi-exclamation-triangle-fill me-2"></i>
-    You do not have permission to view this report.
+    {{ 'reports.view_permission_denied' | translate }}
   </div>
 
   <!-- Error message -->
@@ -41,13 +41,13 @@
   <!-- Loading indicator -->
   <div *ngIf="isLoading" class="text-center my-4">
     <div class="spinner-border text-warning" role="status">
-      <span class="visually-hidden">Loading...</span>
+      <span class="visually-hidden">{{ 'reports.loading' | translate }}</span>
     </div>
   </div>
 
   <!-- No data message -->
   <div *ngIf="!isLoading && canViewReport && reportData.length === 0" class="alert alert-info">
-    No data found for this report.
+    {{ 'reports.no_data' | translate }}
   </div>
 
   <!-- Report table -->
@@ -55,7 +55,7 @@
     <table class="table align-middle">
       <thead>
         <tr>
-          <th *ngFor="let column of columns">{{ column.header }}</th>
+          <th *ngFor="let column of columns">{{ column.translationKey | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -66,7 +66,7 @@
                 <img
                   [src]="item.imageUrl || getNestedValue(item, 'employee.imageUrl') || '../../../../../assets/images/Avatar.png'"
                   class="user-avatar"
-                  alt="User avatar">
+                  alt="{{ 'reports.column.employee_name' | translate }}">
                 <span class="ms-2">{{ getNestedValue(item, column.field) }}</span>
               </div>
             </ng-container>
@@ -79,7 +79,6 @@
                 class="status-badge">
                 {{ getNestedValue(item, column.field) }}
               </span>
-
 
               <!-- Default text display -->
               <span

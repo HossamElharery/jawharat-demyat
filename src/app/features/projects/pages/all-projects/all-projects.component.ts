@@ -15,6 +15,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { PermissionsService } from '../../../../core/services/permissions.service';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { ImageUrlPipe } from "../../../../shared/pipes/image-url.pipe";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 interface Project {
   id: string;
@@ -48,8 +49,9 @@ interface Project {
     ConfirmDialogModule,
     DialogModule,
     PaginationComponent,
-    ImageUrlPipe
-],
+    ImageUrlPipe,
+    TranslateModule
+  ],
   templateUrl: './all-projects.component.html',
   styleUrl: './all-projects.component.scss',
   providers: [ConfirmationService]
@@ -65,7 +67,7 @@ export class AllProjectsComponent implements OnInit {
 
   // Dialog controls
   showProjectDialog = false;
-  dialogTitle = 'Add Project';
+  dialogTitle = '';
   projectName = '';
   editingProjectId: string | null = null;
   submitting = false;
@@ -81,7 +83,8 @@ export class AllProjectsComponent implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private authService: AuthService,
-    private permissionsService: PermissionsService
+    private permissionsService: PermissionsService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
@@ -133,7 +136,7 @@ export class AllProjectsComponent implements OnInit {
       this.messageService.add({
         severity: 'error',
         summary: 'Permission Denied',
-        detail: 'You do not have permission to view projects'
+        detail: this.translateService.instant('projects.errors.permission_view')
       });
       return;
     }
@@ -162,7 +165,7 @@ export class AllProjectsComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Failed to load projects. Please try again.'
+          detail: this.translateService.instant('projects.errors.load_failed')
         });
       }
     });
@@ -198,12 +201,12 @@ export class AllProjectsComponent implements OnInit {
       this.messageService.add({
         severity: 'error',
         summary: 'Permission Denied',
-        detail: 'You do not have permission to create projects'
+        detail: this.translateService.instant('projects.errors.permission_create')
       });
       return;
     }
 
-    this.dialogTitle = 'Add Project';
+    this.dialogTitle = this.translateService.instant('projects.dialog.add_title');
     this.projectName = '';
     this.editingProjectId = null;
     this.showProjectDialog = true;
@@ -217,12 +220,12 @@ export class AllProjectsComponent implements OnInit {
       this.messageService.add({
         severity: 'error',
         summary: 'Permission Denied',
-        detail: 'You do not have permission to edit projects'
+        detail: this.translateService.instant('projects.errors.permission_edit')
       });
       return;
     }
 
-    this.dialogTitle = 'Edit Project';
+    this.dialogTitle = this.translateService.instant('projects.dialog.edit_title');
     this.projectName = project.title;
     this.editingProjectId = project.id;
     this.showProjectDialog = true;
@@ -236,7 +239,7 @@ export class AllProjectsComponent implements OnInit {
       this.messageService.add({
         severity: 'error',
         summary: 'Validation Error',
-        detail: 'Project name is required'
+        detail: this.translateService.instant('projects.errors.validation.name_required')
       });
       return;
     }
@@ -252,7 +255,7 @@ export class AllProjectsComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
-            detail: 'Project updated successfully'
+            detail: this.translateService.instant('projects.success.update')
           });
           this.showProjectDialog = false;
           this.loadProjects();
@@ -262,7 +265,7 @@ export class AllProjectsComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: error.error?.message || 'Failed to update project'
+            detail: error.error?.message || this.translateService.instant('projects.errors.update_failed')
           });
         }
       });
@@ -275,7 +278,7 @@ export class AllProjectsComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
-            detail: response.message || 'Project created successfully'
+            detail: response.message || this.translateService.instant('projects.success.create')
           });
           this.showProjectDialog = false;
           this.loadProjects();
@@ -285,7 +288,7 @@ export class AllProjectsComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: error.error?.message || 'Failed to create project'
+            detail: error.error?.message || this.translateService.instant('projects.errors.create_failed')
           });
         }
       });
@@ -300,14 +303,14 @@ export class AllProjectsComponent implements OnInit {
       this.messageService.add({
         severity: 'error',
         summary: 'Permission Denied',
-        detail: 'You do not have permission to delete projects'
+        detail: this.translateService.instant('projects.errors.permission_delete')
       });
       return;
     }
 
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete the project "${project.title}"?`,
-      header: 'Confirm Delete',
+      message: this.translateService.instant('projects.confirm.delete_message', { 0: project.title }),
+      header: this.translateService.instant('projects.confirm.delete_title'),
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.projectsService.deleteProject(project.id).subscribe({
@@ -315,7 +318,7 @@ export class AllProjectsComponent implements OnInit {
             this.messageService.add({
               severity: 'success',
               summary: 'Success',
-              detail: response.message || 'Project deleted successfully'
+              detail: response.message || this.translateService.instant('projects.success.delete')
             });
             this.loadProjects();
           },
@@ -324,7 +327,7 @@ export class AllProjectsComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
-              detail: error.error?.message || 'Failed to delete project'
+              detail: error.error?.message || this.translateService.instant('projects.errors.delete_failed')
             });
           }
         });

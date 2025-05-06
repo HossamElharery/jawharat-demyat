@@ -9,7 +9,7 @@
             </div>
             <div class="stat-text">
               <h2 class="stat-value">{{ stat.value }} AED</h2>
-              <p class="stat-title">{{stat.title}}</p>
+              <p class="stat-title">{{ 'payroll.stats.' + stat.translationKey | translate }}</p>
             </div>
           </div>
         </mat-card-content>
@@ -20,7 +20,7 @@
   <!-- Permission denied message -->
   <div *ngIf="!canViewPayrolls" class="alert alert-warning">
     <i class="bi bi-exclamation-triangle-fill me-2"></i>
-    You do not have permission to view payrolls.
+    {{ 'payroll.permission_denied' | translate }}
   </div>
 
   <div *ngIf="canViewPayrolls" class="header-section mb-4">
@@ -31,7 +31,7 @@
           <input
             type="text"
             class="form-control search-input"
-            placeholder="Search for anything"
+            placeholder="{{ 'payroll.search_placeholder' | translate }}"
             [formControl]="searchControl">
         </div>
         <div class="dropdown">
@@ -40,12 +40,12 @@
             type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false">
-            {{ selectedStatus || 'Pending' }}
+            {{ 'payroll.filter.' + (selectedStatus | lowercase) | translate }}
           </button>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" (click)="filterByStatus('Paid')">Paid</a></li>
-            <li><a class="dropdown-item" (click)="filterByStatus('Pending')">Pending</a></li>
-            <li><a class="dropdown-item" (click)="filterByStatus('All')">All</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('Paid')">{{ 'payroll.filter.paid' | translate }}</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('Pending')">{{ 'payroll.filter.pending' | translate }}</a></li>
+            <li><a class="dropdown-item" (click)="filterByStatus('All')">{{ 'payroll.filter.all' | translate }}</a></li>
           </ul>
         </div>
       </div>
@@ -55,7 +55,7 @@
   <!-- Loading indicator -->
   <div *ngIf="isLoading" class="text-center my-4">
     <div class="spinner-border text-warning" role="status">
-      <span class="visually-hidden">Loading...</span>
+      <span class="visually-hidden">{{ 'payroll.loading' | translate }}</span>
     </div>
   </div>
 
@@ -72,6 +72,6 @@
 
   <!-- No data message -->
   <div *ngIf="!isLoading && canViewPayrolls && attendanceData.length === 0" class="alert alert-info">
-    No payrolls found matching your criteria.
+    {{ 'payroll.no_data' | translate }}
   </div>
 </div>

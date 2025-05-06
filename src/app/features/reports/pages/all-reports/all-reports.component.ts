@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ReportsService } from '../../services/reports.service';
 import { PermissionsService } from '../../../../core/services/permissions.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 interface Report {
   id: string;
@@ -27,7 +27,8 @@ export class AllReportsComponent implements OnInit {
   constructor(
     private router: Router,
     private reportsService: ReportsService,
-    private permissionsService: PermissionsService
+    private permissionsService: PermissionsService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {

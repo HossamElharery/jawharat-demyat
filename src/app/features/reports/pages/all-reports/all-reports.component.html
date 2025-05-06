@@ -2,28 +2,28 @@
   <!-- Permission denied message -->
   <div *ngIf="!canViewReports" class="alert alert-warning mb-4">
     <i class="bi bi-exclamation-triangle-fill me-2"></i>
-    You do not have permission to view reports.
+    {{ 'reports.permission_denied' | translate }}
   </div>
 
   <div class="row g-4" *ngIf="canViewReports">
     <div class="col-12 mb-4">
-      <h2 class="section-title">Reports</h2>
-      <p class="section-description">Access and analyze your business data through different report types.</p>
+      <h2 class="section-title">{{ 'reports.title' | translate }}</h2>
+      <p class="section-description">{{ 'reports.description' | translate }}</p>
     </div>
 
     <!-- Loop through all reports dynamically -->
     <div class="col-md-4 mb-4" *ngFor="let report of reports">
       <div class="report-card">
         <div class="report-icon">
-          <img [src]="report.img" alt="Report Icon">
+          <img [src]="report.img" alt="{{ 'reports.types.' + report.id | translate }}">
         </div>
-        <h3 class="report-title">{{ report.title }}</h3>
+        <h3 class="report-title">{{ 'reports.types.' + report.id | translate }}</h3>
         <p class="report-description">
-          {{ report.description }}
+          {{ 'reports.descriptions.' + report.id | translate }}
         </p>
         <div class="report-action">
           <a href="javascript:void(0)" class="view-report-btn" (click)="viewReport(report)">
-            <span>{{ 'View Report' }}</span>
+            <span>{{ 'reports.view_report' | translate }}</span>
             <i class="bi bi-arrow-right ms-2"></i>
           </a>
         </div>

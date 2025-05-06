@@ -6,12 +6,13 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { PayrollViewComponent } from '../../components/payroll-view/payroll-view.component';
-import { AttendanceTableComponent, Column,   } from "../../../../shared/components/attendance-table/attendance-table.component";
+import { AttendanceTableComponent, Column } from "../../../../shared/components/attendance-table/attendance-table.component";
 import { Payroll, PayrollService } from '../../services/payroll.service';
 import { PermissionsService } from '../../../../core/services/permissions.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { MessageService } from 'primeng/api';
 import { ToastService } from '../../../../core/services/toast.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-payroll',
@@ -23,7 +24,8 @@ import { ToastService } from '../../../../core/services/toast.service';
     MatDialogModule,
     FormsModule,
     ReactiveFormsModule,
-    AttendanceTableComponent
+    AttendanceTableComponent,
+    TranslateModule
   ],
   templateUrl: './payroll.component.html',
   styleUrl: './payroll.component.scss'
@@ -38,6 +40,7 @@ export class PayrollComponent implements OnInit {
   stats = [
     {
       title: 'Total Payroll',
+      translationKey: 'total_payroll',
       value: 0,
       icon: 'wallet',
       color: '#3D8F83',
@@ -45,6 +48,7 @@ export class PayrollComponent implements OnInit {
     },
     {
       title: 'Salaries',
+      translationKey: 'salaries',
       value: 0,
       icon: 'credit-card',
       color: '#28A745',
@@ -52,6 +56,7 @@ export class PayrollComponent implements OnInit {
     },
     {
       title: 'Overtime',
+      translationKey: 'overtime',
       value: 0,
       icon: 'clock',
       color: '#FFC107',
@@ -59,6 +64,7 @@ export class PayrollComponent implements OnInit {
     },
     {
       title: 'Expenses',
+      translationKey: 'expenses',
       value: 0,
       icon: 'receipt',
       color: '#DC3545',
@@ -70,77 +76,8 @@ export class PayrollComponent implements OnInit {
   selectedStatus: string = 'All'; // Default to load all payrolls
   isLoading = false;
 
-  // Create dynamic action buttons for each row
-  getTableActionButtons(record: any): any[] {
-    const buttons: any[] = [];
-
-    // Only show Pay button for pending payrolls and users with permission
-    if (record.status === 'Pending' && this.canPayPayrolls) {
-      buttons.push({ type: 'pay', label: 'Pay' });
-    }
-
-    // Always show view button
-    buttons.push({ type: 'view', icon: 'bi-eye' });
-
-    return buttons;
-  }
-
   // Table configuration
-  tableColumns: Column[] = [
-    // {
-    //   field: 'employeeId',
-    //   header: 'Employee Id',
-    //   type: 'text',
-    // },
-    {
-      field: 'employeeName',
-      header: 'Employee',
-      type: 'text'
-    },
-    {
-      field: 'salary',
-      header: 'Salary',
-      type: 'text'
-    },
-    {
-      field: 'expenses',
-      header: 'Expenses',
-      type: 'text'
-    },
-    {
-      field: 'netSalary',
-      header: 'Net Salary',
-      type: 'text'
-    },
-    {
-      field: 'overtime',
-      header: 'Overtime',
-      type: 'text'
-    },
-    {
-      field: 'status',
-      header: 'Status',
-      type: 'tag',
-      tagConfig: {
-        field: 'status',
-        severityMap: {
-          'Paid': 'success',
-          'Pending': 'danger'
-        }
-      }
-    },
-    {
-      field: 'actions',
-      header: 'Actions',
-      type: 'actions',
-      actionConfig: {
-        buttons: [
-          { type: 'view', icon: 'bi-eye' }
-        ]
-      }
-    }
-  ];
-
+  tableColumns: Column[] = [];
   attendanceData: any[] = [];
 
   constructor(
@@ -149,10 +86,14 @@ export class PayrollComponent implements OnInit {
     private permissionsService: PermissionsService,
     private authService: AuthService,
     private messageService: MessageService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
+    // Initialize table columns with translations
+    this.initializeTableColumns();
+
     // Check permissions
     this.checkPermissions();
 
@@ -168,6 +109,61 @@ export class PayrollComponent implements OnInit {
     ).subscribe(value => {
       this.loadPayrolls();
     });
+  }
+
+  /**
+   * Initialize table columns with translations
+   */
+  initializeTableColumns(): void {
+    this.tableColumns = [
+      {
+        field: 'employeeName',
+        header: this.translateService.instant('payroll.columns.employee'),
+        type: 'text'
+      },
+      {
+        field: 'salary',
+        header: this.translateService.instant('payroll.columns.salary'),
+        type: 'text'
+      },
+      {
+        field: 'expenses',
+        header: this.translateService.instant('payroll.columns.expenses'),
+        type: 'text'
+      },
+      {
+        field: 'netSalary',
+        header: this.translateService.instant('payroll.columns.net_salary'),
+        type: 'text'
+      },
+      {
+        field: 'overtime',
+        header: this.translateService.instant('payroll.columns.overtime'),
+        type: 'text'
+      },
+      {
+        field: 'status',
+        header: this.translateService.instant('payroll.columns.status'),
+        type: 'tag',
+        tagConfig: {
+          field: 'status',
+          severityMap: {
+            'Paid': 'success',
+            'Pending': 'danger'
+          }
+        }
+      },
+      {
+        field: 'actions',
+        header: this.translateService.instant('payroll.columns.actions'),
+        type: 'actions',
+        actionConfig: {
+          buttons: [
+            { type: 'view', icon: 'bi-eye' }
+          ]
+        }
+      }
+    ];
   }
 
   /**
@@ -200,7 +196,7 @@ export class PayrollComponent implements OnInit {
    */
   loadPayrolls(): void {
     if (!this.canViewPayrolls) {
-      this.toastService.error('You do not have permission to view payrolls');
+      this.toastService.error(this.translateService.instant('payroll.errors.permission_denied'));
       return;
     }
 
@@ -221,7 +217,10 @@ export class PayrollComponent implements OnInit {
                 ...col,
                 actionConfig: {
                   buttons: this.canPayPayrolls ?
-                    [{ type: 'pay', label: 'Pay' }, { type: 'view', icon: 'bi-eye' }] :
+                    [
+                      { type: 'pay', label: this.translateService.instant('payroll.pay_button') },
+                      { type: 'view', icon: 'bi-eye' }
+                    ] :
                     [{ type: 'view', icon: 'bi-eye' }]
                 }
               };
@@ -233,7 +232,7 @@ export class PayrollComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error loading payrolls:', error);
-          this.toastService.error('Failed to load payrolls. Please try again.');
+          this.toastService.error(this.translateService.instant('payroll.errors.load_failed'));
         }
       });
   }
@@ -247,7 +246,7 @@ export class PayrollComponent implements OnInit {
       const status = payroll.status === 'paid' ? 'Paid' : 'Pending';
 
       const item = {
-        // id: payroll.id,
+        id: payroll.id,
         employeeId: payroll.employeeId,
         employeeName: payroll.employee.name,
         salary: `${payroll.salary} AED`,
@@ -293,25 +292,25 @@ export class PayrollComponent implements OnInit {
    */
   onPay(record: any): void {
     if (!this.canPayPayrolls) {
-      this.toastService.error('You do not have permission to process payments');
+      this.toastService.error(this.translateService.instant('payroll.errors.permission_denied'));
       return;
     }
 
     // Skip if already paid
     if (record.status !== 'Pending') {
-      this.toastService.info('This payroll has already been paid');
+      this.toastService.info(this.translateService.instant('payroll.errors.already_paid'));
       return;
     }
 
-    if (confirm(`Are you sure you want to mark this payroll as paid for ${record.employeeName}?`)) {
+    if (confirm(this.translateService.instant('payroll.confirm.pay_message', { 0: record.employeeName }))) {
       this.payrollService.payPayroll(record.id).subscribe({
         next: (response) => {
-          this.toastService.success('Payroll marked as paid successfully');
+          this.toastService.success(this.translateService.instant('payroll.success.payment_processed'));
           this.loadPayrolls(); // Reload payrolls after payment
         },
         error: (error) => {
           console.error('Error paying payroll:', error);
-          this.toastService.error('Failed to process payment. Please try again.');
+          this.toastService.error(this.translateService.instant('payroll.errors.payment_failed'));
         }
       });
     }
@@ -338,7 +337,7 @@ export class PayrollComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching payroll details:', error);
-        this.toastService.error('Failed to load payroll details');
+        this.toastService.error(this.translateService.instant('payroll.errors.details_load_failed'));
       }
     });
   }

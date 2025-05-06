@@ -335,8 +335,6 @@
   }
 }
 
-// Pagination is now handled by the shared pagination component
-
 // Dialog Styling
 :host ::ng-deep {
   .p-dialog .p-dialog-header {
@@ -369,8 +367,8 @@
   }
 }
 
-// RTL support
-:host-context(.rtl) {
+// Enhanced RTL support
+:host-context([dir="rtl"]) {
   .search-container .search-icon {
     left: auto;
     right: 12px;
@@ -388,17 +386,46 @@
   .members-avatars {
     flex-direction: row-reverse;
 
-    .member-avatar, .additional-members {
-      margin-left: 0;
-      margin-right: -8px;
+    .member-item {
+      margin-left: -12px;
+      margin-right: 0;
 
       &:first-child {
-        margin-right: 0;
+        margin-left: 0;
+      }
+    }
+
+    .member-tooltip {
+      right: 50%;
+      left: auto;
+      transform: translateX(50%);
+
+      &:after {
+        right: 50%;
+        left: auto;
+        transform: translateX(50%);
       }
     }
   }
 
   .actions {
     flex-direction: row-reverse;
+  }
+
+  .p-dialog-footer {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  .p-button .p-button-icon-left {
+    margin-right: 0;
+    margin-left: 0.5rem;
+  }
+
+  button[icon="pi pi-plus"] .p-button-icon,
+  button[icon="pi pi-times"] .p-button-icon,
+  button[icon="pi pi-check"] .p-button-icon {
+    margin-right: 0;
+    margin-left: 0.5rem;
   }
 }

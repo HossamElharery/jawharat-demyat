@@ -37,7 +37,9 @@
     "settings": "Settings",
     "feedback": "Send Feedback",
     "knowledge_base": "Knowledge Base",
-    "logout": "Logout"
+    "logout": "Logout",
+    "send_feedback": "Send Feedback"
+
   },
   "login": {
     "title": "Welcome Back!",
@@ -579,6 +581,219 @@
     "approve": "Failed to approve expense. Please try again.",
     "reject": "Failed to reject expense. Please try again.",
     "delete": "Failed to delete expense. Please try again."
-  }}
+  }},
+  "reports": {
+  "title": "Reports",
+  "description": "Access and analyze your business data through different report types.",
+  "permission_denied": "You do not have permission to view reports.",
+  "view_report": "View Report",
+  "search_placeholder": "Search in report",
+  "back_to_reports": "Back to Reports",
+  "export": "Export",
+  "view_permission_denied": "You do not have permission to view this report.",
+  "loading": "Loading...",
+  "no_data": "No data found for this report.",
+  "exporting": "Exporting report...",
+  "column": {
+    "id": "ID",
+    "employee_name": "Employee Name",
+    "email": "Email",
+    "role": "Role",
+    "payment_type": "Payment Type",
+    "salary_date": "Salary Date",
+    "days_attended": "Days Attended",
+    "days_absent": "Days Absent",
+    "holidays": "Holidays",
+    "leave_days": "Leave Days",
+    "total_tasks": "Total Tasks",
+    "total_expenses": "Total Expenses",
+    "employee_id": "Employee ID",
+    "date": "Date",
+    "salary": "Salary",
+    "overtime_hours": "Overtime Hours",
+    "overtime_value": "Overtime Value",
+    "expenses": "Expenses",
+    "item_name": "Item Name",
+    "type": "Type",
+    "value": "Value",
+    "status": "Status",
+    "stock": "Stock",
+    "task_title": "Task Title",
+    "priority": "Priority",
+    "project_name": "Project Name",
+    "project_id": "Project ID"
+  },
+  "types": {
+    "employees": "Employee Reports",
+    "absence": "Absence Report",
+    "payroll": "Payroll Report",
+    "inventory": "Inventory Report",
+    "tasks": "Tasks Report"
+  },
+  "descriptions": {
+    "employees": "View comprehensive data about all employees including their roles, payment types, and salary dates.",
+    "absence": "Track employee attendance, absences, holidays, and leave data to monitor workforce availability.",
+    "payroll": "Access detailed payroll information including salaries, overtime, and expenses for financial tracking.",
+    "inventory": "Monitor your inventory levels, values, and other critical inventory management data.",
+    "tasks": "Review task assignments, priorities, statuses, and project associations across the organization."
+  },
+  "errors": {
+    "load_failed": "Failed to load {0} report. Please try again."
+  }
+},
+"payroll": {
+  "title": "Payroll",
+  "search_placeholder": "Search for anything",
+  "permission_denied": "You do not have permission to view payrolls.",
+  "loading": "Loading...",
+  "no_data": "No payrolls found matching your criteria.",
+  "filter": {
+    "paid": "Paid",
+    "pending": "Pending",
+    "all": "All"
+  },
+  "pay_button": "Pay",
+  "view_details": "View details",
+  "stats": {
+    "total_payroll": "Total Payroll",
+    "salaries": "Salaries",
+    "overtime": "Overtime",
+    "expenses": "Expenses"
+  },
+  "columns": {
+    "employee": "Employee",
+    "employee_id": "Employee ID",
+    "salary": "Salary",
+    "expenses": "Expenses",
+    "net_salary": "Net Salary",
+    "overtime": "Overtime",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "details": {
+    "title": "Payroll Details",
+    "total": "Total",
+    "paid": "Paid",
+    "pending": "Pending",
+    "salary": "Salary",
+    "overtime": "Over Time",
+    "expenses": "Expenses",
+    "close": "Close",
+    "pay": "Pay"
+  },
+  "confirm": {
+    "pay_title": "Confirm Payment",
+    "pay_message": "Are you sure you want to mark this payroll as paid for {0}?"
+  },
+  "success": {
+    "payment_processed": "Payroll marked as paid successfully"
+  },
+  "errors": {
+    "permission_denied": "You do not have permission to process payments",
+    "already_paid": "This payroll has already been paid",
+    "payment_failed": "Failed to process payment. Please try again.",
+    "load_failed": "Failed to load payrolls. Please try again.",
+    "details_load_failed": "Failed to load payroll details"
+  }
+},
+"projects": {
+  "title": "Projects",
+  "search_placeholder": "Search for anything",
+  "add_project": "Add Project",
+  "loading": "Loading projects...",
+  "permission_denied": "You do not have permission to view projects.",
+  "table": {
+    "project_title": "Project Title",
+    "creator": "Creator",
+    "creation_date": "Creation Date",
+    "members": "Members",
+    "actions": "Actions",
+    "no_members": "No members"
+  },
+  "empty_state": {
+    "title": "No Projects Found",
+    "description": "Create a new project to get started",
+    "add_first": "Add Your First Project"
+  },
+  "dialog": {
+    "add_title": "Add Project",
+    "edit_title": "Edit Project",
+    "project_name": "Project Name",
+    "project_name_placeholder": "Enter project name",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "confirm": {
+    "delete_title": "Confirm Delete",
+    "delete_message": "Are you sure you want to delete the project \"{0}\"?"
+  },
+  "success": {
+    "create": "Project created successfully",
+    "update": "Project updated successfully",
+    "delete": "Project deleted successfully"
+  },
+  "errors": {
+    "permission_view": "You do not have permission to view projects",
+    "permission_create": "You do not have permission to create projects",
+    "permission_edit": "You do not have permission to edit projects",
+    "permission_delete": "You do not have permission to delete projects",
+    "load_failed": "Failed to load projects. Please try again.",
+    "create_failed": "Failed to create project",
+    "update_failed": "Failed to update project",
+    "delete_failed": "Failed to delete project",
+    "validation": {
+      "name_required": "Project name is required"
+    }
+  }
+},
+"settings": {
+  "main_info": "Main Information",
+  "notifications": "Notifications",
+  "roles": "Roles",
+  "main_info_desc": "Customize your profile settings to ensure all information is accurate and tailored to your preferences.",
+  "full_name": "Full Name",
+  "email": "E-Mail",
+  "company_name": "Company Name",
+  "company_size": "Company Size",
+  "phone_number": "Phone Number",
+  "updating": "Updating...",
+  "update_profile": "Update Profile",
+  "password": "Password",
+  "password_desc": "Update your password to enhance account security.",
+  "current_password": "Current Password",
+  "new_password": "New Password",
+  "confirm_password": "Confirm New Password",
+  "update_password": "Update Password",
+  "notifications_desc": "Configure which notifications you want to receive.",
+  "task_reminders": "Task Reminders",
+  "task_notifications": "Notifications for assigned tasks, task updates, and task deadlines.",
+  "task_summaries": "Daily or weekly summaries of pending or overdue tasks.",
+  "expenses": "Expenses",
+  "expense_notifications": "Notifications for new expense submissions and approvals.",
+  "expense_reports": "Expense reports and summaries.",
+  "team_collaboration": "Team Collaboration Notifications",
+  "team_updates": "Updates when a team member comments on or updates a shared case or task.",
+  "file_shares": "Notifications for new file shares or collaborative edits.",
+  "save_notifications": "Save Notification Settings",
+  "roles_desc": "Manage roles and permissions for users in the system.",
+  "add_role": "Add New Role",
+  "edit_role": "Edit Role",
+  "loading_roles": "Loading roles...",
+  "no_roles": "No roles found. Create a new role to get started.",
+  "role_permissions_desc": "Define role permissions to control access to different parts of the system.",
+  "role_name": "Role Name",
+  "role_name_required": "Role name is required",
+  "role_name_length": "Role name must be at least 3 characters",
+  "loading_permissions": "Loading permissions...",
+  "permission_name": "Permission Name",
+  "view": "View",
+  "add": "Add",
+  "edit": "Edit",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "saving": "Saving...",
+  "save": "Save",
+  "select": "Select"
+}
 
 }

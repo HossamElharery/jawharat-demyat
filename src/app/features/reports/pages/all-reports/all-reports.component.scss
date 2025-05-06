@@ -1,9 +1,5 @@
 @use '../../../../../assets/scss/variables.scss' as *;
 
-// .report-container {
-//   padding: 20px;
-// }
-
 .report-card {
   background-color: $white;
   border-radius: $br-12px;
@@ -63,4 +59,18 @@
   background-color: $bk-blue;
   min-height: 100vh;
   padding: 20px 0;
+}
+
+// RTL Support
+:host-context([dir="rtl"]) {
+  .view-report-btn {
+    .bi-arrow-right {
+      transform: scaleX(-1);
+    }
+  }
+
+  .ms-2 {
+    margin-left: 0 !important;
+    margin-right: 0.5rem !important;
+  }
 }

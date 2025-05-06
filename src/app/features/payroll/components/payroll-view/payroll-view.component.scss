@@ -197,3 +197,33 @@
     row-gap: 20px;
   }
 }
+
+/* RTL Support */
+:host-context([dir="rtl"]) {
+  .id-section .total-section {
+    text-align: left;
+
+    .total-label {
+      margin-right: 0;
+      margin-left: 10px;
+    }
+  }
+
+  .modal-footer {
+    justify-content: flex-start;
+  }
+
+  .detail-item {
+    flex-direction: row-reverse;
+  }
+
+  .me-2 {
+    margin-right: 0 !important;
+    margin-left: 0.5rem !important;
+  }
+
+  .spinner-border-sm.me-2 {
+    margin-right: 0 !important;
+    margin-left: 0.5rem !important;
+  }
+}

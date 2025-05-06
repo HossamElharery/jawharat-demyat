@@ -525,3 +525,78 @@
     margin-left: 1rem;
   }
 }
+
+/* Add to all-settings.component.scss */
+:host-context([dir="rtl"]) {
+  .nav-tabs .nav-item {
+    margin-right: 0;
+    margin-left: 20px;
+  }
+
+  .profile-actions {
+    margin-left: 0;
+    margin-right: 15px;
+  }
+
+  .action-buttons .cancel-btn {
+    margin-right: 0;
+    margin-left: 0.5rem;
+  }
+
+  .input-group {
+    .form-control {
+      border-right: 1px solid #ced4da;
+      border-left: none;
+    }
+
+    .btn-outline-secondary {
+      border-left: 1px solid #ced4da;
+      border-right: none;
+    }
+  }
+
+  .notification-item {
+    p {
+      text-align: right;
+    }
+  }
+
+  .role-icon {
+    margin-right: 0;
+    margin-left: 1rem;
+  }
+
+  .role-actions {
+    .btn-icon {
+      margin-right: 0;
+      margin-left: 0.5rem;
+    }
+  }
+
+  /* Dropdown and other controls */
+  :host ::ng-deep {
+    .p-dropdown .p-dropdown-label {
+      text-align: right;
+    }
+
+    .p-dropdown .p-dropdown-trigger {
+      right: auto;
+      left: 0;
+    }
+
+    .p-inputswitch {
+      .p-inputswitch-slider {
+        &:before {
+          right: 0.125rem;
+          left: auto;
+        }
+      }
+
+      &.p-inputswitch-checked {
+        .p-inputswitch-slider:before {
+          transform: translateX(-1.5rem);
+        }
+      }
+    }
+  }
+}
