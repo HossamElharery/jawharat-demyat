@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastModule } from 'primeng/toast';
+import { LoadingOverlayComponent } from "./shared/components/loading-overlay/loading-overlay.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,TranslateModule,ToastModule],
+  imports: [RouterOutlet, TranslateModule, ToastModule, LoadingOverlayComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

@@ -1,5 +1,7 @@
+// src/app/shared/services/language.service.ts
 import { Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { LoadingOverlayService } from './loading-overlay.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,10 @@ export class LanguageService {
   currentDir = signal('ltr');
   private rtlLanguages = ['ar', 'he', 'fa', 'ur'];
 
-  constructor(private translate: TranslateService) {
+  constructor(
+    private translate: TranslateService,
+    private loadingOverlay: LoadingOverlayService
+  ) {
     this.translate.addLangs(['ar', 'en']);
     this.translate.setDefaultLang('en');
     this.initializeLanguage();
@@ -18,15 +23,11 @@ export class LanguageService {
 
   private initializeLanguage() {
     const savedLang = localStorage.getItem(this.LANG_KEY) || 'en';
-    this.setLanguage(savedLang);
+    this.setLanguageWithoutReload(savedLang);
   }
 
-  setLanguage(lang: string) {
-    // Avoid unnecessary re-renderings if the language is already set
-    if (lang === this.currentLang()) {
-      return;
-    }
-
+  // Set language without reloading (used for initial load)
+  private setLanguageWithoutReload(lang: string) {
     localStorage.setItem(this.LANG_KEY, lang);
     this.currentLang.set(lang);
     this.currentDir.set(this.rtlLanguages.includes(lang) ? 'rtl' : 'ltr');
@@ -39,13 +40,29 @@ export class LanguageService {
       .replace(/\brtl\b/, '')
       .replace(/\bltr\b/, '') + ' ' + this.currentDir();
 
-    // Refresh PrimeNG components by triggering a window resize
-    setTimeout(() => {
-      window.dispatchEvent(new Event('resize'));
-    }, 100);
-
     // Update CSS stylesheet for RTL dynamic components
     this.updateRtlStylesheet();
+  }
+
+  // Set language with page reload
+  setLanguage(lang: string) {
+    // Avoid unnecessary reloads if the language is already set
+    if (lang === this.currentLang()) {
+      return;
+    }
+
+    // First, save the language preference
+    localStorage.setItem(this.LANG_KEY, lang);
+
+    // Show loading overlay with translated message
+    const message = lang === 'ar' ? 'جاري تحميل اللغة العربية...' : 'Loading English language...';
+    this.loadingOverlay.show(message);
+
+    // Short delay to allow overlay to appear before reload
+    setTimeout(() => {
+      // Reload the page after a short delay
+      window.location.reload();
+    }, 300);
   }
 
   private updateRtlStylesheet() {
@@ -60,7 +77,7 @@ export class LanguageService {
       const linkElem = document.createElement('link');
       linkElem.id = 'rtl-stylesheet';
       linkElem.rel = 'stylesheet';
-      linkElem.href = 'assets/css/rtl.css'; // Create this file if needed
+       linkElem.href = 'assets/css/ar.scss';
       document.head.appendChild(linkElem);
     }
   }

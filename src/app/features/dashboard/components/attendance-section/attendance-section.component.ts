@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { AttendanceRecord } from '../../services/dashboard.service';
 import { ImageUrlPipe } from '../../../../shared/pipes/image-url.pipe';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { RouterLink } from '@angular/router';
 
 interface DisplayRecord {
   id: string;
@@ -21,7 +22,7 @@ interface DisplayRecord {
 @Component({
   selector: 'app-attendance-section',
   standalone: true,
-  imports: [CommonModule, TableModule, AvatarModule, TagModule, ButtonModule, ImageUrlPipe, TranslateModule],
+  imports: [CommonModule, TableModule, AvatarModule, TagModule, ButtonModule, ImageUrlPipe, TranslateModule,RouterLink],
   templateUrl: './attendance-section.component.html',
   styleUrl: './attendance-section.component.scss'
 })
